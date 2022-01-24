@@ -1,2 +1,2 @@
 build:
-	@go build -o ./dist ./cmd/cli
+	@go build -o ./dist/gogo ./cmd/cli
