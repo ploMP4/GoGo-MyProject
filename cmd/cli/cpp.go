@@ -7,19 +7,19 @@ import (
 	"github.com/fatih/color"
 )
 
-type CppProjectType struct {
+type CppProject struct {
 	buildTool string
 	dirs      []string
 	projType  string
 }
 
-type CppProject interface {
+type ICppProject interface {
 	parseArgs(args []string)
 	create(args []string)
 	createVanilla()
 }
 
-func (c *CppProjectType) parseArgs(args []string) {
+func (c *CppProject) parseArgs(args []string) {
 	buildTools := []string{"cmake"}
 	types := []string{"opengl", "vanilla"}
 
@@ -42,7 +42,7 @@ func (c *CppProjectType) parseArgs(args []string) {
 	}
 }
 
-func (c *CppProjectType) create(args []string) {
+func (c *CppProject) create(args []string) {
 	c.parseArgs(args)
 
 	switch c.buildTool {
@@ -55,7 +55,7 @@ func (c *CppProjectType) create(args []string) {
 	}
 }
 
-func (c *CppProjectType) createVanilla() {
+func (c *CppProject) createVanilla() {
 	c.dirs = []string{"bin", "includes", "src"}
 
 	err := os.Mkdir(ggp.appname, 0755)
