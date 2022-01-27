@@ -13,8 +13,9 @@ type GGP struct {
 	path     string
 	rootPath string
 	appname  string
-	cpp      CppProjectType
+	cpp      CppProject
 	django   DjangoProjectType
+	react    ReactProject
 }
 
 var (
@@ -48,6 +49,11 @@ func main() {
 	case "django":
 		appNameExists(appName)
 		ggp.django.create()
+
+	case "react":
+		appNameExists(appName)
+		ggp.react.create(args)
+		message = "React app created successfully under name: " + ggp.appname
 
 	default:
 		showHelp()
