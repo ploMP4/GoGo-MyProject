@@ -3,6 +3,7 @@ module github.com/ploMP4/gogo-myproject
 go 1.17
 
 require (
+	github.com/briandowns/spinner v1.18.0
 	github.com/fatih/color v1.13.0
 	github.com/spf13/cobra v1.3.0
 )

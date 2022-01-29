@@ -5,7 +5,9 @@ import (
 	"os"
 	"os/exec"
 	"runtime"
+	"time"
 
+	"github.com/briandowns/spinner"
 	"github.com/fatih/color"
 	"github.com/spf13/cobra"
 )
@@ -61,4 +63,8 @@ func ClearScreen() {
 	} else { //unsupported platform
 		color.Red("Screen clearing is unsupported on your platform")
 	}
+}
+
+func LoadSpinner() *spinner.Spinner {
+	return spinner.New(spinner.CharSets[43], 100*time.Millisecond) // Build our new spinner
 }
