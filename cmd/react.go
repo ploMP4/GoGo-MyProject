@@ -56,49 +56,48 @@ func (r *ReactCmd) run(cmd *cobra.Command, args []string) {
 
 	// Execute create-react-app with provided arguments
 	c := exec.Command(command[0], command[1:]...)
+
+	s := LoadSpinner()
+	s.Start()
+	defer s.Stop()
+
 	err := c.Run()
 	if err != nil {
 		ExitGracefully(err)
 	}
 
-	// https://blog.bitsrc.io/build-command-line-spinners-in-node-js-3e432d926d56
-	// var i int
-	// go func() {
-	// 	for {
-	// 		i++
-	// 		if i%2 == 0 {
-	// 			fmt.Println("\x1B[?25l/")
-	// 			time.Sleep(1 * time.Second)
-	// 		} else {
-	// 			fmt.Println("-")
-	// 			time.Sleep(1 * time.Second)
-	// 		}
-	// 	}
-	// }()
+	s.Restart()
 
 	// TODO: create redux boilerplate from template
 	if r.redux {
 		wg.Add(1)
 		color.Blue("State management: Redux")
-		go r.installRedux(wg, appName)
+		go r.installRedux(&wg, appName)
 	}
 
 	if r.materialUI {
 		wg.Add(1)
 		color.Blue("UI Library: Material-UI")
-		go r.installMUI(wg, appName)
+		go r.installMUI(&wg, appName)
 	}
 
 	wg.Wait()
-	ExitGracefully(nil, Green("React app created successfully under name: "+appName))
+	ExitGracefully(nil, Green("\nReact app created successfully under name: "+appName))
 }
 
-func (r *ReactCmd) installRedux(wg sync.WaitGroup, appName string) {
+func (r *ReactCmd) installRedux(wg *sync.WaitGroup, appName string) {
+	var cmd *exec.Cmd
 	defer wg.Done()
+
 	color.Green("Installing Redux...")
 
 	os.Chdir(appName)
-	cmd := exec.Command("npm", "install", "redux")
+
+	if react.typescript {
+		cmd = exec.Command("npm", "install", "@reduxjs/toolkit", "@types/react-redux", "react-redux")
+	} else {
+		cmd = exec.Command("npm", "install", "react-redux")
+	}
 
 	err := cmd.Run()
 	if err != nil {
@@ -106,12 +105,12 @@ func (r *ReactCmd) installRedux(wg sync.WaitGroup, appName string) {
 	}
 }
 
-func (r *ReactCmd) installMUI(wg sync.WaitGroup, appName string) {
+func (r *ReactCmd) installMUI(wg *sync.WaitGroup, appName string) {
 	defer wg.Done()
 	color.Green("Installing Material UI...")
 
 	os.Chdir(appName)
-	cmd := exec.Command("npm", "install", "@material-ui/core")
+	cmd := exec.Command("npm", "install", "@mui/material", "@emotion/react", "@emotion/styled")
 
 	err := cmd.Run()
 	if err != nil {
