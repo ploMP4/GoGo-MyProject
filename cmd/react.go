@@ -59,30 +59,37 @@ func (r *ReactCmd) run(cmd *cobra.Command, args []string) {
 
 	s := LoadSpinner()
 	s.Start()
-	defer s.Stop()
 
 	err := c.Run()
 	if err != nil {
 		ExitGracefully(err)
 	}
 
-	s.Restart()
-
 	// TODO: create redux boilerplate from template
 	if r.redux {
 		wg.Add(1)
+		s.Restart()
 		color.Blue("State management: Redux")
 		go r.installRedux(&wg, appName)
 	}
 
 	if r.materialUI {
 		wg.Add(1)
+		s.Restart()
 		color.Blue("UI Library: Material-UI")
 		go r.installMUI(&wg, appName)
 	}
 
+	if r.bootstrap {
+		wg.Add(1)
+		s.Restart()
+		color.Blue("UI Library: Bootstrap")
+		go r.installBootstrap(&wg, appName)
+	}
+
 	wg.Wait()
-	ExitGracefully(nil, Green("\nReact app created successfully under name: "+appName))
+	s.Stop()
+	ExitGracefully(nil, "\nReact app created successfully under name: "+appName)
 }
 
 func (r *ReactCmd) installRedux(wg *sync.WaitGroup, appName string) {
@@ -115,5 +122,18 @@ func (r *ReactCmd) installMUI(wg *sync.WaitGroup, appName string) {
 	err := cmd.Run()
 	if err != nil {
 		ExitGracefully(err, "Unable to install material-ui")
+	}
+}
+
+func (r *ReactCmd) installBootstrap(wg *sync.WaitGroup, appName string) {
+	defer wg.Done()
+	color.Green("Installing Bootstrap...")
+
+	os.Chdir(appName)
+	cmd := exec.Command("npm", "install", "react-bootstrap")
+
+	err := cmd.Run()
+	if err != nil {
+		ExitGracefully(err, "Unable to install bootstrap")
 	}
 }
