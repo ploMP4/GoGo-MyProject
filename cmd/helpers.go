@@ -66,5 +66,8 @@ func ClearScreen() {
 }
 
 func LoadSpinner() *spinner.Spinner {
-	return spinner.New(spinner.CharSets[43], 100*time.Millisecond) // Build our new spinner
+	s := spinner.New(spinner.CharSets[43], 100*time.Millisecond) // Build our new spinner
+	s.HideCursor = true
+
+	return s
 }
