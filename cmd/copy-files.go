@@ -1,4 +1,4 @@
-package main
+package cmd
 
 import (
 	"embed"
@@ -17,12 +17,12 @@ func copyFileFromTemplate(templatePath, targetFile string) error {
 
 	data, err := templateFS.ReadFile(templatePath)
 	if err != nil {
-		exitGracefully(err)
+		ExitGracefully(err)
 	}
 
 	err = copyDataToFile(data, targetFile)
 	if err != nil {
-		exitGracefully(err)
+		ExitGracefully(err)
 	}
 
 	return nil
