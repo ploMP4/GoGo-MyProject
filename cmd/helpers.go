@@ -26,17 +26,16 @@ func ExitGracefully(err error, msg ...string) {
 		message = msg[0]
 	}
 
+	if len(message) > 0 {
+		color.Yellow(message)
+	}
+
 	if err != nil {
 		color.Red("Error: %v\n", err)
 		os.Exit(1)
 	}
 
-	if len(message) > 0 {
-		color.Yellow(message)
-	} else {
-		color.Green("Finished")
-	}
-
+	color.Green("Finished")
 	os.Exit(0)
 }
 
@@ -66,8 +65,5 @@ func ClearScreen() {
 }
 
 func LoadSpinner() *spinner.Spinner {
-	s := spinner.New(spinner.CharSets[43], 100*time.Millisecond) // Build our new spinner
-	s.HideCursor = true
-
-	return s
+	return spinner.New(spinner.CharSets[43], 100*time.Millisecond, spinner.WithHiddenCursor(true)) // Build our new spinner
 }

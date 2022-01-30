@@ -2,7 +2,7 @@
 https://gianarb.it/blog/golang-mockmania-cli-command-with-cobra
 ---
 
-gogo <type> <appname> <flags>
+gogo [type] [appname] [flags]
 
 gogo react myapp ts redux
 
@@ -32,18 +32,18 @@ gogo react myapp ts redux
 
 - [x] React
 
-  - [ ] Redux
+  - [x] Redux
   - [x] Material-UI
-  - [ ] Bootstrap
+  - [x] Bootstrap
   - [x] Typescript
 
 ---
 
-- [ ] NextJS
+- [x] NextJS
 
-  - [ ] Redux
-  - [ ] Material-UI
-  - [ ] Bootstrap
-  - [ ] Typescript
+  - [x] Redux
+  - [x] Material-UI
+  - [x] Bootstrap
+  - [x] Typescript
 
 ---

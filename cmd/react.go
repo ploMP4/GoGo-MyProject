@@ -48,10 +48,24 @@ func (r *ReactCmd) run(cmd *cobra.Command, args []string) {
 
 	// Construct create-react-app command
 	command := []string{"npx", "create-react-app", appName}
-	if r.typescript {
+
+	switch {
+	case r.typescript && r.redux:
+		command = append(command, "--template")
+		command = append(command, "redux-typescript")
+		color.Blue("Template: Typescript")
+		color.Blue("State management: Redux")
+
+	case r.typescript:
 		command = append(command, "--template")
 		command = append(command, "typescript")
 		color.Blue("Template: Typescript")
+
+	case r.redux:
+		command = append(command, "--template")
+		command = append(command, "redux")
+		color.Blue("Template: Javascript")
+		color.Blue("State management: Redux")
 	}
 
 	// Execute create-react-app with provided arguments
@@ -62,15 +76,7 @@ func (r *ReactCmd) run(cmd *cobra.Command, args []string) {
 
 	err := c.Run()
 	if err != nil {
-		ExitGracefully(err)
-	}
-
-	// TODO: create redux boilerplate from template
-	if r.redux {
-		wg.Add(1)
-		s.Restart()
-		color.Blue("State management: Redux")
-		go r.installRedux(&wg, appName)
+		ExitGracefully(err, "Unable to create react app")
 	}
 
 	if r.materialUI {
@@ -90,26 +96,6 @@ func (r *ReactCmd) run(cmd *cobra.Command, args []string) {
 	wg.Wait()
 	s.Stop()
 	ExitGracefully(nil, "\nReact app created successfully under name: "+appName)
-}
-
-func (r *ReactCmd) installRedux(wg *sync.WaitGroup, appName string) {
-	var cmd *exec.Cmd
-	defer wg.Done()
-
-	color.Green("Installing Redux...")
-
-	os.Chdir(appName)
-
-	if react.typescript {
-		cmd = exec.Command("npm", "install", "@reduxjs/toolkit", "@types/react-redux", "react-redux")
-	} else {
-		cmd = exec.Command("npm", "install", "react-redux")
-	}
-
-	err := cmd.Run()
-	if err != nil {
-		ExitGracefully(err, "Unable to install redux")
-	}
 }
 
 func (r *ReactCmd) installMUI(wg *sync.WaitGroup, appName string) {
