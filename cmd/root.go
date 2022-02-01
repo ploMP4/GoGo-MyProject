@@ -5,12 +5,8 @@ Copyright © 2022 Kostas Artopoulos
 package cmd
 
 import (
-	"os"
-
 	"github.com/spf13/cobra"
 )
-
-var version = "1.0.0"
 
 // rootCmd represents the base command when called without any subcommands
 var rootCmd = &cobra.Command{
@@ -25,7 +21,8 @@ to quickly create a Cobra application.`,
 }
 
 func init() {
-	rootCmd.Flags().BoolP("help", "h", false, Yellow("help for "+rootCmd.Name()))
+	rootCmd.Flags().BoolP("help", "h", false, "help for "+rootCmd.Name())
+
 }
 
 // Execute adds all child commands to the root command and sets flags appropriately.
@@ -33,6 +30,6 @@ func init() {
 func Execute() {
 	err := rootCmd.Execute()
 	if err != nil {
-		os.Exit(1)
+		ExitGracefully(err)
 	}
 }

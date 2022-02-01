@@ -23,18 +23,18 @@ var next NextCmd
 func init() {
 	next.cmd = &cobra.Command{
 		Use:   "next [appname]",
-		Short: Yellow("Create next app and optionally add typescript, redux, material-ui, bootstrap"),
+		Short: "Create next app and optionally add typescript, redux, material-ui, bootstrap",
 		Args:  NameExists,
 		Run:   next.run,
 	}
 
 	rootCmd.AddCommand(next.cmd)
 
-	next.cmd.Flags().BoolP("help", "h", false, Yellow("help for react"))
-	next.cmd.Flags().BoolVarP(&next.typescript, "typescript", "t", false, Yellow("Uses typescript template"))
-	next.cmd.Flags().BoolVarP(&next.redux, "redux", "r", false, Yellow("Install redux and creates boilerplate"))
-	next.cmd.Flags().BoolVarP(&next.materialUI, "mui", "m", false, Yellow("Install  Material-UI to use as a UI library"))
-	next.cmd.Flags().BoolVarP(&next.bootstrap, "bootstrap", "b", false, Yellow("Install Bootsrap to use as a UI library"))
+	next.cmd.Flags().BoolP("help", "h", false, "help for react")
+	next.cmd.Flags().BoolVarP(&next.typescript, "typescript", "t", false, "Uses typescript template")
+	next.cmd.Flags().BoolVarP(&next.redux, "redux", "r", false, "Install redux and creates boilerplate")
+	next.cmd.Flags().BoolVarP(&next.materialUI, "mui", "m", false, "Install  Material-UI to use as a UI library")
+	next.cmd.Flags().BoolVarP(&next.bootstrap, "bootstrap", "b", false, "Install Bootsrap to use as a UI library")
 }
 
 func (n *NextCmd) run(cmd *cobra.Command, args []string) {

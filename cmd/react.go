@@ -26,18 +26,18 @@ var react ReactCmd
 func init() {
 	react.cmd = &cobra.Command{
 		Use:   "react [appname]",
-		Short: Yellow("Create react app and optionally add typescript, redux, material-ui, bootstrap"),
+		Short: "Create react app and optionally add typescript, redux, material-ui, bootstrap",
 		Args:  NameExists,
 		Run:   react.run,
 	}
 
 	rootCmd.AddCommand(react.cmd)
 
-	react.cmd.Flags().BoolP("help", "h", false, Yellow("help for react"))
-	react.cmd.Flags().BoolVarP(&react.typescript, "typescript", "t", false, Yellow("Uses typescript template"))
-	react.cmd.Flags().BoolVarP(&react.redux, "redux", "r", false, Yellow("Install redux and creates boilerplate"))
-	react.cmd.Flags().BoolVarP(&react.materialUI, "mui", "m", false, Yellow("Install  Material-UI to use as a UI library"))
-	react.cmd.Flags().BoolVarP(&react.bootstrap, "bootstrap", "b", false, Yellow("Install Bootsrap to use as a UI library"))
+	react.cmd.Flags().BoolP("help", "h", false, "help for react")
+	react.cmd.Flags().BoolVarP(&react.typescript, "typescript", "t", false, "Uses typescript template")
+	react.cmd.Flags().BoolVarP(&react.redux, "redux", "r", false, "Install redux and creates boilerplate")
+	react.cmd.Flags().BoolVarP(&react.materialUI, "mui", "m", false, "Install  Material-UI to use as a UI library")
+	react.cmd.Flags().BoolVarP(&react.bootstrap, "bootstrap", "b", false, "Install Bootsrap to use as a UI library")
 }
 
 func (r *ReactCmd) run(cmd *cobra.Command, args []string) {

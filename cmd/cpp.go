@@ -21,7 +21,7 @@ func init() {
 	cpp.cmd = &cobra.Command{
 		Use:     "cpp [appname]",
 		Aliases: []string{"c++"},
-		Short:   Yellow("Create c++ application"),
+		Short:   "Create c++ application",
 		Args:    NameExists,
 		Run:     cpp.run,
 	}
