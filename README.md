@@ -25,8 +25,10 @@ gogo react myapp ts redux
 
 - [ ] Django
 
-  - [ ] DjangoRestFramework
-  - [ ] DjangoJWT
+  - [x] DjangoRestFramework
+  - [x] DjangoJWT
+  - [ ] User Auth app
+  - [ ] CorsHeaders
 
 ---
 
