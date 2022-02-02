@@ -27,6 +27,7 @@ gogo react myapp ts redux
 
   - [x] DjangoRestFramework
   - [x] DjangoJWT
+  - [ ] Static Files
   - [ ] User Auth app
   - [x] CorsHeaders
 

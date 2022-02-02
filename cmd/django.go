@@ -38,10 +38,10 @@ func init() {
 	django.cmd.Flags().BoolVarP(&django.auth, "auth", "a", false, "Create users django app with custom authentication (NOTE: Uses JWT)")
 }
 
+// Function that runs when you execute the command
 func (d *DjangoCmd) run(cmd *cobra.Command, args []string) {
 	var wg sync.WaitGroup
 
-	// Create app dir
 	appName := args[0]
 
 	// Create virtualenv
@@ -71,6 +71,7 @@ func (d *DjangoCmd) run(cmd *cobra.Command, args []string) {
 		ExitGracefully(err)
 	}
 
+	// Install DjangoRestFramework
 	if d.restframework {
 		wg.Add(1)
 		s.Restart()
@@ -78,6 +79,7 @@ func (d *DjangoCmd) run(cmd *cobra.Command, args []string) {
 		go d.installRestFramework(&wg, appName)
 	}
 
+	// Install Django CORS Headers
 	if d.cors {
 		wg.Add(1)
 		s.Restart()
@@ -85,6 +87,7 @@ func (d *DjangoCmd) run(cmd *cobra.Command, args []string) {
 		go d.installCORS(&wg, appName)
 	}
 
+	// Install Django Simple JWT
 	if d.jwt {
 		wg.Add(1)
 		s.Restart()
@@ -97,7 +100,10 @@ func (d *DjangoCmd) run(cmd *cobra.Command, args []string) {
 	ExitGracefully(nil, "Django project created successfully under name: "+appName)
 }
 
-func (d *DjangoCmd) createVirtualEnv() {
+// Creates a python virtual environment called env
+// inside the folder you executed the command from.
+// Uses python's virtualenv package
+func (d DjangoCmd) createVirtualEnv() {
 	c := exec.Command("virtualenv", "env")
 
 	err := c.Run()
@@ -106,7 +112,10 @@ func (d *DjangoCmd) createVirtualEnv() {
 	}
 }
 
-func (d *DjangoCmd) editSettings(appName, splitOn, toAppend string) {
+// Adds a string in the settings.py file either at the end of the file
+// if the splitOn argument is an empty string or by splitting the file by the string
+// specified in splitOn and appending it there
+func (d DjangoCmd) editSettings(appName, splitOn, toAppend string) {
 	var settings string
 
 	content, err := os.ReadFile(fmt.Sprintf("%s/%s/settings.py", appName, appName))
@@ -114,12 +123,12 @@ func (d *DjangoCmd) editSettings(appName, splitOn, toAppend string) {
 		ExitGracefully(err)
 	}
 
-	if splitOn != "" {
+	if splitOn != "" { // Append after certain string in the file
 		s := strings.Split(string(content), splitOn)
 		s[0] += toAppend
 
 		settings = strings.Join(s, " ")
-	} else {
+	} else { // Append at the end of file
 		settings = string(content) + toAppend
 	}
 
@@ -129,7 +138,8 @@ func (d *DjangoCmd) editSettings(appName, splitOn, toAppend string) {
 	}
 }
 
-func (d *DjangoCmd) installRestFramework(wg *sync.WaitGroup, appName string) {
+// Installs the djangorestframework package and adds the required settings to settings.py
+func (d DjangoCmd) installRestFramework(wg *sync.WaitGroup, appName string) {
 	defer wg.Done()
 
 	c := exec.Command("./env/bin/pip", "install", "djangorestframework")
@@ -143,7 +153,8 @@ func (d *DjangoCmd) installRestFramework(wg *sync.WaitGroup, appName string) {
 	d.editSettings(appName, "'django.contrib.staticfiles',", "'django.contrib.staticfiles',\n\t'rest_framework',")
 }
 
-func (d *DjangoCmd) installCORS(wg *sync.WaitGroup, appName string) {
+// Installs the django-cors-headers package and adds the required settings to settings.py
+func (d DjangoCmd) installCORS(wg *sync.WaitGroup, appName string) {
 	defer wg.Done()
 
 	c := exec.Command("./env/bin/pip", "install", "django-cors-headers")
@@ -163,7 +174,8 @@ func (d *DjangoCmd) installCORS(wg *sync.WaitGroup, appName string) {
 	d.editSettings(appName, "", "\n# Change in production\nCORS_ALLOW_ALL_ORIGINS = True")
 }
 
-func (d *DjangoCmd) installJWT(wg *sync.WaitGroup, appName string) {
+// Installs the djangorestframework-simplejwt package and adds the required settings to settings.py
+func (d DjangoCmd) installJWT(wg *sync.WaitGroup, appName string) {
 	defer wg.Done()
 
 	c := exec.Command("./env/bin/pip", "install", "djangorestframework-simplejwt")
@@ -185,6 +197,6 @@ MIDDLEWARE = [`
 	d.editSettings(appName, "MIDDLEWARE = [", appendString)
 }
 
-func (d *DjangoCmd) createAuth() {
+func (d DjangoCmd) createAuth() {
 
 }
