@@ -1,6 +1,6 @@
 # GoGo MyProject
-https://gianarb.it/blog/golang-mockmania-cli-command-with-cobra
----
+
+## https://gianarb.it/blog/golang-mockmania-cli-command-with-cobra
 
 gogo [type] [appname] [flags]
 
@@ -28,7 +28,7 @@ gogo react myapp ts redux
   - [x] DjangoRestFramework
   - [x] DjangoJWT
   - [ ] User Auth app
-  - [ ] CorsHeaders
+  - [x] CorsHeaders
 
 ---
 
@@ -49,3 +49,19 @@ gogo react myapp ts redux
   - [x] Typescript
 
 ---
+
+- [ ] NextJS + Django
+
+  - [ ] User Auth
+  - [ ] Redux
+  - [ ] Material-UI
+  - [ ] Bootstrap
+
+---
+
+- [ ] React + Django
+
+  - [ ] User Auth
+  - [ ] Redux
+  - [ ] Material-UI
+  - [ ] Bootstrap

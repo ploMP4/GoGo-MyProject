@@ -15,6 +15,7 @@ type DjangoCmd struct {
 	restframework bool
 	auth          bool
 	jwt           bool
+	cors          bool
 	cmd           *cobra.Command
 }
 
@@ -33,6 +34,7 @@ func init() {
 	django.cmd.Flags().BoolP("help", "h", false, "help for django")
 	django.cmd.Flags().BoolVarP(&django.restframework, "restframework", "r", false, "Install and setup DjangoRestFramework")
 	django.cmd.Flags().BoolVarP(&django.jwt, "jwt", "j", false, "Add JSON Web Tokens to use for user authentication")
+	django.cmd.Flags().BoolVarP(&django.cors, "cors", "c", false, "Install django-cors-headers")
 	django.cmd.Flags().BoolVarP(&django.auth, "auth", "a", false, "Create users django app with custom authentication (NOTE: Uses JWT)")
 }
 
@@ -76,6 +78,13 @@ func (d *DjangoCmd) run(cmd *cobra.Command, args []string) {
 		go d.installRestFramework(&wg, appName)
 	}
 
+	if d.cors {
+		wg.Add(1)
+		s.Restart()
+		color.Green("Installing CORS Headers")
+		go d.installCORS(&wg, appName)
+	}
+
 	if d.jwt {
 		wg.Add(1)
 		s.Restart()
@@ -97,6 +106,29 @@ func (d *DjangoCmd) createVirtualEnv() {
 	}
 }
 
+func (d *DjangoCmd) editSettings(appName, splitOn, toAppend string) {
+	var settings string
+
+	content, err := os.ReadFile(fmt.Sprintf("%s/%s/settings.py", appName, appName))
+	if err != nil {
+		ExitGracefully(err)
+	}
+
+	if splitOn != "" {
+		s := strings.Split(string(content), splitOn)
+		s[0] += toAppend
+
+		settings = strings.Join(s, " ")
+	} else {
+		settings = string(content) + toAppend
+	}
+
+	err = os.WriteFile(fmt.Sprintf("%s/%s/settings.py", appName, appName), []byte(settings), 0644)
+	if err != nil {
+		ExitGracefully(err)
+	}
+}
+
 func (d *DjangoCmd) installRestFramework(wg *sync.WaitGroup, appName string) {
 	defer wg.Done()
 
@@ -108,18 +140,27 @@ func (d *DjangoCmd) installRestFramework(wg *sync.WaitGroup, appName string) {
 	}
 
 	// Add restframework to settings.py
-	content, err := os.ReadFile(fmt.Sprintf("%s/%s/settings.py", appName, appName))
+	d.editSettings(appName, "'django.contrib.staticfiles',", "'django.contrib.staticfiles',\n\t'rest_framework',")
+}
+
+func (d *DjangoCmd) installCORS(wg *sync.WaitGroup, appName string) {
+	defer wg.Done()
+
+	c := exec.Command("./env/bin/pip", "install", "django-cors-headers")
+
+	err := c.Run()
 	if err != nil {
-		ExitGracefully(err)
+		ExitGracefully(err, "Unable to install django-cors-headers")
 	}
 
-	settings := strings.Split(string(content), "'django.contrib.staticfiles',")
-	settings[0] += "'django.contrib.staticfiles',\n\t'rest_framework'"
+	// Add cors headers to INSTALLED_APPS in settings.py
+	d.editSettings(appName, "'django.contrib.staticfiles',", "'django.contrib.staticfiles',\n\t'corsheaders',")
 
-	err = os.WriteFile(fmt.Sprintf("%s/%s/settings.py", appName, appName), []byte(strings.Join(settings, " ")), 0644)
-	if err != nil {
-		ExitGracefully(err)
-	}
+	// Add cors headers to MIDDLEWARE in settings.py
+	d.editSettings(appName, "MIDDLEWARE = [", "MIDDLEWARE = [\n\t'corsheaders.middleware.CorsMiddleware',")
+
+	// Set cors origins
+	d.editSettings(appName, "", "\n# Change in production\nCORS_ALLOW_ALL_ORIGINS = True")
 }
 
 func (d *DjangoCmd) installJWT(wg *sync.WaitGroup, appName string) {
@@ -133,24 +174,15 @@ func (d *DjangoCmd) installJWT(wg *sync.WaitGroup, appName string) {
 	}
 
 	// Add JWT to settings.py
-	content, err := os.ReadFile(fmt.Sprintf("%s/%s/settings.py", appName, appName))
-	if err != nil {
-		ExitGracefully(err)
-	}
-
-	settings := strings.Split(string(content), "MIDDLEWARE = [")
-	settings[0] += `REST_FRAMEWORK = {
+	appendString := `REST_FRAMEWORK = {
 	'DEFAULT_AUTHENTICATION_CLASSES': (
 		'rest_framework_simplejwt.authentication.JWTAuthentication',
 	)
 }
-
+	
 MIDDLEWARE = [`
 
-	err = os.WriteFile(fmt.Sprintf("%s/%s/settings.py", appName, appName), []byte(strings.Join(settings, " ")), 0644)
-	if err != nil {
-		ExitGracefully(err)
-	}
+	d.editSettings(appName, "MIDDLEWARE = [", appendString)
 }
 
 func (d *DjangoCmd) createAuth() {
