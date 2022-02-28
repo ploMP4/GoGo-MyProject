@@ -4,7 +4,7 @@
 
 gogo [type] [appname] [flags]
 
-gogo react myapp ts redux
+- [ ] Change error handling
 
 ---
 
@@ -54,9 +54,12 @@ gogo react myapp ts redux
 - [ ] NextJS + Django
 
   - [ ] User Auth
-  - [ ] Redux
-  - [ ] Material-UI
-  - [ ] Bootstrap
+  - [x] Redux
+  - [x] Material-UI
+  - [x] Bootstrap
+  - [x] DjangoRestFramework
+  - [x] DjangoJWT
+  - [x] CorsHeaders
 
 ---
 
