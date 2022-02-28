@@ -97,7 +97,7 @@ func (d *DjangoCmd) run(cmd *cobra.Command, args []string) {
 
 	wg.Wait()
 	s.Stop()
-	ExitGracefully(nil, "Django project created successfully under name: "+appName)
+	color.Green("Django project created successfully under name: " + appName)
 }
 
 // Creates a python virtual environment called env
@@ -197,6 +197,6 @@ MIDDLEWARE = [`
 	d.editSettings(appName, "MIDDLEWARE = [", appendString)
 }
 
-func (d DjangoCmd) createAuth() {
+// func (d DjangoCmd) createAuth() {
 
-}
+// }

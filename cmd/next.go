@@ -9,13 +9,9 @@ import (
 )
 
 type NextCmd struct {
-	typescript bool
-	redux      bool
-	materialUI bool
-	bootstrap  bool
-	cmd        *cobra.Command
+	cmd *cobra.Command
 
-	react ReactCmd
+	ReactCmd
 }
 
 var next NextCmd
@@ -78,17 +74,17 @@ func (n *NextCmd) run(cmd *cobra.Command, args []string) {
 		wg.Add(1)
 		s.Restart()
 		color.Blue("UI Library: Material-UI")
-		go n.react.installMUI(&wg, appName)
+		go n.installMUI(&wg, appName)
 	}
 
 	if n.bootstrap {
 		wg.Add(1)
 		s.Restart()
 		color.Blue("UI Library: Bootstrap")
-		go n.react.installBootstrap(&wg, appName)
+		go n.installBootstrap(&wg, appName)
 	}
 
 	wg.Wait()
 	s.Stop()
-	ExitGracefully(nil, "\nNext app created successfully under name: "+appName)
+	color.Green("Next app created successfully under name: " + appName)
 }
