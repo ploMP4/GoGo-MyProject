@@ -79,6 +79,9 @@ func (r *ReactCmd) run(cmd *cobra.Command, args []string) {
 		ExitGracefully(err, "Unable to create react app")
 	}
 
+	wg.Add(1)
+	go r.installRouter(&wg)
+
 	if r.materialUI {
 		wg.Add(1)
 		s.Restart()
@@ -96,6 +99,16 @@ func (r *ReactCmd) run(cmd *cobra.Command, args []string) {
 	wg.Wait()
 	s.Stop()
 	ExitGracefully(nil, "\nReact app created successfully under name: "+appName)
+}
+
+func (r *ReactCmd) installRouter(wg *sync.WaitGroup) {
+	defer wg.Done()
+	c := exec.Command("npm", "install", "react-router-dom")
+
+	err := c.Run()
+	if err != nil {
+		ExitGracefully(err, "Unable to install react router")
+	}
 }
 
 func (r *ReactCmd) installMUI(wg *sync.WaitGroup, appName string) {
