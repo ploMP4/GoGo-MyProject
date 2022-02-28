@@ -11,13 +11,10 @@ import (
 // rootCmd represents the base command when called without any subcommands
 var rootCmd = &cobra.Command{
 	Use:   "gogo",
-	Short: "A brief description of your application",
-	Long: `A longer description that spans multiple lines and likely contains
-examples and usage of using your application. For example:
-
-Cobra is a CLI library for Go that empowers applications.
-This application is a tool to generate the needed files
-to quickly create a Cobra application.`,
+	Short: "A CLI tool to create starter boilerplate for you",
+	Long: `GoGo is a CLI tool that creates the starter boilerplate 
+for your projects and it's really helpfull for people
+who use many different programming languages and frameworks.`,
 }
 
 func init() {
