@@ -1,0 +1,46 @@
+{
+  "commands": [["npx", "create-next-app"]],
+  "subCommands": {
+    "redux": {
+      "name": "Redux",
+      "command": ["npx", "create-next-app", "--example", "with-redux-thunk"],
+      "override": true,
+      "help": "Use redux example of create-next-app"
+    },
+
+    "ts": {
+      "name": "Typescript",
+      "command": ["npx", "create-next-app", "--typescript"],
+      "override": true,
+      "help": "Use typescript with create-next-app"
+    },
+
+    "redux-ts": {
+      "name": "Redux-Typescript",
+      "command": ["npx", "create-next-app", "--example", "with-redux"],
+      "override": true,
+      "help": "Use redux-typescript example of create-next-app"
+    },
+
+    "mui": {
+      "name": "Material-UI",
+      "command": [
+        "npm",
+        "install",
+        "@mui/material",
+        "@emotion/react",
+        "@emotion/styled"
+      ],
+      "override": false,
+      "help": "Install material-ui library"
+    },
+
+    "bootstrap": {
+      "name": "Bootstrap",
+      "command": ["npm", "install", "react-bootstrap"],
+      "override": false,
+      "help": "Install react-bootstrap library"
+    }
+  },
+  "help": "Create nextJS app"
+}

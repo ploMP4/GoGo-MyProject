@@ -4,11 +4,11 @@
 
 gogo [type] [appname] [flags]
 
-- [ ] Change error handling
+- [x] Change error handling
 
 ---
 
-- [x] C++
+- [ ] C++
 
   - [ ] OpenGL
   - [ ] CMake
@@ -23,13 +23,13 @@ gogo [type] [appname] [flags]
 
 ---
 
-- [ ] Django
+- [x] Django
 
-  - [x] DjangoRestFramework
-  - [x] DjangoJWT
+  - [ ] DjangoRestFramework
+  - [ ] DjangoJWT
   - [ ] Static Files
   - [ ] User Auth app
-  - [x] CorsHeaders
+  - [ ] CorsHeaders
 
 ---
 
@@ -54,12 +54,12 @@ gogo [type] [appname] [flags]
 - [ ] NextJS + Django
 
   - [ ] User Auth
-  - [x] Redux
-  - [x] Material-UI
-  - [x] Bootstrap
-  - [x] DjangoRestFramework
-  - [x] DjangoJWT
-  - [x] CorsHeaders
+  - [ ] Redux
+  - [ ] Material-UI
+  - [ ] Bootstrap
+  - [ ] DjangoRestFramework
+  - [ ] DjangoJWT
+  - [ ] CorsHeaders
 
 ---
 
@@ -69,3 +69,14 @@ gogo [type] [appname] [flags]
   - [ ] Redux
   - [ ] Material-UI
   - [ ] Bootstrap
+  - [ ] DjangoRestFramework
+  - [ ] DjangoJWT
+  - [ ] CorsHeaders
+
+
+TODO:
+
+- [ ] Add Commands to help menu from config file
+- [ ] Create settings file with config path etc...
+- [ ] Create Commands for other projects
+- [x] Make working subcommands 

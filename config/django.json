@@ -1,0 +1,11 @@
+{
+  "commands": [
+    ["virtualenv", "env"],
+    ["./env/bin/pip", "install", "django"],
+    ["./env/bin/django-admin", "startproject"]
+  ],
+
+  "subCommands": {},
+
+  "help": "Create django app"
+}

@@ -16,12 +16,12 @@ func copyFileFromTemplate(templatePath, targetFile string) error {
 
 	data, err := templateFS.ReadFile(templatePath)
 	if err != nil {
-		ExitGracefully(err)
+		exitGracefully(err)
 	}
 
 	err = copyDataToFile(data, targetFile)
 	if err != nil {
-		ExitGracefully(err)
+		exitGracefully(err)
 	}
 
 	return nil

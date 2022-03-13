@@ -1,32 +1,138 @@
-/*
-Copyright © 2022 Kostas Artopoulos
-
-*/
 package cmd
 
 import (
-	"github.com/spf13/cobra"
+	"errors"
+	"os"
+	"os/exec"
+	"sync"
+
+	"github.com/briandowns/spinner"
+	"github.com/fatih/color"
 )
 
-// rootCmd represents the base command when called without any subcommands
-var rootCmd = &cobra.Command{
-	Use:   "gogo",
-	Short: "A CLI tool to create starter boilerplate for you",
-	Long: `GoGo is a CLI tool that creates the starter boilerplate 
-for your projects and it's really helpfull for people
-who use many different programming languages and frameworks.`,
-}
+var version = "0.2.0"
 
-func init() {
-	rootCmd.Flags().BoolP("help", "h", false, "help for "+rootCmd.Name())
-
-}
-
-// Execute adds all child commands to the root command and sets flags appropriately.
-// This is called by main.main(). It only needs to happen once to the rootCmd.
 func Execute() {
-	err := rootCmd.Execute()
+	var message string
+	command, appName, args, err := validateInput()
+	s := loadSpinner()
+
 	if err != nil {
-		ExitGracefully(err)
+		exitGracefully(err)
 	}
+
+	switch command {
+	case "help":
+		showHelp()
+
+	case "version":
+		color.Green("Application version: " + version)
+
+	default:
+		message, err = run(command, appName, args, s)
+	}
+
+	s.Stop()
+	exitGracefully(err, message)
+}
+
+func validateInput() (string, string, []string, error) {
+	var command, appName string
+	var args []string
+
+	if len(os.Args) > 1 {
+		command = os.Args[1]
+
+		if len(os.Args) >= 3 {
+			appName = os.Args[2]
+		}
+
+		if len(os.Args) >= 4 {
+			args = os.Args[3:]
+		}
+	} else {
+		showHelp()
+		return "", "", nil, errors.New("no command provided")
+	}
+
+	return command, appName, args, nil
+}
+
+func run(filename, appName string, args []string, s *spinner.Spinner) (string, error) {
+	parser := Parser{args: args}
+
+	err := parser.parseJson(filename)
+	if err != nil {
+		return "", err
+	}
+
+	if appName == "" {
+		return "", errors.New("appname was not provided")
+	}
+
+	mainCommands, otherCommands := parser.parseArgs()
+	mainCommands[len(mainCommands)-1] = append(mainCommands[len(mainCommands)-1], appName)
+
+	s.Start()
+
+	msg, err := runMainCommands(mainCommands, s)
+	if err != nil {
+		return msg, err
+	}
+
+	s.Restart()
+	showMessage("Created Project", appName)
+
+	os.Chdir(appName)
+	runSubCommands(otherCommands, s)
+
+	s.Stop()
+	return "\nApp Created Successfully: " + appName, nil
+}
+
+func runMainCommands(mainCommands MainCommmands, s *spinner.Spinner) (string, error) {
+	for _, cmd := range mainCommands {
+		s.Restart()
+		showMessage("Running", cmd...)
+
+		c := exec.Command(cmd[0], cmd[1:]...)
+		err := c.Run()
+		if err != nil {
+			return "Unable to execute command: " + cmd[0], err
+		}
+	}
+
+	return "", nil
+}
+
+func runSubCommands(subcommands []SubCommand, s *spinner.Spinner) {
+	var wg sync.WaitGroup
+
+	for _, command := range subcommands {
+		s.Restart()
+		showMessage("Installing", command.Name)
+
+		if command.Parallel {
+			wg.Add(1)
+			go func(wg *sync.WaitGroup, command []string) {
+				defer wg.Done()
+
+				c := exec.Command(command[0], command[1:]...)
+				err := c.Run()
+				if err != nil {
+					color.Yellow("Failed to execute %s\n", command)
+					color.Red("Error: %v\n", err)
+				}
+			}(&wg, command.Command)
+		} else {
+			c := exec.Command(command.Command[0], command.Command[1:]...)
+			err := c.Run()
+			if err != nil {
+				color.Yellow("Failed to execute %s\n", command)
+				color.Red("Error: %v\n", err)
+			}
+		}
+	}
+
+	wg.Wait()
 }

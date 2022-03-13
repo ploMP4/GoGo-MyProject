@@ -4,7 +4,7 @@ CC = g++
 
 build: 
     @echo Compiling...
-    $(CC) -o bin/main -O3 -I $(INCLUDEDIR) ./src/*.cpp
+    $(CC) -o bin/main -I $(INCLUDEDIR) ./src/*.cpp
 
 run: build
     ./bin/main
