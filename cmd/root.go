@@ -10,6 +10,7 @@ import (
 	"github.com/fatih/color"
 )
 
+// Application Version
 var version = "0.2.0"
 
 func Execute() {
@@ -36,6 +37,9 @@ func Execute() {
 	exitGracefully(err, message)
 }
 
+// Validate that the user passed what command he wants
+// to execute and also return with it the appname and
+// the rest of the args for later use
 func validateInput() (string, string, []string, error) {
 	var command, appName string
 	var args []string
@@ -90,6 +94,8 @@ func run(filename, appName string, args []string, s *spinner.Spinner) (string, e
 	return "\nApp Created Successfully: " + appName, nil
 }
 
+// Used to run all the main commands and throw an error if
+// something goes wrong
 func runMainCommands(mainCommands MainCommmands, s *spinner.Spinner) (string, error) {
 	for _, cmd := range mainCommands {
 		s.Restart()
@@ -105,6 +111,9 @@ func runMainCommands(mainCommands MainCommmands, s *spinner.Spinner) (string, er
 	return "", nil
 }
 
+// Used to run all the subcommands either concurrently or by themselves
+// based on the value of SubCommand.parallel. Displays a message if
+// there is an error
 func runSubCommands(subcommands []SubCommand, s *spinner.Spinner) {
 	var wg sync.WaitGroup
 

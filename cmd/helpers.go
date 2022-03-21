@@ -9,6 +9,9 @@ import (
 	"github.com/fatih/color"
 )
 
+// Exits the program gracefully and
+// displays a message and an error message
+// if there are passed any.
 func exitGracefully(err error, msg ...string) {
 	message := ""
 	if len(msg) > 0 {
@@ -28,6 +31,7 @@ func exitGracefully(err error, msg ...string) {
 	os.Exit(0)
 }
 
+// Print the help menu
 func showHelp() {
 	fmt.Printf(`%s
 
@@ -41,6 +45,8 @@ func showHelp() {
 `, Yellow("Usage:"), Yellow("Available commands:"))
 }
 
+// Used to display status messages
+// e.x. Running: npm install
 func showMessage(prefix string, message ...string) {
 	fmt.Printf("%s: %s\n", Yellow(prefix), message)
 }
