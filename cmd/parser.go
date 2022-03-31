@@ -2,15 +2,18 @@ package cmd
 
 import (
 	"encoding/json"
+	"fmt"
 	"io/ioutil"
 	"os"
+	"strings"
 )
 
 // Used to parse the arguments passed in and
 // the json file specified
 type Parser struct {
-	json Json     // The json file name
-	args []string // Arguments passed
+	configPath string   // Path of folder containing json files
+	json       Json     // The json file name
+	args       []string // Arguments passed
 }
 
 // We can have many main commands and commands
@@ -44,7 +47,7 @@ type SubCommand struct {
 // Check if a file with the name passed in by the user exists
 // and parse its contents into the Parser.json
 func (p *Parser) parseJson(filename string) error {
-	jsonFile, err := os.Open("./config/" + filename + ".json")
+	jsonFile, err := os.Open(fmt.Sprintf("%s/%s.json", p.configPath, filename))
 	if err != nil {
 		return err
 	}
@@ -60,6 +63,24 @@ func (p *Parser) parseJson(filename string) error {
 	}
 
 	return nil
+}
+
+// Parse and return the help commands for the json files
+func (p Parser) getHelp() []string {
+	helpCommands := []string{}
+
+	files, err := ioutil.ReadDir(p.configPath)
+	if err != nil {
+		return nil
+	}
+
+	for _, file := range files {
+		filename := strings.Split(file.Name(), ".")[0]
+		p.parseJson(filename)
+		helpCommands = append(helpCommands, fmt.Sprintf("\n\t%s \t\t- %s", filename, p.json.Help))
+	}
+
+	return helpCommands
 }
 
 // Use the parsed json file and the args to construct

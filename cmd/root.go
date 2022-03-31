@@ -63,7 +63,10 @@ func validateInput() (string, string, []string, error) {
 }
 
 func run(filename, appName string, args []string, s *spinner.Spinner) (string, error) {
-	parser := Parser{args: args}
+	parser := Parser{
+		configPath: "./config",
+		args:       args,
+	}
 
 	err := parser.parseJson(filename)
 	if err != nil {

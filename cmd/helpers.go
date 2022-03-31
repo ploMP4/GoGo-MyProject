@@ -3,6 +3,7 @@ package cmd
 import (
 	"fmt"
 	"os"
+	"strings"
 	"time"
 
 	"github.com/briandowns/spinner"
@@ -33,16 +34,26 @@ func exitGracefully(err error, msg ...string) {
 
 // Print the help menu
 func showHelp() {
-	fmt.Printf(`%s
+	p := Parser{configPath: "./config"}
+	helpCommands := p.getHelp()
+
+	fmt.Printf(`A CLI tool to create starter boilerplate for you
+
+GoGo is a CLI tool that creates the starter boilerplate 
+for your projects and it's really helpfull for people
+who use many different programming languages and frameworks.
+
+%s
 
 	gogo <COMMAND> <APPNAME> [args]
 
 %s
 
-	help     -show the help menu
-	version  -print application version
+	help            - show the help menu
+	version         - print application version
+	%v
 
-`, Yellow("Usage:"), Yellow("Available commands:"))
+`, Yellow("Usage:"), Yellow("Available commands:"), strings.Trim(fmt.Sprint(helpCommands), "[]"))
 }
 
 // Used to display status messages
