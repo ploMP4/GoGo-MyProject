@@ -77,7 +77,7 @@ func (p Parser) getHelp() []string {
 	for _, file := range files {
 		filename := strings.Split(file.Name(), ".")[0]
 		p.parseJson(filename)
-		helpCommands = append(helpCommands, fmt.Sprintf("\n\t%s \t\t- %s", filename, p.json.Help))
+		helpCommands = append(helpCommands, fmt.Sprintf("\n%15s   - %s", filename, p.json.Help))
 	}
 
 	return helpCommands

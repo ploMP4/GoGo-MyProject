@@ -1,8 +1,6 @@
 # GoGo MyProject
 
-## https://gianarb.it/blog/golang-mockmania-cli-command-with-cobra
-
-gogo [type] [appname] [flags]
+gogo \<COMMAND> \<APPNAME> [args]
 
 - [x] Change error handling
 
@@ -76,7 +74,7 @@ gogo [type] [appname] [flags]
 
 TODO:
 
-- [ ] Add Commands to help menu from config file
+- [x] Add Commands to help menu from config file
 - [ ] Create settings file with config path etc...
 - [ ] Create Commands for other projects
 - [x] Make working subcommands 

@@ -49,11 +49,11 @@ who use many different programming languages and frameworks.
 
 %s
 
-	help            - show the help menu
-	version         - print application version
+	   help   - show the help menu
+	version   - print application version
 	%v
 
-`, Yellow("Usage:"), Yellow("Available commands:"), strings.Trim(fmt.Sprint(helpCommands), "[]"))
+`, Yellow("USAGE:"), Yellow("AVAILABLE COMMANDS:"), strings.Trim(fmt.Sprint(helpCommands), "[]"))
 }
 
 // Used to display status messages
