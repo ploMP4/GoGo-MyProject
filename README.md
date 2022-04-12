@@ -78,3 +78,4 @@ TODO:
 - [ ] Create settings file with config path etc...
 - [ ] Create Commands for other projects
 - [x] Make working subcommands 
+- [ ] Setup file manipulation functionality
