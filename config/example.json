@@ -1,0 +1,27 @@
+{
+  "commands": [],
+
+  "subCommands": {
+    "command-name": {
+      "name": "",
+      "command": [],
+
+      "override": true,
+      "parallel": false,
+
+      "files": {
+        "filename": {
+          "template": false,
+          "change": {
+            "splitOn": "",
+            "append": ""
+          }
+        }
+      },
+
+      "help": ""
+    }
+  },
+
+  "help": "help"
+}

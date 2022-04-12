@@ -27,6 +27,11 @@ type MainCommmands [][]string
 // as the value so we translate it to a map[string]SubCommand
 type SubCommands map[string]SubCommand
 
+// We can change many files with different ways each.
+// Files is an object with the filename we want to change
+// as the key and the properties for the value
+type FilesType map[string]File
+
 // Describe the main json config file
 type Json struct {
 	Commands    MainCommmands `json:"commands"`    // Array with the commands that will be executed. Note: commands should be passed as an array instead of using spaces e.x ["npx", "create-react-app"]
@@ -37,11 +42,24 @@ type Json struct {
 
 // Describe a subcommand
 type SubCommand struct {
-	Name     string   `json:"name"`     // Name that will be displayed in the Installing status message e.x Installing: React
-	Command  []string `json:"command"`  // The command that will be executed.  Note: commands should be passed as an array instead of using spaces e.x ["npx", "create-react-app"]
-	Override bool     `json:"override"` // Overrides the last command in the main commands array and runs this instead
-	Parallel bool     `json:"parallel"` // Sets if the command will be run concurrently with others or not
-	Help     string   `json:"help"`     // Help text for the command
+	Name     string    `json:"name"`     // Name that will be displayed in the Installing status message e.x Installing: React
+	Command  []string  `json:"command"`  // The command that will be executed.  Note: commands should be passed as an array instead of using spaces e.x ["npx", "create-react-app"]
+	Override bool      `json:"override"` // Overrides the last command in the main commands array and runs this instead
+	Parallel bool      `json:"parallel"` // Sets if the command will be run concurrently with others or not
+	Files    FilesType `json:"files"`    // Specify files that you want to change
+	Help     string    `json:"help"`     // Help text for the command
+}
+
+// Describe a file object
+type File struct {
+	Template bool       `json:"template"` // Specify if the file will be updated from an existing template
+	Change   FileChange `json:"change"`   // Properties about changing the file
+}
+
+// Describe file change properties object
+type FileChange struct {
+	SplitOn string `json:"splitOn"` // Specify string to split the file on
+	Append  string `json:"append"`  // Content that will be appended after the split on
 }
 
 // Check if a file with the name passed in by the user exists
