@@ -13,7 +13,8 @@
       "parallel": true,
 
       "files": {
-        "backend/settings.py": {
+        "rest-framework to installed apps": {
+          "filepath": "backend/settings.py",
           "change": {
             "splitOn": "'django.contrib.staticfiles',",
             "append": "\n\t'rest_framework',"
@@ -22,6 +23,60 @@
       },
 
       "help": "Install and setup DjangoRestFramework"
+    },
+
+    "cors": {
+      "name": "cors-headers",
+      "command": ["../env/bin/pip", "install", "django-cors-headers"],
+
+      "parallel": true,
+
+      "files": {
+        "CORS to installed apps": {
+          "filepath": "backend/settings.py",
+          "change": {
+            "splitOn": "'django.contrib.staticfiles',",
+            "append": "\n\t'corsheaders',"
+          }
+        },
+
+        "CORS middleware": {
+          "filepath": "backend/settings.py",
+          "change": {
+            "splitOn": "MIDDLEWARE = [",
+            "append": "\n\t'corsheaders.middleware.CorsMiddleware',"
+          }
+        },
+
+        "CORS settings": {
+          "filepath": "backend/settings.py",
+          "change": {
+            "splitOn": "",
+            "append": "\n# Change in production\nCORS_ALLOW_ALL_ORIGINS = True"
+          }
+        }
+      },
+
+      "help": "Install django-cors-headers"
+    },
+
+    "jwt": {
+      "name": "json-web-tokens",
+      "command": ["../env/bin/pip", "install", "djangorestframework-simplejwt"],
+
+      "parallel": true,
+
+      "files": {
+        "JWT settings": {
+          "filepath": "backend/settings.py",
+          "change": {
+            "splitOn": "# Application definition",
+            "append": "\nREST_FRAMEWORK = {\n\t'DEFAULT_AUTHENTICATION_CLASSES': (\n\t\t'rest_framework_simplejwt.authentication.JWTAuthentication',\n\t)\n}"
+          }
+        }
+      },
+
+      "help": "Add JSON Web Tokens to use for user authentication"
     }
   },
 
