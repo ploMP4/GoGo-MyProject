@@ -2,8 +2,6 @@
 
 gogo \<COMMAND> \<APPNAME> [args]
 
-- [x] Change error handling
-
 ---
 
 - [ ] C++
@@ -23,11 +21,11 @@ gogo \<COMMAND> \<APPNAME> [args]
 
 - [x] Django
 
-  - [ ] DjangoRestFramework
-  - [ ] DjangoJWT
+  - [x] DjangoRestFramework
+  - [x] DjangoJWT
   - [ ] Static Files
   - [ ] User Auth app
-  - [ ] CorsHeaders
+  - [x] CorsHeaders
 
 ---
 
@@ -71,11 +69,15 @@ gogo \<COMMAND> \<APPNAME> [args]
   - [ ] DjangoJWT
   - [ ] CorsHeaders
 
-
 TODO:
 
+- [x] Change error handling
 - [x] Add Commands to help menu from config file
 - [ ] Create settings file with config path etc...
 - [ ] Create Commands for other projects
-- [x] Make working subcommands 
-- [ ] Setup file manipulation functionality
+- [x] Make working subcommands
+- [x] Setup file manipulation functionality
+- [x] Copy files from template
+- [ ] Create help menu for subcommands
+- [ ] All flag
+- [ ] Exclude flag
