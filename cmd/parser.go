@@ -28,8 +28,8 @@ type MainCommmands [][]string
 type SubCommands map[string]SubCommand
 
 // We can change many files with different ways each.
-// Files is an object with the filename we want to change
-// as the key and the properties for the value
+// Files is an object with the key being a small
+// description to print out to the user and the properties for the values
 type FilesType map[string]File
 
 // Describe the main json config file
@@ -52,6 +52,7 @@ type SubCommand struct {
 
 // Describe a file object
 type File struct {
+	Filepath string     `json:"filepath"` // Path where the file we want to edit is located. Path starts from the root file of our project
 	Template bool       `json:"template"` // Specify if the file will be updated from an existing template
 	Change   FileChange `json:"change"`   // Properties about changing the file
 }
