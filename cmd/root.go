@@ -12,18 +12,32 @@ import (
 )
 
 // Application Version
-var version = "0.3.0"
+var version = "0.4.0"
+
+type App struct {
+	filename string           // Name of the config file we are executing
+	appName  string           // The name that the main app folder will have
+	args     []string         // Command line arguments passed
+	spinner  *spinner.Spinner // Load Spinner
+}
 
 func Execute() {
 	var message string
-	command, appName, args, err := validateInput()
+	filename, appName, args, err := validateInput()
 	s := loadSpinner()
+
+	app := &App{
+		filename: filename,
+		appName:  appName,
+		args:     args,
+		spinner:  s,
+	}
 
 	if err != nil {
 		exitGracefully(err)
 	}
 
-	switch command {
+	switch filename {
 	case "help":
 		showHelp()
 
@@ -31,7 +45,7 @@ func Execute() {
 		color.Green("Application version: " + version)
 
 	default:
-		message, err = run(command, appName, args, s)
+		message, err = app.run()
 	}
 
 	s.Stop()
@@ -63,46 +77,46 @@ func validateInput() (string, string, []string, error) {
 	return command, appName, args, nil
 }
 
-func run(filename, appName string, args []string, s *spinner.Spinner) (string, error) {
+func (app *App) run() (string, error) {
 	parser := Parser{
 		configPath: "./config",
-		args:       args,
+		args:       app.args,
 	}
 
-	err := parser.parseJson(filename)
+	err := parser.parseJson(app.filename)
 	if err != nil {
 		return "", err
 	}
 
-	if appName == "" {
+	if app.appName == "" {
 		return "", errors.New("appname was not provided")
 	}
 
 	mainCommands, otherCommands := parser.parseArgs()
-	mainCommands[len(mainCommands)-1] = append(mainCommands[len(mainCommands)-1], appName)
+	mainCommands[len(mainCommands)-1] = append(mainCommands[len(mainCommands)-1], app.appName)
 
-	s.Start()
+	app.spinner.Start()
 
-	msg, err := runMainCommands(mainCommands, s)
+	msg, err := app.runMainCommands(mainCommands)
 	if err != nil {
 		return msg, err
 	}
 
-	s.Restart()
-	showMessage("Created Project", appName)
+	app.spinner.Restart()
+	showMessage("Created Project", app.appName)
 
-	os.Chdir(appName)
-	runSubCommands(otherCommands, s)
+	os.Chdir(app.appName)
+	app.runSubCommands(otherCommands)
 
-	s.Stop()
-	return "\nApp Created Successfully: " + appName, nil
+	app.spinner.Stop()
+	return "\nApp Created Successfully: " + app.appName, nil
 }
 
 // Used to run all the main commands and throw an error if
 // something goes wrong
-func runMainCommands(mainCommands MainCommmands, s *spinner.Spinner) (string, error) {
+func (app *App) runMainCommands(mainCommands MainCommmands) (string, error) {
 	for _, cmd := range mainCommands {
-		s.Restart()
+		app.spinner.Restart()
 		showMessage("Running", cmd...)
 
 		c := exec.Command(cmd[0], cmd[1:]...)
@@ -118,11 +132,11 @@ func runMainCommands(mainCommands MainCommmands, s *spinner.Spinner) (string, er
 // Used to run all the subcommands either concurrently or by themselves
 // based on the value of SubCommand.parallel. Displays a message if
 // there is an error
-func runSubCommands(subcommands []SubCommand, s *spinner.Spinner) {
+func (app *App) runSubCommands(subcommands []SubCommand) {
 	var wg sync.WaitGroup
 
 	for _, command := range subcommands {
-		s.Restart()
+		app.spinner.Restart()
 		showMessage("Installing", command.Name)
 
 		if command.Parallel {
@@ -130,14 +144,14 @@ func runSubCommands(subcommands []SubCommand, s *spinner.Spinner) {
 			go func(wg *sync.WaitGroup, command SubCommand) {
 				defer wg.Done()
 
-				err := executeSubCommand(command, s)
+				err := app.executeSubCommand(command)
 				if err != nil {
 					color.Yellow("Failed to execute %s\n", command)
 					color.Red("Error: %v\n", err)
 				}
 			}(&wg, command)
 		} else {
-			executeSubCommand(command, s)
+			app.executeSubCommand(command)
 		}
 	}
 
@@ -145,18 +159,24 @@ func runSubCommands(subcommands []SubCommand, s *spinner.Spinner) {
 }
 
 // Executes a single subcommand
-func executeSubCommand(command SubCommand, s *spinner.Spinner) error {
-	c := exec.Command(command.Command[0], command.Command[1:]...)
-	err := c.Run()
-	if err != nil {
-		return err
+func (app *App) executeSubCommand(command SubCommand) error {
+	if command.Command != nil {
+		c := exec.Command(command.Command[0], command.Command[1:]...)
+		err := c.Run()
+		if err != nil {
+			return err
+		}
 	}
 
 	if command.Files != nil {
 		for name, file := range command.Files {
-			s.Restart()
-			showMessage("Editing", name)
-			editFile(name, file.Change.SplitOn, file.Change.Append)
+			if file.Template {
+				copyFileFromTemplate("templates/"+app.filename+"/"+file.Filepath, file.Filepath)
+			} else {
+				app.spinner.Restart()
+				showMessage("Adding", name, "in", Green(file.Filepath))
+				editFile(file.Filepath, file.Change.SplitOn, file.Change.Append)
+			}
 		}
 	}
 
