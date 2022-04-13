@@ -5,7 +5,25 @@
     ["./env/bin/django-admin", "startproject"]
   ],
 
-  "subCommands": {},
+  "subCommands": {
+    "rest": {
+      "name": "rest-framework",
+      "command": ["../env/bin/pip", "install", "djangorestframework"],
+
+      "parallel": true,
+
+      "files": {
+        "backend/settings.py": {
+          "change": {
+            "splitOn": "'django.contrib.staticfiles',",
+            "append": "\n\t'rest_framework',"
+          }
+        }
+      },
+
+      "help": "Install and setup DjangoRestFramework"
+    }
+  },
 
   "help": "Create django app"
 }

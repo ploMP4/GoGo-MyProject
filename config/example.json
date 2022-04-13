@@ -1,16 +1,18 @@
 {
   "commands": [],
 
+  "dirs": [],
+
   "subCommands": {
     "command-name": {
       "name": "",
       "command": [],
 
-      "override": true,
+      "override": false,
       "parallel": false,
 
       "files": {
-        "filename": {
+        "filepath": {
           "template": false,
           "change": {
             "splitOn": "",
@@ -23,5 +25,5 @@
     }
   },
 
-  "help": "help"
+  "help": ""
 }

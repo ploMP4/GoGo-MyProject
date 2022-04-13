@@ -4,6 +4,7 @@ import (
 	"errors"
 	"os"
 	"os/exec"
+	"strings"
 	"sync"
 
 	"github.com/briandowns/spinner"
@@ -11,7 +12,7 @@ import (
 )
 
 // Application Version
-var version = "0.2.0"
+var version = "0.3.0"
 
 func Execute() {
 	var message string
@@ -126,25 +127,64 @@ func runSubCommands(subcommands []SubCommand, s *spinner.Spinner) {
 
 		if command.Parallel {
 			wg.Add(1)
-			go func(wg *sync.WaitGroup, command []string) {
+			go func(wg *sync.WaitGroup, command SubCommand) {
 				defer wg.Done()
 
-				c := exec.Command(command[0], command[1:]...)
-				err := c.Run()
+				err := executeSubCommand(command, s)
 				if err != nil {
 					color.Yellow("Failed to execute %s\n", command)
 					color.Red("Error: %v\n", err)
 				}
-			}(&wg, command.Command)
+			}(&wg, command)
 		} else {
-			c := exec.Command(command.Command[0], command.Command[1:]...)
-			err := c.Run()
-			if err != nil {
-				color.Yellow("Failed to execute %s\n", command)
-				color.Red("Error: %v\n", err)
-			}
+			executeSubCommand(command, s)
 		}
 	}
 
 	wg.Wait()
+}
+
+// Executes a single subcommand
+func executeSubCommand(command SubCommand, s *spinner.Spinner) error {
+	c := exec.Command(command.Command[0], command.Command[1:]...)
+	err := c.Run()
+	if err != nil {
+		return err
+	}
+
+	if command.Files != nil {
+		for name, file := range command.Files {
+			s.Restart()
+			showMessage("Editing", name)
+			editFile(name, file.Change.SplitOn, file.Change.Append)
+		}
+	}
+
+	return nil
+}
+
+// Adds a string in the specified file either at the end of the file
+// if the splitOn argument is an empty string or by splitting the file by the string
+// specified in splitOn and appending it there
+func editFile(filename, splitOn, toAppend string) {
+	var settings string
+
+	content, err := os.ReadFile(filename)
+	if err != nil {
+		exitGracefully(err)
+	}
+
+	if splitOn != "" { // Append after certain string in the file
+		s := strings.Split(string(content), splitOn)
+		s[0] += splitOn + toAppend
+
+		settings = strings.Join(s, " ")
+	} else { // Append at the end of file
+		settings = string(content) + toAppend
+	}
+
+	err = os.WriteFile(filename, []byte(settings), 0644)
+	if err != nil {
+		exitGracefully(err)
+	}
 }
