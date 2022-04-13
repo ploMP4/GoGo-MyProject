@@ -12,7 +12,8 @@
       "parallel": false,
 
       "files": {
-        "filepath": {
+        "description": {
+          "filepath": "",
           "template": false,
           "change": {
             "splitOn": "",
@@ -25,5 +26,5 @@
     }
   },
 
-  "help": ""
+  "help": "example file"
 }
