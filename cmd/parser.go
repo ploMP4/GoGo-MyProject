@@ -32,10 +32,6 @@ type SubCommands map[string]SubCommand
 // description to print out to the user and the properties for the values
 type FilesType map[string]File
 
-type Settings struct {
-	ConfigPath string `json:"config-path"` // Path of folder containing json files
-}
-
 // Describe the main json config file
 type Config struct {
 	Commands    MainCommmands `json:"commands"`    // Array with the commands that will be executed. Note: commands should be passed as an array instead of using spaces e.x ["npx", "create-react-app"]
@@ -90,7 +86,7 @@ func (p *Parser) parseSettings() error {
 
 // Check if a file with the name passed in by the user exists
 // and parse its contents into the Parser.config
-func (p *Parser) parseJson(filename string) error {
+func (p *Parser) parseConfig(filename string) error {
 	jsonFile, err := os.Open(fmt.Sprintf("%s/%s.json", p.settings.ConfigPath, filename))
 	if err != nil {
 		return err
@@ -120,8 +116,8 @@ func (p Parser) getHelp() []string {
 
 	for _, file := range files {
 		filename := strings.Split(file.Name(), ".")[0]
-		p.parseJson(filename)
-		helpCommands = append(helpCommands, fmt.Sprintf("\n%15s   - %s", filename, p.config.Help))
+		p.parseConfig(filename)
+		helpCommands = append(helpCommands, fmt.Sprintf("\n%30s   - %s", filename, p.config.Help))
 	}
 
 	return helpCommands

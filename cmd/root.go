@@ -2,6 +2,7 @@ package cmd
 
 import (
 	"errors"
+	"fmt"
 	"os"
 	"os/exec"
 	"strings"
@@ -43,6 +44,14 @@ func Execute() {
 
 	case "version":
 		color.Green("Application version: " + version)
+
+	case "set-config-path":
+		p := Parser{}
+		p.parseSettings()
+		err = p.settings.setConfigPath(appName)
+		if err != nil {
+			message = fmt.Sprint("Config path set to: " + appName)
+		}
 
 	default:
 		message, err = app.run()
@@ -87,7 +96,7 @@ func (app *App) run() (string, error) {
 		return "", err
 	}
 
-	err = parser.parseJson(app.filename)
+	err = parser.parseConfig(app.filename)
 	if err != nil {
 		return "", err
 	}
