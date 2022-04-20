@@ -103,8 +103,8 @@ func (p Parser) getHelp() []string {
 }
 
 // Use the parsed json file and the args to construct
-// the main and sub commands and return them
-func (p *Parser) parseArgs() (MainCommmands, []SubCommand) {
+// the dirs, main and sub commands and return them
+func (p *Parser) parseArgs() (MainCommmands, []SubCommand, []string) {
 	finalCommand := p.json.Commands[len(p.json.Commands)-1]
 	var otherCommands []SubCommand
 
@@ -121,6 +121,7 @@ func (p *Parser) parseArgs() (MainCommmands, []SubCommand) {
 
 	p.json.Commands[len(p.json.Commands)-1] = finalCommand
 	mainCommands := p.json.Commands
+	dirs := p.json.Dirs
 
-	return mainCommands, otherCommands
+	return mainCommands, otherCommands, dirs
 }

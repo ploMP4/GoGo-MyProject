@@ -12,7 +12,7 @@ import (
 )
 
 // Application Version
-var version = "0.4.0"
+var version = "0.5.0"
 
 type App struct {
 	filename string           // Name of the config file we are executing
@@ -92,7 +92,7 @@ func (app *App) run() (string, error) {
 		return "", errors.New("appname was not provided")
 	}
 
-	mainCommands, otherCommands := parser.parseArgs()
+	mainCommands, otherCommands, dirs := parser.parseArgs()
 	mainCommands[len(mainCommands)-1] = append(mainCommands[len(mainCommands)-1], app.appName)
 
 	app.spinner.Start()
@@ -106,6 +106,8 @@ func (app *App) run() (string, error) {
 	showMessage("Created Project", app.appName)
 
 	os.Chdir(app.appName)
+
+	app.createDirs(dirs)
 	app.runSubCommands(otherCommands)
 
 	app.spinner.Stop()
@@ -129,6 +131,18 @@ func (app *App) runMainCommands(mainCommands MainCommmands) (string, error) {
 	return "", nil
 }
 
+func (app *App) createDirs(dirs []string) {
+	for _, dir := range dirs {
+		app.spinner.Restart()
+		showMessage("Creating", dir)
+
+		err := os.Mkdir(dir, 0755)
+		if err != nil {
+			color.Red("Error: %v\n", err)
+		}
+	}
+}
+
 // Used to run all the subcommands either concurrently or by themselves
 // based on the value of SubCommand.parallel. Displays a message if
 // there is an error
@@ -137,7 +151,7 @@ func (app *App) runSubCommands(subcommands []SubCommand) {
 
 	for _, command := range subcommands {
 		app.spinner.Restart()
-		showMessage("Installing", command.Name)
+		showMessage("Running", command.Name)
 
 		if command.Parallel {
 			wg.Add(1)
@@ -171,6 +185,9 @@ func (app *App) executeSubCommand(command SubCommand) error {
 	if command.Files != nil {
 		for name, file := range command.Files {
 			if file.Template {
+				app.spinner.Restart()
+				showMessage("Copying", file.Filepath)
+
 				copyFileFromTemplate("templates/"+app.filename+"/"+file.Filepath, file.Filepath)
 			} else {
 				app.spinner.Restart()
