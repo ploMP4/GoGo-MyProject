@@ -11,9 +11,9 @@ import (
 // Used to parse the arguments passed in and
 // the json file specified
 type Parser struct {
-	configPath string   // Path of folder containing json files
-	json       Json     // The json file name
-	args       []string // Arguments passed
+	settings Settings // settings.json file
+	config   Config   // The config file
+	args     []string // Arguments passed
 }
 
 // We can have many main commands and commands
@@ -32,8 +32,12 @@ type SubCommands map[string]SubCommand
 // description to print out to the user and the properties for the values
 type FilesType map[string]File
 
+type Settings struct {
+	ConfigPath string `json:"config-path"` // Path of folder containing json files
+}
+
 // Describe the main json config file
-type Json struct {
+type Config struct {
 	Commands    MainCommmands `json:"commands"`    // Array with the commands that will be executed. Note: commands should be passed as an array instead of using spaces e.x ["npx", "create-react-app"]
 	Dirs        []string      `json:"dirs"`        // Array with names of directories that will be created
 	SubCommands SubCommands   `json:"subCommands"` // Commands that can be passed after the initial command for optional features e.x. ts for typescript in a react command
@@ -59,14 +63,14 @@ type File struct {
 
 // Describe file change properties object
 type FileChange struct {
-	SplitOn string `json:"splitOn"` // Specify string to split the file on
-	Append  string `json:"append"`  // Content that will be appended after the split on
+	SplitOn string `json:"split-on"` // Specify string to split the file on
+	Append  string `json:"append"`   // Content that will be appended after the split on
 }
 
-// Check if a file with the name passed in by the user exists
-// and parse its contents into the Parser.json
-func (p *Parser) parseJson(filename string) error {
-	jsonFile, err := os.Open(fmt.Sprintf("%s/%s.json", p.configPath, filename))
+// Parse the settings.json file that exists in
+// the root of the application into the Parser.settings
+func (p *Parser) parseSettings() error {
+	jsonFile, err := os.Open("./settings.json")
 	if err != nil {
 		return err
 	}
@@ -77,18 +81,39 @@ func (p *Parser) parseJson(filename string) error {
 		return err
 	}
 
-	if err = json.Unmarshal(jsonData, &p.json); err != nil {
+	if err = json.Unmarshal(jsonData, &p.settings); err != nil {
 		return err
 	}
 
 	return nil
 }
 
-// Parse and return the help commands for the json files
+// Check if a file with the name passed in by the user exists
+// and parse its contents into the Parser.config
+func (p *Parser) parseJson(filename string) error {
+	jsonFile, err := os.Open(fmt.Sprintf("%s/%s.json", p.settings.ConfigPath, filename))
+	if err != nil {
+		return err
+	}
+	defer jsonFile.Close()
+
+	jsonData, err := ioutil.ReadAll(jsonFile)
+	if err != nil {
+		return err
+	}
+
+	if err = json.Unmarshal(jsonData, &p.config); err != nil {
+		return err
+	}
+
+	return nil
+}
+
+// Parse and return the help commands for the config files
 func (p Parser) getHelp() []string {
 	helpCommands := []string{}
 
-	files, err := ioutil.ReadDir(p.configPath)
+	files, err := ioutil.ReadDir(p.settings.ConfigPath)
 	if err != nil {
 		return nil
 	}
@@ -96,20 +121,20 @@ func (p Parser) getHelp() []string {
 	for _, file := range files {
 		filename := strings.Split(file.Name(), ".")[0]
 		p.parseJson(filename)
-		helpCommands = append(helpCommands, fmt.Sprintf("\n%15s   - %s", filename, p.json.Help))
+		helpCommands = append(helpCommands, fmt.Sprintf("\n%15s   - %s", filename, p.config.Help))
 	}
 
 	return helpCommands
 }
 
-// Use the parsed json file and the args to construct
+// Use the parsed config file and the args to construct
 // the dirs, main and sub commands and return them
 func (p *Parser) parseArgs() (MainCommmands, []SubCommand, []string) {
-	finalCommand := p.json.Commands[len(p.json.Commands)-1]
+	finalCommand := p.config.Commands[len(p.config.Commands)-1]
 	var otherCommands []SubCommand
 
 	for _, arg := range p.args {
-		if value, isMapContainsKey := p.json.SubCommands[arg]; isMapContainsKey {
+		if value, isMapContainsKey := p.config.SubCommands[arg]; isMapContainsKey {
 			if value.Override {
 				finalCommand = value.Command
 				showMessage("Using", value.Name)
@@ -119,9 +144,9 @@ func (p *Parser) parseArgs() (MainCommmands, []SubCommand, []string) {
 		}
 	}
 
-	p.json.Commands[len(p.json.Commands)-1] = finalCommand
-	mainCommands := p.json.Commands
-	dirs := p.json.Dirs
+	p.config.Commands[len(p.config.Commands)-1] = finalCommand
+	mainCommands := p.config.Commands
+	dirs := p.config.Dirs
 
 	return mainCommands, otherCommands, dirs
 }

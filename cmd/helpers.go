@@ -34,7 +34,8 @@ func exitGracefully(err error, msg ...string) {
 
 // Print the help menu
 func showHelp() {
-	p := Parser{configPath: "./config"}
+	p := Parser{}
+	p.parseSettings()
 	helpCommands := p.getHelp()
 
 	fmt.Printf(`A CLI tool to create starter boilerplate for you

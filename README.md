@@ -73,7 +73,7 @@ TODO:
 
 - [x] Change error handling
 - [x] Add Commands to help menu from config file
-- [ ] Create settings file with config path etc...
+- [x] Create settings file with config path etc...
 - [ ] Create Commands for other projects
 - [x] Make working subcommands
 - [x] Setup file manipulation functionality

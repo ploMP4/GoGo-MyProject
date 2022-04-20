@@ -79,11 +79,15 @@ func validateInput() (string, string, []string, error) {
 
 func (app *App) run() (string, error) {
 	parser := Parser{
-		configPath: "./config",
-		args:       app.args,
+		args: app.args,
 	}
 
-	err := parser.parseJson(app.filename)
+	err := parser.parseSettings()
+	if err != nil {
+		return "", err
+	}
+
+	err = parser.parseJson(app.filename)
 	if err != nil {
 		return "", err
 	}

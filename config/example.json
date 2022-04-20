@@ -16,7 +16,7 @@
           "filepath": "",
           "template": false,
           "change": {
-            "splitOn": "",
+            "split-on": "",
             "append": ""
           }
         }
