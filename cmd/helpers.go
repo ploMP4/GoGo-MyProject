@@ -50,8 +50,9 @@ who use many different programming languages and frameworks.
 
 %s
 
-	   help   - show the help menu
-	version   - print application version
+	        help [command]   - show the help menu
+	               version   - print application version
+	set-config-path <path>   - set the config folder path containing your json files.
 	%v
 
 `, Yellow("USAGE:"), Yellow("AVAILABLE COMMANDS:"), strings.Trim(fmt.Sprint(helpCommands), "[]"))
