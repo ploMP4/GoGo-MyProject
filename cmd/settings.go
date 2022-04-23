@@ -9,6 +9,7 @@ type Settings struct {
 	ConfigPath string `json:"config-path"` // Path of folder containing json files
 }
 
+// Change the config-path value in settings.json
 func (s *Settings) setConfigPath(path string) error {
 	s.ConfigPath = path
 
