@@ -40,7 +40,11 @@ func Execute() {
 
 	switch filename {
 	case "-h", "help":
-		showHelp()
+		if appName == "" {
+			showHelp()
+		} else {
+			showSubHelp(appName)
+		}
 
 	case "-v", "version":
 		color.Green("Application version: " + version)

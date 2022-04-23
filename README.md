@@ -74,10 +74,10 @@ TODO:
 - [x] Change error handling
 - [x] Add Commands to help menu from config file
 - [x] Create settings file with config path etc...
-- [ ] Create Commands for other projects
+- [x] Create Commands for other projects
 - [x] Make working subcommands
 - [x] Setup file manipulation functionality
 - [x] Copy files from template
-- [ ] Create help menu for subcommands
+- [x] Create help menu for subcommands
 - [ ] All flag
 - [ ] Exclude flag

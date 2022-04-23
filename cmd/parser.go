@@ -105,7 +105,7 @@ func (p *Parser) parseConfig(filename string) error {
 	return nil
 }
 
-// Parse and return the help commands for the config files
+// Parse and return the help commands for all the config files
 func (p Parser) getHelp() []string {
 	helpCommands := []string{}
 
@@ -116,11 +116,27 @@ func (p Parser) getHelp() []string {
 
 	for _, file := range files {
 		filename := strings.Split(file.Name(), ".")[0]
-		p.parseConfig(filename)
+		_ = p.parseConfig(filename)
 		helpCommands = append(helpCommands, fmt.Sprintf("\n%30s   - %s", filename, p.config.Help))
 	}
 
 	return helpCommands
+}
+
+// Parse and return help for the subcommands of a config file
+func (p Parser) getSubHelp(filename string) ([]string, error) {
+	helpCommands := []string{}
+
+	err := p.parseConfig(filename)
+	if err != nil {
+		return nil, err
+	}
+
+	for _, command := range p.config.SubCommands {
+		helpCommands = append(helpCommands, fmt.Sprintf("\n%30s   - %s", command.Name, command.Help))
+	}
+
+	return helpCommands, nil
 }
 
 // Use the parsed config file and the args to construct

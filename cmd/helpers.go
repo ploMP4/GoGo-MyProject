@@ -32,7 +32,7 @@ func exitGracefully(err error, msg ...string) {
 	os.Exit(0)
 }
 
-// Print the help menu
+// Print the general help menu
 func showHelp() {
 	p := Parser{}
 	p.parseSettings()
@@ -56,6 +56,18 @@ who use many different programming languages and frameworks.
 	%v
 
 `, Yellow("USAGE:"), Yellow("AVAILABLE COMMANDS:"), strings.Trim(fmt.Sprint(helpCommands), "[]"))
+}
+
+// Show the help menu the subcommands of a config file
+func showSubHelp(filename string) {
+	p := Parser{}
+	p.parseSettings()
+	helpCommands, err := p.getSubHelp(filename)
+	if err != nil {
+		exitGracefully(fmt.Errorf("command %s not found", filename))
+	}
+
+	fmt.Printf("%s\n%v\n\n", Yellow("AVAILABLE COMMANDS FOR: "+filename), strings.Trim(fmt.Sprint(helpCommands), "[]"))
 }
 
 // Used to display status messages
