@@ -13,7 +13,7 @@ import (
 )
 
 // Application Version
-var version = "0.5.0"
+var version = "0.6.0"
 
 type App struct {
 	filename string           // Name of the config file we are executing
@@ -39,13 +39,13 @@ func Execute() {
 	}
 
 	switch filename {
-	case "help":
+	case "-h", "help":
 		showHelp()
 
-	case "version":
+	case "-v", "version":
 		color.Green("Application version: " + version)
 
-	case "set-config-path":
+	case "-P", "set-config-path":
 		p := Parser{}
 		p.parseSettings()
 		err = p.settings.setConfigPath(appName)
@@ -201,7 +201,7 @@ func (app *App) executeSubCommand(command SubCommand) error {
 				app.spinner.Restart()
 				showMessage("Copying", file.Filepath)
 
-				copyFileFromTemplate("templates/"+app.filename+"/"+file.Filepath, file.Filepath)
+				copyFileFromTemplate("templates/"+app.filename+"/"+file.Filepath+".txt", file.Filepath)
 			} else {
 				app.spinner.Restart()
 				showMessage("Adding", name, "in", Green(file.Filepath))
