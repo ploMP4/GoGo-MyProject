@@ -81,3 +81,4 @@ TODO:
 - [x] Create help menu for subcommands
 - [ ] All flag
 - [ ] Exclude flag
+- [x] Write tests
