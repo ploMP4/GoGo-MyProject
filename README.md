@@ -82,3 +82,4 @@ TODO:
 - [ ] All flag
 - [ ] Exclude flag
 - [x] Write tests
+- [x] Fix settings.json path bug

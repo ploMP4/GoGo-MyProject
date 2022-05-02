@@ -5,6 +5,7 @@ import (
 	"fmt"
 	"io/ioutil"
 	"os"
+	"path/filepath"
 	"strings"
 )
 
@@ -66,7 +67,17 @@ type FileChange struct {
 // Parse the settings.json file that exists in
 // the root of the application into the Parser.settings
 func (p *Parser) parseSettings() error {
-	jsonFile, err := os.Open("./settings.json")
+	e, err := os.Executable()
+	if err != nil {
+		return err
+	}
+
+	e_path, err := filepath.EvalSymlinks(e)
+	if err != nil {
+		return err
+	}
+
+	jsonFile, err := os.Open(filepath.Dir(e_path) + "/settings.json")
 	if err != nil {
 		return err
 	}

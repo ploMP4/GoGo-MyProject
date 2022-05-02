@@ -3,6 +3,8 @@ package cmd
 import (
 	"encoding/json"
 	"io/ioutil"
+	"os"
+	"path/filepath"
 )
 
 type Settings struct {
@@ -18,7 +20,17 @@ func (s *Settings) setConfigPath(path string) error {
 		return err
 	}
 
-	err = ioutil.WriteFile("./settings.json", file, 0644)
+	e, err := os.Executable()
+	if err != nil {
+		return err
+	}
+
+	e_path, err := filepath.EvalSymlinks(e)
+	if err != nil {
+		return err
+	}
+
+	err = ioutil.WriteFile(filepath.Dir(e_path)+"/settings.json", file, 0644)
 	if err != nil {
 		return err
 	}
