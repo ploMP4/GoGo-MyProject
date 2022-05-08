@@ -1,7 +1,6 @@
 package pkg
 
 import (
-	"os"
 	"testing"
 )
 
@@ -13,15 +12,15 @@ func TestParser_parseSettings(t *testing.T) {
 		t.Error("no error thrown with not existant settings.json file")
 	}
 
-	os.Chdir("./testdata")
-	err = p.parseSettings()
-	if err != nil {
-		t.Error(err)
-	}
-
+	// err = p.parseSettings()
+	// if err != nil {
+	// 	t.Error(err)
+	// }
 }
 
 func TestParser_parseConfig(t *testing.T) {
+	p.settings.ConfigPath = "./testdata/config"
+
 	err := p.parseConfig("cpp")
 	if err != nil {
 		t.Error(err)
