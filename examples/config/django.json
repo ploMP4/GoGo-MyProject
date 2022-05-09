@@ -14,7 +14,7 @@
 
       "files": {
         "rest-framework to installed apps": {
-          "filepath": "backend/settings.py",
+          "filepath": "<APPNAME>/settings.py",
           "change": {
             "split-on": "'django.contrib.staticfiles',",
             "append": "\n\t'rest_framework',"
@@ -33,7 +33,7 @@
 
       "files": {
         "CORS to installed apps": {
-          "filepath": "backend/settings.py",
+          "filepath": "<APPNAME>/settings.py",
           "change": {
             "split-on": "'django.contrib.staticfiles',",
             "append": "\n\t'corsheaders',"
@@ -41,7 +41,7 @@
         },
 
         "CORS middleware": {
-          "filepath": "backend/settings.py",
+          "filepath": "<APPNAME>/settings.py",
           "change": {
             "split-on": "MIDDLEWARE = [",
             "append": "\n\t'corsheaders.middleware.CorsMiddleware',"
@@ -49,7 +49,7 @@
         },
 
         "CORS settings": {
-          "filepath": "backend/settings.py",
+          "filepath": "<APPNAME>/settings.py",
           "change": {
             "split-on": "",
             "append": "\n# Change in production\nCORS_ALLOW_ALL_ORIGINS = True"
@@ -68,7 +68,7 @@
 
       "files": {
         "JWT settings": {
-          "filepath": "backend/settings.py",
+          "filepath": "<APPNAME>/settings.py",
           "change": {
             "split-on": "# Application definition",
             "append": "\nREST_FRAMEWORK = {\n\t'DEFAULT_AUTHENTICATION_CLASSES': (\n\t\t'rest_framework_simplejwt.authentication.JWTAuthentication',\n\t)\n}"

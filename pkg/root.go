@@ -208,6 +208,12 @@ func (app *App) executeSubCommand(command SubCommand) error {
 				copyFileFromTemplate("templates/"+app.filename+"/"+file.Filepath+".txt", file.Filepath)
 			} else {
 				app.spinner.Restart()
+
+				if strings.Contains(file.Filepath, "<APPNAME>") {
+					path := strings.Split(file.Filepath, "<APPNAME>")
+					file.Filepath = app.appName + path[1]
+				}
+
 				showMessage("Adding", name, "in", Green(file.Filepath))
 				editFile(file.Filepath, file.Change.SplitOn, file.Change.Append)
 			}
