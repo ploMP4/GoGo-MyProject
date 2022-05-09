@@ -79,8 +79,8 @@ TODO:
 - [x] Setup file manipulation functionality
 - [x] Copy files from template
 - [x] Create help menu for subcommands
-- [ ] All flag
+- [x] All flag
 - [ ] Exclude flag
 - [x] Write tests
 - [x] Fix settings.json path bug
-- [ ] Update tests
+- [x] Update tests
