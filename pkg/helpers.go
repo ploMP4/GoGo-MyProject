@@ -67,7 +67,15 @@ func showSubHelp(filename string) {
 		exitGracefully(fmt.Errorf("command %s not found", filename))
 	}
 
-	fmt.Printf("%s\n%30s   - %s\n%v\n\n", Yellow("AVAILABLE COMMANDS FOR: "+filename), "-a, all", "Run all subcommands", strings.Trim(fmt.Sprint(helpCommands), "[]"))
+	fmt.Printf(`%s
+	%24s   - %s
+	%s   - %s
+	%v
+	
+	`, Yellow("AVAILABLE COMMANDS FOR: "+filename),
+		"-a, all", "Run all subcommands",
+		"-e, exclude [subcommand]", "Don't run specified subcommand",
+		strings.Trim(fmt.Sprint(helpCommands), "[]"))
 }
 
 // Used to display status messages

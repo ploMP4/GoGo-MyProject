@@ -145,7 +145,7 @@ func (p Parser) getSubHelp(filename string) ([]string, error) {
 	}
 
 	for name, command := range p.config.SubCommands {
-		helpCommands = append(helpCommands, fmt.Sprintf("\n%30s   - %s", name, command.Help))
+		helpCommands = append(helpCommands, fmt.Sprintf("\n%32s   - %s", name, command.Help))
 	}
 
 	return helpCommands, nil
