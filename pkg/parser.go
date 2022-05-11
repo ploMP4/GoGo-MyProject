@@ -158,9 +158,17 @@ func (p *Parser) parseArgs() (MainCommmands, []SubCommand, []string) {
 	var otherCommands []SubCommand
 
 	all := false
-	for _, arg := range p.args {
+	for idx, arg := range p.args {
 		if arg == "all" || arg == "-a" {
 			all = true
+		}
+
+		if arg == "exclude" || arg == "-e" {
+			if subcommand, ok := p.config.SubCommands[p.args[idx+1]]; ok {
+				subcommand.Exclude = true
+
+				p.config.SubCommands[p.args[idx+1]] = subcommand
+			}
 		}
 	}
 

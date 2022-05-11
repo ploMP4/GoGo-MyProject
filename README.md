@@ -80,7 +80,8 @@ TODO:
 - [x] Copy files from template
 - [x] Create help menu for subcommands
 - [x] All flag
-- [ ] Exclude flag
+- [x] Exclude flag
 - [x] Write tests
 - [x] Fix settings.json path bug
 - [x] Update tests
+- [ ] Make install script

@@ -13,7 +13,7 @@ import (
 )
 
 // Application Version
-var version = "0.8.0"
+var version = "1.0.0"
 
 type App struct {
 	filename string           // Name of the config file we are executing
