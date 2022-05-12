@@ -145,7 +145,7 @@ func (p Parser) getSubHelp(filename string) ([]string, error) {
 	}
 
 	for name, command := range p.config.SubCommands {
-		helpCommands = append(helpCommands, fmt.Sprintf("\n%32s   - %s", name, command.Help))
+		helpCommands = append(helpCommands, fmt.Sprintf("\n%31s   - %s", name, command.Help))
 	}
 
 	return helpCommands, nil
@@ -159,11 +159,11 @@ func (p *Parser) parseArgs() (MainCommmands, []SubCommand, []string) {
 
 	all := false
 	for idx, arg := range p.args {
-		if arg == "all" || arg == "-a" {
+		if arg == "all" || arg == "a" {
 			all = true
 		}
 
-		if arg == "exclude" || arg == "-e" {
+		if arg == "exclude" || arg == "e" {
 			if subcommand, ok := p.config.SubCommands[p.args[idx+1]]; ok {
 				subcommand.Exclude = true
 

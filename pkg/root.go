@@ -13,7 +13,7 @@ import (
 )
 
 // Application Version
-var version = "1.0.0"
+var version = "1.0.1"
 
 type App struct {
 	filename string           // Name of the config file we are executing
@@ -39,17 +39,17 @@ func Execute() {
 	}
 
 	switch filename {
-	case "-h", "help":
+	case "h", "help":
 		if appName == "" {
 			showHelp()
 		} else {
 			showSubHelp(appName)
 		}
 
-	case "-v", "version":
+	case "v", "version":
 		color.Green("Application version: " + version)
 
-	case "-P", "set-config-path":
+	case "P", "set-config-path":
 		p := Parser{}
 		p.parseSettings()
 		err = p.settings.setConfigPath(appName)

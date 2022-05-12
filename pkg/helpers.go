@@ -50,8 +50,8 @@ who use many different programming languages and frameworks.
 
 %s
 
-	    -h, help [command]   - show the help menu
-	           -v, version   - print application version
+	     h, help [command]   - show the help menu
+	            v, version   - print application version
 	set-config-path <path>   - set the config folder path containing your json files.
 	%v
 
@@ -68,13 +68,13 @@ func showSubHelp(filename string) {
 	}
 
 	fmt.Printf(`%s
-	%24s   - %s
+	%23s   - %s
 	%s   - %s
 	%v
 	
 	`, Yellow("AVAILABLE COMMANDS FOR: "+filename),
-		"-a, all", "Run all subcommands",
-		"-e, exclude [subcommand]", "Don't run specified subcommand",
+		"a, all", "Run all subcommands",
+		"e, exclude [subcommand]", "Don't run specified subcommand",
 		strings.Trim(fmt.Sprint(helpCommands), "[]"))
 }
 
