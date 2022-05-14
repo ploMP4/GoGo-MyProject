@@ -17,5 +17,5 @@ cover:
 	@go test -coverprofile=coverage.out ./pkg && go tool cover -html=coverage.out
 
 ## install: installs executable as a global command to the machine
-install: build
+install: 
 	@./scripts/install.sh
