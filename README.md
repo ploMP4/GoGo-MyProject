@@ -1,87 +1,147 @@
 # GoGo MyProject
 
-gogo \<COMMAND> \<APPNAME> [args]
+GoGo is a CLI tool that creates the starter boilerplate 
+for your projects and it's really helpful for people
+who use many different programming languages and frameworks.
+
+- [Installation](#installation)
+  - [Linux](#linux)
+    - [Makefile](#1-using-make)
+    - [Install.sh](#2-using-the-installsh)
+    - [Manual Install](#3-manual-installation)
+    - [Adding command to PATH](#add-command-to-path)
+    - [Installing Go and Make](#installing-go-and-make)
+  - [Windows](#windows)
+  - [Mac](#mac)
+- [Usage](#usage)
+- [Config Files](#config-files)
+- [Templates]()
 
 ---
 
-- [ ] C++
+## Installation:
 
-  - [ ] OpenGL
-  - [ ] CMake
+### Linux:
+
+- #### 1. Using Make:
+
+  Make sure you have make and go installed.  
+  See [Installing Go and Make](#installing-go-and-make) if you need help installing them
+
+  Clone the repo to your computer:
+
+  > `git clone https://github.com/ploMP4/GoGo-MyProject`
+
+  cd into the project directory and run make install
+
+  > `cd GoGo-MyProject && make install`
+
+  Finally [Add the command to PATH](#add-command-to-path)
+
+- #### 2. Using the install.sh
+
+  Make sure you have make and go installed.  
+  See [Installing Go and Make](#installing-go-and-make) if you need help installing them
+
+  Clone the repo to your computer:
+
+  > `git clone https://github.com/ploMP4/GoGo-MyProject`
+
+  cd into the project directory and build the project using go build.
+
+  > `cd GoGo-MyProject && go build -o ./dist/gogo ./cmd/...`
+
+  OR
+  
+  > `cd GoGo-MyProject && make build`
+
+  Run the install.sh script
+
+  > `./scripts/install.sh`
+
+  Finally [Add the command to PATH](#add-command-to-path)
+
+- #### 3. Manual installation
+
+  Make sure you have make and go installed.  
+  See [Installing Go and Make](#installing-go-and-make) if you need help installing them
+
+  Clone the repo to your computer:
+
+  >`git clone https://github.com/ploMP4/GoGo-MyProject`
+
+  cd into the project directory and build the project using go build.
+
+  > `cd GoGo-MyProject && go build -o ./dist/gogo ./cmd/...`
+
+  OR
+  
+  > `cd GoGo-MyProject && make build`
+
+  Create a new folder in your home directory
+
+  > `mkdir $HOME/.gogo $HOME/.gogo/bin`
+
+  Move executable to the newly created folder
+
+  > `mv ./dist/gogo $HOME/.gogo/bin`
+
+  Create a settings.json file
+
+  > `echo '{ "config-path": "" }' > $HOME/.gogo/bin/settings.json`
+
+  Finally [Add the command to PATH](#add-command-to-path)
+
+
+- #### Add command to PATH
+  - zsh
+
+    Add this to your .zshrc file before the `export PATH` line 
+
+    `path+=($HOME'/.gogo/bin')`
+
+    *if you installed it in a different directory add that instead*
+
+  - bash
+
+    Add this to the end of your .bashrc file
+
+    `export PATH="$HOME/.gogo/bin:$PATH"`
+
+- #### Installing Go and Make
+
+  - Debian:
+
+    > `sudo apt install make`
+
+    Visit the [go website](https://go.dev/dl/) and download the linux version.
+    Then unzip the file you downloaded.
+
+    > `sudo tar -C /usr/local -xzf <filename>`
+
+    Finally add this line to your .bashrc file
+
+    `export PATH="/usr/local/go/bin:$PATH"`
+
+  - Fedora:  
+
+    > `sudo dnf install make go`
+
+  - Arch:
+
+    > `sudo pacman -S make go`
+
+### Windows:
+
+### Mac:
 
 ---
 
-- [ ] Java
+## Usage:
 
-  - [ ] OpenGL
-  - [ ] Gradle
-  - [ ] Maven
+> ```gogo <COMMAND> <APPNAME> [args]```
 
 ---
 
-- [x] Django
+## Config files:
 
-  - [x] DjangoRestFramework
-  - [x] DjangoJWT
-  - [ ] Static Files
-  - [ ] User Auth app
-  - [x] CorsHeaders
-
----
-
-- [x] React
-
-  - [x] Redux
-  - [x] Material-UI
-  - [x] Bootstrap
-  - [x] Typescript
-
----
-
-- [x] NextJS
-
-  - [x] Redux
-  - [x] Material-UI
-  - [x] Bootstrap
-  - [x] Typescript
-
----
-
-- [ ] NextJS + Django
-
-  - [ ] User Auth
-  - [ ] Redux
-  - [ ] Material-UI
-  - [ ] Bootstrap
-  - [ ] DjangoRestFramework
-  - [ ] DjangoJWT
-  - [ ] CorsHeaders
-
----
-
-- [ ] React + Django
-
-  - [ ] User Auth
-  - [ ] Redux
-  - [ ] Material-UI
-  - [ ] Bootstrap
-  - [ ] DjangoRestFramework
-  - [ ] DjangoJWT
-  - [ ] CorsHeaders
-
-TODO:
-
-- [x] Change error handling
-- [x] Add Commands to help menu from config file
-- [x] Create settings file with config path etc...
-- [x] Create Commands for other projects
-- [x] Make working subcommands
-- [x] Setup file manipulation functionality
-- [x] Copy files from template
-- [x] Create help menu for subcommands
-- [x] All flag
-- [x] Exclude flag
-- [x] Write tests
-- [x] Fix settings.json path bug
-- [x] Update tests
-- [ ] Make install script
