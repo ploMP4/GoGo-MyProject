@@ -41,7 +41,7 @@ func showHelp() {
 	fmt.Printf(`A CLI tool to create starter boilerplate for you
 
 GoGo is a CLI tool that creates the starter boilerplate 
-for your projects and it's really helpfull for people
+for your projects and it's really helpful for people
 who use many different programming languages and frameworks.
 
 %s
