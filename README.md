@@ -28,13 +28,12 @@ who use many different programming languages and frameworks.
   Make sure you have make and go installed.  
   See [Installing Go and Make](#installing-go-and-make) if you need help installing them
 
-  Clone the repo to your computer:
+  Clone the repo to your computer. Then cd into the project directory and run make install
 
-  > `git clone https://github.com/ploMP4/GoGo-MyProject`
-
-  cd into the project directory and run make install
-
-  > `cd GoGo-MyProject && make install`
+  ```
+  git clone https://github.com/ploMP4/GoGo-MyProject
+  cd GoGo-MyProject && make install
+  ```
 
   Finally [Add the command to PATH](#add-command-to-path)
 
@@ -45,19 +44,19 @@ who use many different programming languages and frameworks.
 
   Clone the repo to your computer:
 
-  > `git clone https://github.com/ploMP4/GoGo-MyProject`
+  `git clone https://github.com/ploMP4/GoGo-MyProject`
 
   cd into the project directory and build the project using go build.
 
-  > `cd GoGo-MyProject && go build -o ./dist/gogo ./cmd/...`
+  `cd GoGo-MyProject && go build -o ./dist/gogo ./cmd/...`
 
   OR
   
-  > `cd GoGo-MyProject && make build`
+  `cd GoGo-MyProject && make build`
 
   Run the install.sh script
 
-  > `./scripts/install.sh`
+  `./scripts/install.sh`
 
   Finally [Add the command to PATH](#add-command-to-path)
 
@@ -72,23 +71,20 @@ who use many different programming languages and frameworks.
 
   cd into the project directory and build the project using go build.
 
-  > `cd GoGo-MyProject && go build -o ./dist/gogo ./cmd/...`
+  `cd GoGo-MyProject && go build -o ./dist/gogo ./cmd/...`
 
   OR
-  
-  > `cd GoGo-MyProject && make build`
 
-  Create a new folder in your home directory
+  `cd GoGo-MyProject && make build`
 
-  > `mkdir $HOME/.gogo $HOME/.gogo/bin`
+  Create a new folder in your home directory and move the executable there in the *bin* folder. Then create a settings.json file
 
-  Move executable to the newly created folder
 
-  > `mv ./dist/gogo $HOME/.gogo/bin`
-
-  Create a settings.json file
-
-  > `echo '{ "config-path": "" }' > $HOME/.gogo/bin/settings.json`
+  ```
+  mkdir $HOME/.gogo $HOME/.gogo/bin
+  mv ./dist/gogo $HOME/.gogo/bin
+  echo '{ "config-path": "" }' > $HOME/.gogo/bin/settings.json
+  ```
 
   Finally [Add the command to PATH](#add-command-to-path)
 
@@ -112,12 +108,12 @@ who use many different programming languages and frameworks.
 
   - Debian:
 
-    > `sudo apt install make`
+    `sudo apt install make`
 
     Visit the [go website](https://go.dev/dl/) and download the linux version.
     Then unzip the file you downloaded.
 
-    > `sudo tar -C /usr/local -xzf <filename>`
+    `sudo tar -C /usr/local -xzf <filename>`
 
     Finally add this line to your .bashrc file
 
@@ -125,11 +121,11 @@ who use many different programming languages and frameworks.
 
   - Fedora:  
 
-    > `sudo dnf install make go`
+    `sudo dnf install make go`
 
   - Arch:
 
-    > `sudo pacman -S make go`
+    `sudo pacman -S make go`
 
 ### Windows:
 
@@ -139,7 +135,7 @@ who use many different programming languages and frameworks.
 
 ## Usage:
 
-> ```gogo <COMMAND> <APPNAME> [args]```
+`gogo <COMMAND> <APPNAME> [args]`
 
 ---
 
