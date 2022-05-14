@@ -23,7 +23,7 @@ who use many different programming languages and frameworks.
 
 ---
 
-# Installation
+## Installation
 
 ### Linux:
 
@@ -193,17 +193,25 @@ who use many different programming languages and frameworks.
 
 - #### 1. Using the release branch
 
+---
 
-# Usage
+## Usage
 
 ```
 gogo <COMMAND> <APPNAME> [args]
 ```
-# Config files
 
-# Templates
+---
 
-# Dependencies
+## Config files
+
+---
+
+## Templates
+
+---
+
+## Dependencies
 
 ```
 github.com/briandowns/spinner
