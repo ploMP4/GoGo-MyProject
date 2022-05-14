@@ -48,12 +48,11 @@ who use many different programming languages and frameworks.
   git clone https://github.com/ploMP4/GoGo-MyProject
   ```
 
-  cd into the project directory and build the project using go build.
+  cd into the project directory and build the application.
 
   ```
   cd GoGo-MyProject && go build -o ./dist/gogo ./cmd/...
   ```
-
   OR
   
   ```
@@ -79,12 +78,11 @@ who use many different programming languages and frameworks.
   git clone https://github.com/ploMP4/GoGo-MyProject
   ```
 
-  cd into the project directory and build the project using go build.
+  cd into the project directory and build the application.
 
   ```
   cd GoGo-MyProject && go build -o ./dist/gogo ./cmd/...
   ```
-
   OR
 
   ```
@@ -106,7 +104,7 @@ who use many different programming languages and frameworks.
 - #### Add command to PATH
   - zsh
 
-    Add this to your .zshrc file before the `export PATH` line 
+    Add this to your `.zshrc` file before the `export PATH` line 
 
     ```
     path+=($HOME'/.gogo/bin')
@@ -116,7 +114,7 @@ who use many different programming languages and frameworks.
 
   - bash
 
-    Add this to the end of your .bashrc file
+    Add this to the end of your `.bashrc` file
 
     ```
     export PATH="$HOME/.gogo/bin:$PATH"
