@@ -44,19 +44,27 @@ who use many different programming languages and frameworks.
 
   Clone the repo to your computer:
 
-  `git clone https://github.com/ploMP4/GoGo-MyProject`
+  ```
+  git clone https://github.com/ploMP4/GoGo-MyProject
+  ```
 
   cd into the project directory and build the project using go build.
 
-  `cd GoGo-MyProject && go build -o ./dist/gogo ./cmd/...`
+  ```
+  cd GoGo-MyProject && go build -o ./dist/gogo ./cmd/...
+  ```
 
   OR
   
-  `cd GoGo-MyProject && make build`
+  ```
+  cd GoGo-MyProject && make build
+  ```
 
   Run the install.sh script
 
-  `./scripts/install.sh`
+  ```
+  ./scripts/install.sh
+  ```
 
   Finally [Add the command to PATH](#add-command-to-path)
 
@@ -67,17 +75,23 @@ who use many different programming languages and frameworks.
 
   Clone the repo to your computer:
 
-  >`git clone https://github.com/ploMP4/GoGo-MyProject`
+  ```
+  git clone https://github.com/ploMP4/GoGo-MyProject
+  ```
 
   cd into the project directory and build the project using go build.
 
-  `cd GoGo-MyProject && go build -o ./dist/gogo ./cmd/...`
+  ```
+  cd GoGo-MyProject && go build -o ./dist/gogo ./cmd/...
+  ```
 
   OR
 
-  `cd GoGo-MyProject && make build`
+  ```
+  cd GoGo-MyProject && make build
+  ```
 
-  Create a new folder in your home directory and move the executable there in the *bin* folder. Then create a settings.json file
+  Create a new folder in your home directory and move the executable there in the `bin` folder. Then create a settings.json file
 
 
   ```
@@ -94,7 +108,9 @@ who use many different programming languages and frameworks.
 
     Add this to your .zshrc file before the `export PATH` line 
 
-    `path+=($HOME'/.gogo/bin')`
+    ```
+    path+=($HOME'/.gogo/bin')
+    ```
 
     *if you installed it in a different directory add that instead*
 
@@ -102,30 +118,42 @@ who use many different programming languages and frameworks.
 
     Add this to the end of your .bashrc file
 
-    `export PATH="$HOME/.gogo/bin:$PATH"`
+    ```
+    export PATH="$HOME/.gogo/bin:$PATH"
+    ```
 
 - #### Installing Go and Make
 
   - Debian:
 
-    `sudo apt install make`
+    ```
+    sudo apt install make
+    ```
 
     Visit the [go website](https://go.dev/dl/) and download the linux version.
     Then unzip the file you downloaded.
 
-    `sudo tar -C /usr/local -xzf <filename>`
+    ```
+    sudo tar -C /usr/local -xzf <filename>
+    ```
 
     Finally add this line to your .bashrc file
 
-    `export PATH="/usr/local/go/bin:$PATH"`
+    ```
+    export PATH="/usr/local/go/bin:$PATH"
+    ```
 
   - Fedora:  
 
-    `sudo dnf install make go`
+    ```
+    sudo dnf install make go
+    ```
 
   - Arch:
 
-    `sudo pacman -S make go`
+    ```
+    sudo pacman -S make go
+    ```
 
 ### Windows:
 
@@ -135,7 +163,9 @@ who use many different programming languages and frameworks.
 
 ## Usage:
 
-`gogo <COMMAND> <APPNAME> [args]`
+```
+gogo <COMMAND> <APPNAME> [args]
+```
 
 ---
 
