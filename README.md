@@ -6,24 +6,30 @@ who use many different programming languages and frameworks.
 
 - [Installation](#installation)
   - [Linux](#linux)
-    - [Makefile](#1-using-make)
-    - [Install.sh](#2-using-the-installsh)
-    - [Manual Install](#3-manual-installation)
+    - [Release Branch](#1-using-the-release-branch)
+    - [Makefile](#2-using-make)
+    - [Install.sh](#3-using-the-installsh)
+    - [Manual Install](#4-manual-installation)
     - [Adding command to PATH](#add-command-to-path)
     - [Installing Go and Make](#installing-go-and-make)
   - [Windows](#windows)
+    - [Release Branch](#1-using-the-release-branch-1)
   - [Mac](#mac)
+    - [Release Branch](#1-using-the-release-branch-2)
 - [Usage](#usage)
 - [Config Files](#config-files)
-- [Templates]()
+- [Templates](#templates)
+- [Dependencies](#dependencies)
 
 ---
 
-## Installation:
+# Installation
 
 ### Linux:
 
-- #### 1. Using Make:
+- #### 1. Using the release branch
+
+- #### 2. Using Make:
 
   Make sure you have make and go installed.  
   See [Installing Go and Make](#installing-go-and-make) if you need help installing them
@@ -37,7 +43,7 @@ who use many different programming languages and frameworks.
 
   Finally [Add the command to PATH](#add-command-to-path)
 
-- #### 2. Using the install.sh
+- #### 3. Using the install.sh
 
   Make sure you have make and go installed.  
   See [Installing Go and Make](#installing-go-and-make) if you need help installing them
@@ -67,7 +73,7 @@ who use many different programming languages and frameworks.
 
   Finally [Add the command to PATH](#add-command-to-path)
 
-- #### 3. Manual installation
+- #### 4. Manual installation
 
   Make sure you have make and go installed.  
   See [Installing Go and Make](#installing-go-and-make) if you need help installing them
@@ -112,12 +118,38 @@ who use many different programming languages and frameworks.
 
     *if you installed it in a different directory add that instead*
 
+    Restart your terminal or run to following command
+
+    ```
+    source .zshrc
+    ```
+
+    Test that everything went well by running
+
+    ```
+    gogo version
+    ```
+
   - bash
 
     Add this to the end of your `.bashrc` file
 
     ```
     export PATH="$HOME/.gogo/bin:$PATH"
+    ```
+
+    *if you installed it in a different directory add that instead*
+
+    Restart your terminal or run to following command
+
+    ```
+    source .bashrc
+    ```
+
+    Test that everything went well by running
+
+    ```
+    gogo version
     ```
 
 - #### Installing Go and Make
@@ -155,17 +187,25 @@ who use many different programming languages and frameworks.
 
 ### Windows:
 
+- #### 1. Using the release branch
+
 ### Mac:
 
----
+- #### 1. Using the release branch
 
-## Usage:
+
+# Usage
 
 ```
 gogo <COMMAND> <APPNAME> [args]
 ```
+# Config files
 
----
+# Templates
 
-## Config files:
+# Dependencies
 
+```
+github.com/briandowns/spinner
+github.com/fatih/color 
+```
