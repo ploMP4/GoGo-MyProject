@@ -47,7 +47,7 @@ type SubCommand struct {
 	Command  []string  `json:"command"`  // The command that will be executed.  Note: commands should be passed as an array instead of using spaces e.x ["npx", "create-react-app"]
 	Override bool      `json:"override"` // Overrides the last command in the main commands array and runs this instead
 	Parallel bool      `json:"parallel"` // Sets if the command will be run concurrently with others or not
-	Exclude  bool      `json:"exclude"`  // If true this command will be ignored when the (-a, all) flag is ran
+	Exclude  bool      `json:"exclude"`  // If true this command will be ignored when the (a, all) flag is ran
 	Files    FilesType `json:"files"`    // Specify files that you want to change
 	Help     string    `json:"help"`     // Help text for the command
 }
