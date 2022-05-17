@@ -216,6 +216,10 @@ gogo <COMMAND> <APPNAME> [args]
 
 ## Config files
 
+Below is documentation for creating your own config
+file. You can also use the [example](https://github.com/ploMP4/GoGo-MyProject/blob/main/examples/config/example.json) file as a template 
+or modify the [already existing](https://github.com/ploMP4/GoGo-MyProject/tree/main/examples/config) ones
+
 ### Commands:
 
 >Array\<Array\<string>>
@@ -259,6 +263,7 @@ of your project
     - [Template](#template)
     - [Change](#change)
 - [Help](#help-1)
+
 - #### Command Name:
   >Object
 
@@ -274,77 +279,77 @@ of your project
   }
   ```
 
-- #### Name:
-  >String
+  - #### Name:
+    >String
 
-  Name that will be displayed in status messages e.x Installing: Typescript
+    Name that will be displayed in status messages e.x Installing: Typescript
 
-  **_Example:_**
+    **_Example:_**
 
-  ```json
-  "name": "Typescript"
-  ```
+    ```json
+    "name": "Typescript"
+    ```
 
-- #### Command:
-  >Array\<string>
+  - #### Command:
+    >Array\<string>
 
-  The command that will be executed.
+    The command that will be executed.
 
-  **_Example:_**
+    **_Example:_**
 
-  ```json
-  "command": ["npx", "create-react-app", "--template", "typescript"]
-  ```
+    ```json
+    "command": ["npx", "create-react-app", "--template", "typescript"]
+    ```
 
-- #### Override:
-  >Boolean
-  >
-  >Default: false
+  - #### Override:
+    >Boolean
+    >
+    >Default: false
 
-  If true the overrides the last command in the main
-  commands array with this command.
+    If true the overrides the last command in the main
+    commands array with this command.
 
-  **_Example:_**
+    **_Example:_**
 
-  ```json
-  "override": true
-  ```
+    ```json
+    "override": true
+    ```
 
-- #### Parallel:
-  >Boolean
-  >
-  >Default: false
+  - #### Parallel:
+    >Boolean
+    >
+    >Default: false
 
-  If true the command will be run concurrently with others
+    If true the command will be run concurrently with others
 
-  **_Example:_**
+    **_Example:_**
 
-  ```json
-  "parallel": false
-  ```
+    ```json
+    "parallel": false
+    ```
 
-- #### Exclude:
-  >Boolean
-  >
-  >Default: false
+  - #### Exclude:
+    >Boolean
+    >
+    >Default: false
 
-  If true this command will be ignored when the [a, all]() flag is used
+    If true this command will be ignored when the [a, all]() flag is used
 
-  **_Example:_**
+    **_Example:_**
 
-  ```json
-  "exclude": false
-  ```
+    ```json
+    "exclude": false
+    ```
 
-- #### Files:
+  - #### Files:
 
-  - #### Description:
+    - #### Description:
 
-  - #### Filepath:
+    - #### Filepath:
 
-  - #### Template:
+    - #### Template:
 
-  - #### Change:
+    - #### Change:
 
 - #### Help:
   >String
@@ -370,4 +375,7 @@ of your project
 ```
 github.com/briandowns/spinner
 github.com/fatih/color
+github.com/mattn/go-colorable
+github.com/mattn/go-isatty
+golang.org/x/sys
 ```
