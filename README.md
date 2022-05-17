@@ -217,15 +217,15 @@ gogo <COMMAND> <APPNAME> [args]
 ## Config files
 
 Below is documentation for creating your own config
-file. You can also use the [example](https://github.com/ploMP4/GoGo-MyProject/blob/main/examples/config/example.json) file as a template 
+file. You can also use the [example](https://github.com/ploMP4/GoGo-MyProject/blob/main/examples/config/example.json) file as a template
 or modify the [already existing](https://github.com/ploMP4/GoGo-MyProject/tree/main/examples/config) ones
 
 ### Commands:
 
->Array\<Array\<string>>
+> Array\<Array\<string>>
 
 Array with the commands that will be executed.
-Commands should be passed as an array of strings 
+Commands should be passed as an array of strings
 instead of using spaces
 
 **_Example:_**
@@ -238,7 +238,7 @@ instead of using spaces
 
 ### Dirs:
 
->Array\<string>
+> Array\<string>
 
 Directories with these names will be created at the root
 of your project
@@ -265,11 +265,12 @@ of your project
 - [Help](#help-1)
 
 - #### Command Name:
-  >Object
+
+  > Object
 
   The key defined is the argument you need to pass
-  to activate the subcommand. The value contains 
-  data about what it does 
+  to activate the subcommand. The value contains
+  data about what it does
 
   **_Example:_**
 
@@ -280,7 +281,10 @@ of your project
   ```
 
   - #### Name:
-    >String
+
+    > json: "name"
+    >
+    > String
 
     Name that will be displayed in status messages e.x Installing: Typescript
 
@@ -291,7 +295,10 @@ of your project
     ```
 
   - #### Command:
-    >Array\<string>
+
+    > json: "command"
+    >
+    > Array\<string>
 
     The command that will be executed.
 
@@ -302,9 +309,12 @@ of your project
     ```
 
   - #### Override:
-    >Boolean
+
+    > json: "override"
     >
-    >Default: false
+    > Boolean
+    >
+    > Default: false
 
     If true the overrides the last command in the main
     commands array with this command.
@@ -316,9 +326,12 @@ of your project
     ```
 
   - #### Parallel:
-    >Boolean
+
+    > json: "parallel"
     >
-    >Default: false
+    > Boolean
+    >
+    > Default: false
 
     If true the command will be run concurrently with others
 
@@ -329,9 +342,12 @@ of your project
     ```
 
   - #### Exclude:
-    >Boolean
+
+    > json: "exclude"
     >
-    >Default: false
+    > Boolean
+    >
+    > Default: false
 
     If true this command will be ignored when the [a, all]() flag is used
 
@@ -343,18 +359,50 @@ of your project
 
   - #### Files:
 
+    > Object
+
     - #### Description:
+
+      > Object
 
     - #### Filepath:
 
+      > json: "filepath"
+      >
+      > String
+
     - #### Template:
+
+      > json: "template"
+      >
+      > Boolean
+      >
+      > Default: false
 
     - #### Change:
 
-- #### Help:
-  >String
+      > json: "change"
+      >
+      > Object
 
-  Help text for the command
+      - #### Split On
+
+        > json: "split-on"
+        >
+        > String
+
+      - #### Append
+        > json: "append"
+        >
+        > String
+
+- #### Help:
+
+  > json: "help"
+  >
+  > String
+
+  Help text for the subcommand
 
   **_Example:_**
 
