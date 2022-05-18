@@ -218,15 +218,17 @@ gogo <COMMAND> <APPNAME> [args]
 
 Below is documentation for creating your own config
 file. You can also use the [example](https://github.com/ploMP4/GoGo-MyProject/blob/main/examples/config/example.json) file as a template
-or modify the [already existing](https://github.com/ploMP4/GoGo-MyProject/tree/main/examples/config) ones
+or modify the [already existing](https://github.com/ploMP4/GoGo-MyProject/tree/main/examples/config) ones.
 
 ### Commands:
 
+> json: "commands"
+>
 > Array\<Array\<string>>
 
 Array with the commands that will be executed.
 Commands should be passed as an array of strings
-instead of using spaces
+instead of using spaces.
 
 **_Example:_**
 
@@ -238,10 +240,12 @@ instead of using spaces
 
 ### Dirs:
 
+> json: "dirs"
+>
 > Array\<string>
 
 Directories with these names will be created at the root
-of your project
+of your project.
 
 **_Example:_**
 
@@ -270,7 +274,7 @@ of your project
 
   The key defined is the argument you need to pass
   to activate the subcommand. The value contains
-  data about what it does
+  data about what it does.
 
   **_Example:_**
 
@@ -286,7 +290,7 @@ of your project
     >
     > String
 
-    Name that will be displayed in status messages e.x Installing: Typescript
+    Name that will be displayed in status messages e.x Installing: Typescript.
 
     **_Example:_**
 
@@ -333,7 +337,7 @@ of your project
     >
     > Default: false
 
-    If true the command will be run concurrently with others
+    If true the command will be run concurrently with others.
 
     **_Example:_**
 
@@ -349,7 +353,7 @@ of your project
     >
     > Default: false
 
-    If true this command will be ignored when the [a, all]() flag is used
+    If true this command will be ignored when the [a, all]() flag is used.
 
     **_Example:_**
 
@@ -359,17 +363,50 @@ of your project
 
   - #### Files:
 
+    > json: "files"
+    >
     > Object
+
+    Specify files that you want to change
 
     - #### Description:
 
       > Object
+
+      The key of the object is just what is going
+      to be shown in the message when executing.
+      The value contains data about what it does.
+
+      **_Example:_**
+
+      ```json
+      "CORS middleware": {
+          ...
+       },
+      ```
 
     - #### Filepath:
 
       > json: "filepath"
       >
       > String
+
+      Path where the file we want to edit is located. **Path starts from the root file of our project**.
+
+      **_Example:_**
+
+      ```json
+      "filepath": "src/main.c"
+      ```
+
+      You can also use the **\<APPNAME>** tag which searches for a something
+      with the same name as your app. Useful for things like a django project.
+
+      **_Example:_**
+
+      ```json
+      "filepath": "<APPNAME>/settings.py"
+      ```
 
     - #### Template:
 
@@ -379,11 +416,29 @@ of your project
       >
       > Default: false
 
+      If true updates the file using a template. See [Creating a template]() for more info.
+
+      **_Example:_**
+
+      ```json
+      "template": false
+      ```
+
     - #### Change:
 
       > json: "change"
       >
       > Object
+
+      Properties about changing the file
+
+      **_Example:_**
+
+      ```json
+      "change": {
+          ...
+       }
+      ```
 
       - #### Split On
 
@@ -391,10 +446,30 @@ of your project
         >
         > String
 
+        Will split the file on specified string and will append after it.
+        If left empty appends at the end of the file.
+
+        _Uses strings.Split()_
+
+        **_Example:_**
+
+        ```json
+        "split-on": "MIDDLEWARE = [",
+        ```
+
       - #### Append
+
         > json: "append"
         >
         > String
+
+        Content that will be appended after the split on
+
+        **_Example:_**
+
+        ```json
+        "append": "\n\t'corsheaders.middleware.CorsMiddleware',"
+        ```
 
 - #### Help:
 
@@ -411,6 +486,18 @@ of your project
   ```
 
 ### Help:
+
+> json: "help"
+>
+> String
+
+Help text for the command
+
+**_Example:_**
+
+```json
+"help": "Creates react app"
+```
 
 ---
 
