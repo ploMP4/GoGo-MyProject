@@ -17,18 +17,22 @@ who use many different programming languages and frameworks.
   - [Mac](#mac)
     - [Release Branch](#1-using-the-release-branch-2)
 - [Usage](#usage)
+  - [Quick start]()
+- [Flags](#flags)
+  - [h, help](#h-help)
+  - [v, version](#v-version)
+  - [P, set-config-path](#p-set-config-path)
+  - [a, all](#a-all)
+  - [e, exclude](#e-exclude)
 - [Config Files](#config-files)
   - [Commands](#commands)
   - [Dirs](#dirs)
   - [Sub Commands](#sub-commands)
   - [Help](#help)
 - [Templates](#templates)
-- [Flags]()
-  - [a, all]()
-  - [e, exclude]()
-  - [P, set-config-path]()
-  - [h, help]()
-  - [v, version]()
+  - [Get Started]()
+  - [Pros & Cons]()
+  - [Creating a template]()
 - [Dependencies](#dependencies)
 
 ---
@@ -214,6 +218,104 @@ gogo <COMMAND> <APPNAME> [args]
 
 ---
 
+## Flags
+
+### h, help:
+
+> gogo help [command]
+
+**_Description:_**
+
+Displays the help menu. If a command name is passed as an argument
+displays the help menu for the specific command
+
+**_Example:_**
+
+```bash
+gogo help
+```
+
+```bash
+gogo help react
+```
+
+OR
+
+```bash
+gogo h
+```
+
+```bash
+gogo h react
+```
+
+### v, version:
+
+**_Description:_**
+
+Show the application version
+
+**_Example:_**
+
+```bash
+gogo version
+```
+
+OR
+
+```bash
+gogo v
+```
+
+### P, set-config-path:
+
+**_Description:_**
+
+Set the path of the folder containing the config files.
+
+**NOTE: You need to specify the full path from the root directory**
+
+**_Example:_**
+
+```bash
+gogo set-config-path /home/me/.gogo/config
+```
+
+OR
+
+```powershell
+gogo P C:\Users\Me\gogo\config
+```
+
+### a, all:
+
+**_Description:_**
+
+Runs all the subcommands for the command except the ones
+that have the exclude value set to true.
+
+**_Example:_**
+
+```bash
+gogo all react
+```
+
+OR
+
+```bash
+gogo a react
+```
+
+### e, exclude:
+
+> gogo exclude [subcommand]
+
+**_Description:_**
+
+**_Example:_**
+
+---
+
 ## Config files
 
 Below is documentation for creating your own config
@@ -225,6 +327,8 @@ or modify the [already existing](https://github.com/ploMP4/GoGo-MyProject/tree/m
 > json: "commands"
 >
 > Array\<Array\<string>>
+
+**_Description:_**
 
 Array with the commands that will be executed.
 Commands should be passed as an array of strings
@@ -243,6 +347,8 @@ instead of using spaces.
 > json: "dirs"
 >
 > Array\<string>
+
+**_Description:_**
 
 Directories with these names will be created at the root
 of your project.
@@ -272,6 +378,8 @@ of your project.
 
   > Object
 
+  **_Description:_**
+
   The key defined is the argument you need to pass
   to activate the subcommand. The value contains
   data about what it does.
@@ -290,6 +398,8 @@ of your project.
     >
     > String
 
+    **_Description:_**
+
     Name that will be displayed in status messages e.x Installing: Typescript.
 
     **_Example:_**
@@ -303,6 +413,8 @@ of your project.
     > json: "command"
     >
     > Array\<string>
+
+    **_Description:_**
 
     The command that will be executed.
 
@@ -319,6 +431,8 @@ of your project.
     > Boolean
     >
     > Default: false
+
+    **_Description:_**
 
     If true the overrides the last command in the main
     commands array with this command.
@@ -337,6 +451,8 @@ of your project.
     >
     > Default: false
 
+    **_Description:_**
+
     If true the command will be run concurrently with others.
 
     **_Example:_**
@@ -353,6 +469,8 @@ of your project.
     >
     > Default: false
 
+    **_Description:_**
+
     If true this command will be ignored when the [a, all]() flag is used.
 
     **_Example:_**
@@ -367,11 +485,15 @@ of your project.
     >
     > Object
 
+    **_Description:_**
+
     Specify files that you want to change
 
     - #### Description:
 
       > Object
+
+      **_Description:_**
 
       The key of the object is just what is going
       to be shown in the message when executing.
@@ -390,6 +512,8 @@ of your project.
       > json: "filepath"
       >
       > String
+
+      **_Description:_**
 
       Path where the file we want to edit is located. **Path starts from the root file of our project**.
 
@@ -416,6 +540,8 @@ of your project.
       >
       > Default: false
 
+      **_Description:_**
+
       If true updates the file using a template. See [Creating a template]() for more info.
 
       **_Example:_**
@@ -429,6 +555,8 @@ of your project.
       > json: "change"
       >
       > Object
+
+      **_Description:_**
 
       Properties about changing the file
 
@@ -445,6 +573,8 @@ of your project.
         > json: "split-on"
         >
         > String
+
+        **_Description:_**
 
         Will split the file on specified string and will append after it.
         If left empty appends at the end of the file.
@@ -463,6 +593,8 @@ of your project.
         >
         > String
 
+        **_Description:_**
+
         Content that will be appended after the split on
 
         **_Example:_**
@@ -477,6 +609,8 @@ of your project.
   >
   > String
 
+  **_Description:_**
+
   Help text for the subcommand
 
   **_Example:_**
@@ -490,6 +624,8 @@ of your project.
 > json: "help"
 >
 > String
+
+**_Description:_**
 
 Help text for the command
 
