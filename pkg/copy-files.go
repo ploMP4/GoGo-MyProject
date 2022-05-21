@@ -1,20 +1,16 @@
 package pkg
 
 import (
-	"embed"
 	"errors"
 	"os"
 )
-
-//go:embed templates
-var templateFS embed.FS
 
 func copyFileFromTemplate(templatePath, targetFile string) error {
 	if fileExists(targetFile) {
 		return errors.New(targetFile + " already exists")
 	}
 
-	data, err := templateFS.ReadFile(templatePath)
+	data, err := os.ReadFile(templatePath)
 	if err != nil {
 		exitGracefully(err)
 	}

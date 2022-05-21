@@ -13,12 +13,13 @@ import (
 )
 
 // Application Version
-var version = "1.0.1"
+var version = "1.1.0"
 
 type App struct {
 	filename string           // Name of the config file we are executing
 	appName  string           // The name that the main app folder will have
 	args     []string         // Command line arguments passed
+	parser   Parser           // Parser
 	spinner  *spinner.Spinner // Load Spinner
 }
 
@@ -49,12 +50,18 @@ func Execute() {
 	case "v", "version":
 		color.Green("Application version: " + version)
 
-	case "P", "set-config-path":
-		p := Parser{}
-		p.parseSettings()
-		err = p.settings.setConfigPath(appName)
+	case "C", "set-config-path":
+		app.parser.parseSettings()
+		err = app.parser.settings.setConfigPath(appName)
 		if err != nil {
 			message = fmt.Sprint("Config path set to: " + appName)
+		}
+
+	case "T", "set-template-path":
+		app.parser.parseSettings()
+		err = app.parser.settings.setTemplatePath(appName)
+		if err != nil {
+			message = fmt.Sprint("Template path set to: " + appName)
 		}
 
 	default:
@@ -91,16 +98,16 @@ func validateInput() (string, string, []string, error) {
 }
 
 func (app *App) run() (string, error) {
-	parser := Parser{
+	app.parser = Parser{
 		args: app.args,
 	}
 
-	err := parser.parseSettings()
+	err := app.parser.parseSettings()
 	if err != nil {
 		return "", err
 	}
 
-	err = parser.parseConfig(app.filename)
+	err = app.parser.parseConfig(app.filename)
 	if err != nil {
 		return "", err
 	}
@@ -109,7 +116,7 @@ func (app *App) run() (string, error) {
 		return "", errors.New("appname was not provided")
 	}
 
-	mainCommands, otherCommands, dirs := parser.parseArgs()
+	mainCommands, otherCommands, dirs := app.parser.parseArgs()
 	mainCommands[len(mainCommands)-1] = append(mainCommands[len(mainCommands)-1], app.appName)
 
 	app.spinner.Start()
@@ -205,7 +212,7 @@ func (app *App) executeSubCommand(command SubCommand) error {
 				app.spinner.Restart()
 				showMessage("Copying", file.Filepath)
 
-				copyFileFromTemplate("templates/"+app.filename+"/"+file.Filepath+".txt", file.Filepath)
+				copyFileFromTemplate(app.parser.settings.TemplatePath+"/"+app.filename+"/"+file.Filepath, file.Filepath)
 			} else {
 				app.spinner.Restart()
 
