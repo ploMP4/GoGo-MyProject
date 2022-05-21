@@ -49,12 +49,20 @@ func Execute() {
 	case "v", "version":
 		color.Green("Application version: " + version)
 
-	case "P", "set-config-path":
+	case "C", "set-config-path":
 		p := Parser{}
 		p.parseSettings()
 		err = p.settings.setConfigPath(appName)
 		if err != nil {
 			message = fmt.Sprint("Config path set to: " + appName)
+		}
+
+	case "T", "set-template-path":
+		p := Parser{}
+		p.parseSettings()
+		err = p.settings.setTemplatePath(appName)
+		if err != nil {
+			message = fmt.Sprint("Template path set to: " + appName)
 		}
 
 	default:
@@ -205,7 +213,8 @@ func (app *App) executeSubCommand(command SubCommand) error {
 				app.spinner.Restart()
 				showMessage("Copying", file.Filepath)
 
-				copyFileFromTemplate("templates/"+app.filename+"/"+file.Filepath+".txt", file.Filepath)
+				// TODO: SET TEMPLATE PATH
+				copyFileFromTemplate("/home/plo/Documents/GitHub/GoGoProject/examples/templates/"+app.filename+"/"+file.Filepath, file.Filepath)
 			} else {
 				app.spinner.Restart()
 

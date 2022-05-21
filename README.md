@@ -17,8 +17,8 @@ who use many different programming languages and frameworks.
   - [Mac](#mac)
     - [Release Branch](#1-using-the-release-branch-2)
 - [Usage](#usage)
-  - [Quick start]()
-- [Flags](#flags)
+  - [Quick start](#quick-start)
+- [Built in flags](#flags)
   - [h, help](#h-help)
   - [v, version](#v-version)
   - [P, set-config-path](#p-set-config-path)
@@ -30,9 +30,9 @@ who use many different programming languages and frameworks.
   - [Sub Commands](#sub-commands)
   - [Help](#help)
 - [Templates](#templates)
-  - [Get Started]()
-  - [Pros & Cons]()
-  - [Creating a template]()
+  - [Get Started](#get-started)
+  - [Pros & Cons](#pros--cons)
+  - [Creating a template](#creating-a-template)
 - [Dependencies](#dependencies)
 
 ---
@@ -216,9 +216,13 @@ who use many different programming languages and frameworks.
 gogo <COMMAND> <APPNAME> [args]
 ```
 
+### Quick Start:
+
 ---
 
 ## Flags
+
+Built in flags of the app.
 
 ### h, help:
 
@@ -471,7 +475,7 @@ of your project.
 
     **_Description:_**
 
-    If true this command will be ignored when the [a, all]() flag is used.
+    If true this command will be ignored when the [a, all](#a-all) flag is used.
 
     **_Example:_**
 
@@ -638,6 +642,17 @@ Help text for the command
 ---
 
 ## Templates
+
+### Get Started:
+
+### Pros & Cons:
+
+| Pros                                                                  | Cons                                                                 |
+| --------------------------------------------------------------------- | -------------------------------------------------------------------- |
+| You carry all your templates if you move the app to another computer. | Bigger binary size.                                                  |
+|                                                                       | You have to recompile the app whenever you create/update a template. |
+
+### Creating a template:
 
 ---
 
