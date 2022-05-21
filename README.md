@@ -21,7 +21,8 @@ who use many different programming languages and frameworks.
 - [Flags](#flags)
   - [h, help](#h-help)
   - [v, version](#v-version)
-  - [P, set-config-path](#p-set-config-path)
+  - [C, set-config-path](#c-set-config-path)
+  - [T, set-template-path](#t-set-template-path)
   - [a, all](#a-all)
   - [e, exclude](#e-exclude)
 - [Config Files](#config-files)
@@ -267,7 +268,7 @@ OR
 gogo v
 ```
 
-### P, set-config-path:
+### C, set-config-path:
 
 **_Description:_**
 
@@ -284,7 +285,27 @@ gogo set-config-path /home/me/.gogo/config
 OR
 
 ```powershell
-gogo P C:\Users\Me\gogo\config
+gogo C C:\Users\Me\gogo\config
+```
+
+### T, set-template-path:
+
+**_Description:_**
+
+Set the path of the folder containing the templates.
+
+**NOTE: You need to specify the full path from the root directory**
+
+**_Example:_**
+
+```bash
+gogo set-template-path /home/me/.gogo/templates
+```
+
+OR
+
+```powershell
+gogo T C:\Users\Me\gogo\templates
 ```
 
 ### a, all:
