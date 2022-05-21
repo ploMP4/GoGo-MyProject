@@ -52,7 +52,8 @@ who use many different programming languages and frameworks.
 
 	     h, help [command]   - show the help menu
 	            v, version   - print application version
-     P, set-config-path <path>   - set the config folder path containing your json files.
+     C, set-config-path <path>   - set the config folder path containing your json files.
+   T, set-template-path <path>   - set the template folder path.
 	%v
 
 `, Yellow("USAGE:"), Yellow("AVAILABLE COMMANDS:"), strings.Trim(fmt.Sprint(helpCommands), "[]"))
