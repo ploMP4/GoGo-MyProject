@@ -18,7 +18,6 @@ var version = "1.1.0"
 type App struct {
 	filename string           // Name of the config file we are executing
 	appName  string           // The name that the main app folder will have
-	args     []string         // Command line arguments passed
 	parser   Parser           // Parser
 	spinner  *spinner.Spinner // Load Spinner
 }
@@ -31,8 +30,10 @@ func Execute() {
 	app := &App{
 		filename: filename,
 		appName:  appName,
-		args:     args,
 		spinner:  s,
+		parser: Parser{
+			args: args,
+		},
 	}
 
 	if err != nil {
@@ -98,10 +99,6 @@ func validateInput() (string, string, []string, error) {
 }
 
 func (app *App) run() (string, error) {
-	app.parser = Parser{
-		args: app.args,
-	}
-
 	err := app.parser.parseSettings()
 	if err != nil {
 		return "", err
@@ -189,7 +186,11 @@ func (app *App) runSubCommands(subcommands []SubCommand) {
 				}
 			}(&wg, command)
 		} else {
-			app.executeSubCommand(command)
+			err := app.executeSubCommand(command)
+			if err != nil {
+				color.Yellow("Failed to execute %s\n", command)
+				color.Red("Error: %v\n", err)
+			}
 		}
 	}
 
