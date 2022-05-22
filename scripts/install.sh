@@ -19,6 +19,7 @@ if [ ! -f $SETTINGS_FILE_PATH ]; then
     touch $SETTINGS_FILE_PATH
 
     echo '{ 
-    "config-path": "'$APPLICATION_PATH'/config"
+    "config-path": "'$APPLICATION_PATH'/config",
+    "template-path": "'$APPLICATION_PATH'/templates"
 }' > $SETTINGS_FILE_PATH
 fi
