@@ -32,7 +32,6 @@ who use many different programming languages and frameworks.
   - [Help](#help)
 - [Templates](#templates)
   - [Get Started](#get-started)
-  - [Pros & Cons](#pros--cons)
   - [Creating a template](#creating-a-template)
 - [Dependencies](#dependencies)
 
@@ -567,7 +566,7 @@ of your project.
 
       **_Description:_**
 
-      If true updates the file using a template. See [Creating a template]() for more info.
+      If true updates the file using a template. See [templates section](#templates) for more info.
 
       **_Example:_**
 
@@ -664,16 +663,75 @@ Help text for the command
 
 ## Templates
 
+Templates are pre-made files that you copy into your project.
+
 ### Get Started:
 
-### Pros & Cons:
+- First you need to create a directory where you will store your templates anywhere that you want in your machine.
 
-| Pros                                                                  | Cons                                                                 |
-| --------------------------------------------------------------------- | -------------------------------------------------------------------- |
-| You carry all your templates if you move the app to another computer. | Bigger binary size.                                                  |
-|                                                                       | You have to recompile the app whenever you create/update a template. |
+```bash
+mkdir ~/.gogo/templates
+```
+
+- Then you need you add it to `settings.json` see [set-template-path](#t-set-template-path) for info on how to easily do that
+
+- Finally you are ready to [create some templates](#creating-a-template).
+  **Templates need to be stored in a folder with the same name as the command they are meant for.**
+
+  For example if we have a command named `cpp` we need to store the
+  templates for this command in `TEMPLATE_FOLDER/cpp`.
 
 ### Creating a template:
+
+A template is basically just a file that gets copied into your project.
+
+So let's say we want to create a starter file for our c++ project to use
+as a template. As stated before template files need to be under a directory
+with the same name as the command.
+
+So let's say we name our command cpp,
+we will create a directory in the `templates folder` called `cpp`.
+
+**When we say that a file is going to use a template in our [config](#files) file**
+**we specify a path for that file so in our templates folder we need to follow the same directory structure.**
+
+For example let's say we want to have a directory named `src` that will
+store our source files, and in there we want to insert our `main.cpp template`.
+Based on that we will need to create a directory with the name `src` inside
+our template folder for the command we made called `cpp`.
+
+```bash
+mkdir src
+```
+
+Now we can create our template file inside the src directory.
+
+```bash
+cd src && touch main.cpp
+```
+
+main.cpp
+
+```cpp
+#include <iostream>
+
+int main() {
+    std::cout << "Hello World" << std::endl;
+
+    return 0;
+}
+```
+
+Now we can add the template file under our desired subcommand like so:
+
+```json
+"files": {
+  "create main.cpp": {
+    "filepath": "src/main.cpp",
+    "template": true
+  },
+}
+```
 
 ---
 
