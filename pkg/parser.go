@@ -1,18 +1,19 @@
 package pkg
 
 import (
-	"encoding/json"
 	"fmt"
 	"io/ioutil"
 	"os"
 	"path/filepath"
 	"strings"
+
+	"github.com/BurntSushi/toml"
 )
 
 // Used to parse the arguments passed in and
-// the json file specified
+// the toml file specified
 type Parser struct {
-	settings Settings // settings.json file
+	settings Settings // settings.toml file
 	config   Config   // The config file
 	args     []string // Arguments passed
 }
@@ -33,39 +34,39 @@ type SubCommands map[string]SubCommand
 // description to print out to the user and the properties for the values
 type FilesType map[string]File
 
-// Describe the main json config file
+// Describe the main toml config file
 type Config struct {
-	Commands    MainCommmands `json:"commands"`    // Array with the commands that will be executed. Note: commands should be passed as an array instead of using spaces e.x ["npx", "create-react-app"]
-	Dirs        []string      `json:"dirs"`        // Array with names of directories that will be created
-	SubCommands SubCommands   `json:"subCommands"` // Commands that can be passed after the initial command for optional features e.x. ts for typescript in a react command
-	Help        string        `json:"help"`        // Help text for the command
+	Commands    MainCommmands `toml:"commands"`    // Array with the commands that will be executed. Note: commands should be passed as an array instead of using spaces e.x ["npx", "create-react-app"]
+	Dirs        []string      `toml:"dirs"`        // Array with names of directories that will be created
+	SubCommands SubCommands   `toml:"subCommands"` // Commands that can be passed after the initial command for optional features e.x. ts for typescript in a react command
+	Help        string        `toml:"help"`        // Help text for the command
 }
 
 // Describe a subcommand
 type SubCommand struct {
-	Name     string    `json:"name"`     // Name that will be displayed in the Installing status message e.x Installing: React
-	Command  []string  `json:"command"`  // The command that will be executed.  Note: commands should be passed as an array instead of using spaces e.x ["npx", "create-react-app"]
-	Override bool      `json:"override"` // Overrides the last command in the main commands array and runs this instead
-	Parallel bool      `json:"parallel"` // Sets if the command will be run concurrently with others or not
-	Exclude  bool      `json:"exclude"`  // If true this command will be ignored when the (a, all) flag is ran
-	Files    FilesType `json:"files"`    // Specify files that you want to change
-	Help     string    `json:"help"`     // Help text for the command
+	Name     string    `toml:"name"`     // Name that will be displayed in the Installing status message e.x Installing: React
+	Command  []string  `toml:"command"`  // The command that will be executed.  Note: commands should be passed as an array instead of using spaces e.x ["npx", "create-react-app"]
+	Override bool      `toml:"override"` // Overrides the last command in the main commands array and runs this instead
+	Parallel bool      `toml:"parallel"` // Sets if the command will be run concurrently with others or not
+	Exclude  bool      `toml:"exclude"`  // If true this command will be ignored when the (a, all) flag is ran
+	Files    FilesType `toml:"files"`    // Specify files that you want to change
+	Help     string    `toml:"help"`     // Help text for the command
 }
 
 // Describe a file object
 type File struct {
-	Filepath string     `json:"filepath"` // Path where the file we want to edit is located. Path starts from the root file of our project
-	Template bool       `json:"template"` // Specify if the file will be updated from an existing template
-	Change   FileChange `json:"change"`   // Properties about changing the file
+	Filepath string     `toml:"filepath"` // Path where the file we want to edit is located. Path starts from the root file of our project
+	Template bool       `toml:"template"` // Specify if the file will be updated from an existing template
+	Change   FileChange `toml:"change"`   // Properties about changing the file
 }
 
 // Describe file change properties object
 type FileChange struct {
-	SplitOn string `json:"split-on"` // Specify string to split the file on
-	Append  string `json:"append"`   // Content that will be appended after the split on
+	SplitOn string `toml:"split-on"` // Specify string to split the file on
+	Append  string `toml:"append"`   // Content that will be appended after the split on
 }
 
-// Parse the settings.json file that exists in
+// Parse the settings.toml file that exists in
 // the root of the application into the Parser.settings
 func (p *Parser) parseSettings() error {
 	e, err := os.Executable()
@@ -78,18 +79,18 @@ func (p *Parser) parseSettings() error {
 		return err
 	}
 
-	jsonFile, err := os.Open(filepath.Dir(e_path) + "/settings.json")
+	tomlFile, err := os.Open(filepath.Dir(e_path) + "/settings.toml")
 	if err != nil {
 		return err
 	}
-	defer jsonFile.Close()
+	defer tomlFile.Close()
 
-	jsonData, err := ioutil.ReadAll(jsonFile)
+	tomlData, err := ioutil.ReadAll(tomlFile)
 	if err != nil {
 		return err
 	}
 
-	if err = json.Unmarshal(jsonData, &p.settings); err != nil {
+	if err = toml.Unmarshal(tomlData, &p.settings); err != nil {
 		return err
 	}
 
@@ -99,18 +100,18 @@ func (p *Parser) parseSettings() error {
 // Check if a file with the name passed in by the user exists
 // and parse its contents into the Parser.config
 func (p *Parser) parseConfig(filename string) error {
-	jsonFile, err := os.Open(fmt.Sprintf("%s/%s.json", p.settings.ConfigPath, filename))
+	tomlFile, err := os.Open(fmt.Sprintf("%s/%s.toml", p.settings.ConfigPath, filename))
 	if err != nil {
 		return err
 	}
-	defer jsonFile.Close()
+	defer tomlFile.Close()
 
-	jsonData, err := ioutil.ReadAll(jsonFile)
+	tomlData, err := ioutil.ReadAll(tomlFile)
 	if err != nil {
 		return err
 	}
 
-	if err = json.Unmarshal(jsonData, &p.config); err != nil {
+	if err = toml.Unmarshal(tomlData, &p.config); err != nil {
 		return err
 	}
 

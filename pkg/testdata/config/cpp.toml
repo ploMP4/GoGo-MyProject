@@ -1,0 +1,17 @@
+commands = [["mkdir"]]
+dirs = ["bin", "include", "src"]
+help = "Create C++ app"
+
+[subCommands.v]
+name = "vanilla"
+override = false
+parallel = true
+help = "Vanilla app"
+
+[subCommands.v.files.src]
+filepath = "src/main.cpp"
+template = true
+
+[subCommands.v.files.makefile]
+filepath = "Makefile"
+template = true

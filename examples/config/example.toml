@@ -1,0 +1,20 @@
+commands = []
+dirs = []
+help = "example file"
+
+[subCommands.command-name]
+name = ""
+command = []
+
+override = false
+parallel = false
+exclude = false
+
+[subCommands.command-name.files.description]
+filepath = ""
+template = false
+help = ""
+
+[subCommands.command-name.files.description.change]
+split-on = ""
+append = ""

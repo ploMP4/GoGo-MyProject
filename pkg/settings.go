@@ -8,11 +8,11 @@ import (
 )
 
 type Settings struct {
-	ConfigPath   string `json:"config-path"`   // Path of folder containing json files
-	TemplatePath string `json:"template-path"` // Path of folder containing templates
+	ConfigPath   string `toml:"config-path"`   // Path of folder containing toml files
+	TemplatePath string `toml:"template-path"` // Path of folder containing templates
 }
 
-// Change the config-path value in settings.json
+// Change the config-path value in settings.toml
 func (s *Settings) setConfigPath(path string) error {
 	s.ConfigPath = path
 
