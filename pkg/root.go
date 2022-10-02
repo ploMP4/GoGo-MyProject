@@ -213,7 +213,8 @@ func (app *App) executeSubCommand(command SubCommand) error {
 				app.spinner.Restart()
 				showMessage("Copying", file.Filepath)
 
-				copyFileFromTemplate(app.parser.settings.TemplatePath+"/"+app.filename+"/"+file.Filepath, file.Filepath)
+				templatePath := fmt.Sprintf("%s/%s/%s/%s", app.parser.settings.TemplatePath, app.filename, command.Name, file.Filepath)
+				copyFileFromTemplate(templatePath, file.Filepath)
 			} else {
 				app.spinner.Restart()
 
