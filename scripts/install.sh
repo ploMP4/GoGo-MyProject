@@ -2,7 +2,7 @@ DIST_PATH=./dist/gogo
 
 APPLICATION_PATH=$HOME/.gogo
 BINARY_PATH=$APPLICATION_PATH/bin
-SETTINGS_FILE_PATH=$BINARY_PATH/settings.json
+SETTINGS_FILE_PATH=$BINARY_PATH/settings.toml
 
 go build -o ./dist/gogo ./cmd/...
 
@@ -18,8 +18,6 @@ rmdir ./dist
 if [ ! -f $SETTINGS_FILE_PATH ]; then 
     touch $SETTINGS_FILE_PATH
 
-    echo '{ 
-    "config-path": "'$APPLICATION_PATH'/config",
-    "template-path": "'$APPLICATION_PATH'/templates"
-}' > $SETTINGS_FILE_PATH
+    echo 'config-path = "'$APPLICATION_PATH'/config"
+    template-path = "'$APPLICATION_PATH'/templates"' > $SETTINGS_FILE_PATH
 fi
