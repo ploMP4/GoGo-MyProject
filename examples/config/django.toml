@@ -24,10 +24,7 @@ help = "Install and setup DjangoRestFramework"
 
 [subCommands.rest.files.rest-framework-settings]
 filepath = "<APPNAME>/settings.py"
-
-[subCommands.rest.files.rest-framework-settings.change]
-split-on = "'django.contrib.staticfiles',"
-append = "\n\t'rest_framework',"
+change = { split-on = "'django.contrib.staticfiles',", append = "\n\t'rest_framework'," }
 
 # ============ CORS ============
 [subCommands.cors]
@@ -38,24 +35,15 @@ help = "Install django-cors-headers"
 
 [subCommands.cors.files.cors-installed-apps]
 filepath = "<APPNAME>/settings.py"
-
-[subCommands.cors.files.cors-installed-apps.change]
-split-on = "'django.contrib.staticfiles',"
-append = "\n\t'corsheaders',"
+change = { split-on = "'django.contrib.staticfiles',", append = "\n\t'corsheaders'," }
 
 [subCommands.cors.files.cors-middleware]
 filepath = "<APPNAME>/settings.py"
-
-[subCommands.cors.files.cors-middleware.change]
-split-on = "MIDDLEWARE = ["
-append = "\n\t'corsheaders.middleware.CorsMiddleware',"
+change = { split-on = "MIDDLEWARE = [", append = "\n\t'corsheaders.middleware.CorsMiddleware'," }
 
 [subCommands.cors.files.cors-settings]
 filepath = "<APPNAME>/settings.py"
-
-[subCommands.cors.files.cors-settings.change]
-split-on = ""
-append = "\n# Change in production\nCORS_ALLOW_ALL_ORIGINS = True"
+change = { split-on = "", append = "\n# Change in production\nCORS_ALLOW_ALL_ORIGINS = True" }
 
 # ============ JWT ============
 [subCommands.jwt]
@@ -66,7 +54,4 @@ help = "Add JSON Web Tokens to use for user authentication"
 
 [subCommands.jwt.files.jwt-settings]
 filepath = "<APPNAME>/settings.py"
-
-[subCommands.jwt.files.jwt-settings.change]
-split-on = "# Application definition"
-append = "\nREST_FRAMEWORK = {\n\t'DEFAULT_AUTHENTICATION_CLASSES': (\n\t\t'rest_framework_simplejwt.authentication.JWTAuthentication',\n\t)\n}"
+change = { split-on = "# Application definition", append = "\nREST_FRAMEWORK = {\n\t'DEFAULT_AUTHENTICATION_CLASSES': (\n\t\t'rest_framework_simplejwt.authentication.JWTAuthentication',\n\t)\n}" }

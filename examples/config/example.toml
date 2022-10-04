@@ -10,11 +10,9 @@ override = false
 parallel = false
 exclude = false
 
+help = ""
+
 [subCommands.command-name.files.description]
 filepath = ""
 template = false
-help = ""
-
-[subCommands.command-name.files.description.change]
-split-on = ""
-append = ""
+change = { split-on = "", append = "" }
