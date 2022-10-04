@@ -1,10 +1,12 @@
 package pkg
 
 import (
-	"encoding/json"
+	"bytes"
 	"io/ioutil"
 	"os"
 	"path/filepath"
+
+	"github.com/BurntSushi/toml"
 )
 
 type Settings struct {
@@ -14,9 +16,13 @@ type Settings struct {
 
 // Change the config-path value in settings.toml
 func (s *Settings) setConfigPath(path string) error {
+	buf := new(bytes.Buffer)
 	s.ConfigPath = path
 
-	file, err := json.MarshalIndent(s, "", "  ")
+	err := toml.NewEncoder(buf).Encode(map[string]string{
+		"config-path":   s.ConfigPath,
+		"template-path": s.TemplatePath,
+	})
 	if err != nil {
 		return err
 	}
@@ -31,7 +37,7 @@ func (s *Settings) setConfigPath(path string) error {
 		return err
 	}
 
-	err = ioutil.WriteFile(filepath.Dir(e_path)+"/settings.json", file, 0644)
+	err = ioutil.WriteFile(filepath.Dir(e_path)+"/settings.toml", buf.Bytes(), 0644)
 	if err != nil {
 		return err
 	}
@@ -39,11 +45,15 @@ func (s *Settings) setConfigPath(path string) error {
 	return nil
 }
 
-// Change the template-path value in settings.json
+// Change the template-path value in settings.toml
 func (s *Settings) setTemplatePath(path string) error {
+	buf := new(bytes.Buffer)
 	s.TemplatePath = path
 
-	file, err := json.MarshalIndent(s, "", "  ")
+	err := toml.NewEncoder(buf).Encode(map[string]string{
+		"config-path":   s.ConfigPath,
+		"template-path": s.TemplatePath,
+	})
 	if err != nil {
 		return err
 	}
@@ -58,7 +68,7 @@ func (s *Settings) setTemplatePath(path string) error {
 		return err
 	}
 
-	err = ioutil.WriteFile(filepath.Dir(e_path)+"/settings.json", file, 0644)
+	err = ioutil.WriteFile(filepath.Dir(e_path)+"/settings.toml", buf.Bytes(), 0644)
 	if err != nil {
 		return err
 	}
