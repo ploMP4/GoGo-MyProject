@@ -111,12 +111,12 @@ who use many different programming languages and frameworks.
   cd GoGo-MyProject && make build
   ```
 
-  Create a new folder in your home directory and move the executable there in the `bin` folder. Then create a settings.json file
+  Create a new folder in your home directory and move the executable there in the `bin` folder. Then create a settings.toml file
 
   ```
   mkdir $HOME/.gogo $HOME/.gogo/bin
   mv ./dist/gogo $HOME/.gogo/bin
-  echo '{ "config-path": "" }' > $HOME/.gogo/bin/settings.json
+  echo '{ "config-path": "" }' > $HOME/.gogo/bin/settings.toml
   ```
 
   Finally [Add the command to PATH](#add-command-to-path)
@@ -330,25 +330,17 @@ OR
 gogo a react
 ```
 
-### e, exclude:
-
-> gogo exclude [subcommand]
-
-**_Description:_**
-
-**_Example:_**
-
 ---
 
 ## Config files
 
 Below is documentation for creating your own config
-file. You can also use the [example](https://github.com/ploMP4/GoGo-MyProject/blob/main/examples/config/example.json) file as a template
+file. You can also use the [example](https://github.com/ploMP4/GoGo-MyProject/blob/main/examples/config/example.toml) file as a template
 or modify the [already existing](https://github.com/ploMP4/GoGo-MyProject/tree/main/examples/config) ones.
 
 ### Commands:
 
-> json: "commands"
+> toml: "commands"
 >
 > Array\<Array\<string>>
 
@@ -360,15 +352,15 @@ instead of using spaces.
 
 **_Example:_**
 
-```json
-"commands": [
+```toml
+commands = [
   ["npx", "create-react-app"]
 ]
 ```
 
 ### Dirs:
 
-> json: "dirs"
+> toml: "dirs"
 >
 > Array\<string>
 
@@ -379,8 +371,8 @@ of your project.
 
 **_Example:_**
 
-```json
-"dirs": ["src", "dist", "tests", "vendor"]
+```toml
+dirs = ["src", "dist", "tests", "vendor"]
 ```
 
 ### Sub Commands:
@@ -400,41 +392,40 @@ of your project.
 
 - #### Command Name:
 
-  > Object
-
   **_Description:_**
 
-  The key defined is the argument you need to pass
-  to activate the subcommand. The value contains
-  data about what it does.
+  This will be the name of the command when you run the app
 
   **_Example:_**
 
-  ```json
-  "ts": {
-    ...
-  }
+  ```toml
+  [subCommands.ts]
+  ...
+  ```
+  ```bash
+  gogo react myapp ts
   ```
 
   - #### Name:
 
-    > json: "name"
+    > toml: "name"
     >
     > String
 
     **_Description:_**
 
-    Name that will be displayed in status messages e.x Installing: Typescript.
+    Name that will be displayed in log messages e.x Installing: Typescript.
 
     **_Example:_**
 
-    ```json
-    "name": "Typescript"
+    ```toml
+    [subCommands.ts]
+    name = "Typescript"
     ```
 
   - #### Command:
 
-    > json: "command"
+    > toml: "command"
     >
     > Array\<string>
 
@@ -444,13 +435,13 @@ of your project.
 
     **_Example:_**
 
-    ```json
-    "command": ["npx", "create-react-app", "--template", "typescript"]
+    ```toml
+    command = ["npx", "create-react-app", "--template", "typescript"]
     ```
 
   - #### Override:
 
-    > json: "override"
+    > toml: "override"
     >
     > Boolean
     >
@@ -463,13 +454,13 @@ of your project.
 
     **_Example:_**
 
-    ```json
-    "override": true
+    ```toml
+    override = true
     ```
 
   - #### Parallel:
 
-    > json: "parallel"
+    > toml: "parallel"
     >
     > Boolean
     >
@@ -481,13 +472,13 @@ of your project.
 
     **_Example:_**
 
-    ```json
-    "parallel": false
+    ```toml
+    parallel = false
     ```
 
   - #### Exclude:
 
-    > json: "exclude"
+    > toml: "exclude"
     >
     > Boolean
     >
@@ -499,15 +490,13 @@ of your project.
 
     **_Example:_**
 
-    ```json
-    "exclude": false
+    ```toml
+    exclude = false
     ```
 
   - #### Files:
 
-    > json: "files"
-    >
-    > Object
+    > toml: "files"
 
     **_Description:_**
 
@@ -515,25 +504,20 @@ of your project.
 
     - #### Description:
 
-      > Object
-
       **_Description:_**
 
-      The key of the object is just what is going
-      to be shown in the message when executing.
-      The value contains data about what it does.
+      The string that will be displayed in log messages
 
       **_Example:_**
 
-      ```json
-      "CORS middleware": {
-          ...
-       },
+      ```toml
+      [subCommands.cors.files.cors-middleware]
+      ...
       ```
 
     - #### Filepath:
 
-      > json: "filepath"
+      > toml: "filepath"
       >
       > String
 
@@ -543,22 +527,22 @@ of your project.
 
       **_Example:_**
 
-      ```json
-      "filepath": "src/main.c"
+      ```toml
+      filepath = "src/main.c"
       ```
 
-      You can also use the **\<APPNAME>** tag which searches for a something
+      You can also use the **\<APPNAME>** tag which searches for something
       with the same name as your app. Useful for things like a django project.
 
       **_Example:_**
 
-      ```json
-      "filepath": "<APPNAME>/settings.py"
+      ```toml
+      filepath = "<APPNAME>/settings.py"
       ```
 
     - #### Template:
 
-      > json: "template"
+      > toml: "template"
       >
       > Boolean
       >
@@ -570,15 +554,13 @@ of your project.
 
       **_Example:_**
 
-      ```json
-      "template": false
+      ```toml
+      template = false
       ```
 
     - #### Change:
 
-      > json: "change"
-      >
-      > Object
+      > toml: "change"
 
       **_Description:_**
 
@@ -586,15 +568,15 @@ of your project.
 
       **_Example:_**
 
-      ```json
-      "change": {
+      ```toml
+      change = {
           ...
        }
       ```
 
       - #### Split On
 
-        > json: "split-on"
+        > toml: "split-on"
         >
         > String
 
@@ -607,13 +589,15 @@ of your project.
 
         **_Example:_**
 
-        ```json
-        "split-on": "MIDDLEWARE = [",
+        ```toml
+        change = {
+          split-on = "MIDDLEWARE = [",
+        }
         ```
 
       - #### Append
 
-        > json: "append"
+        > toml: "append"
         >
         > String
 
@@ -623,13 +607,16 @@ of your project.
 
         **_Example:_**
 
-        ```json
-        "append": "\n\t'corsheaders.middleware.CorsMiddleware',"
+        ```toml
+        change = {
+          ...
+          append = "\n\t'corsheaders.middleware.CorsMiddleware',"
+        }
         ```
 
 - #### Help:
 
-  > json: "help"
+  > toml: "help"
   >
   > String
 
@@ -639,13 +626,13 @@ of your project.
 
   **_Example:_**
 
-  ```json
-  "help": "Use typescript template of cra"
+  ```toml
+  help = "Use typescript template of cra"
   ```
 
 ### Help:
 
-> json: "help"
+> toml: "help"
 >
 > String
 
@@ -655,8 +642,8 @@ Help text for the command
 
 **_Example:_**
 
-```json
-"help": "Creates react app"
+```toml
+help = "Creates react app"
 ```
 
 ---
@@ -673,7 +660,7 @@ Templates are pre-made files that you copy into your project.
 mkdir ~/.gogo/templates
 ```
 
-- Then you need you add it to `settings.json` see [set-template-path](#t-set-template-path) for info on how to easily do that
+- Then you need you add it to `settings.toml` see [set-template-path](#t-set-template-path) for info on how to easily do that
 
 - Finally you are ready to [create some templates](#creating-a-template).
   **Templates need to be stored in a folder with the same name as the command they are meant for.**
@@ -689,7 +676,7 @@ So let's say we want to create a starter file for our c++ project to use
 as a template. As stated before template files need to be under a directory
 with the same name as the command.
 
-So let's say we name our command cpp,
+Let's say we name our command cpp,
 we will create a directory in the `templates folder` called `cpp`.
 
 **When we say that a file is going to use a template in our [config](#files) file**
@@ -724,13 +711,10 @@ int main() {
 
 Now we can add the template file under our desired subcommand like so:
 
-```json
-"files": {
-  "create main.cpp": {
-    "filepath": "src/main.cpp",
-    "template": true
-  },
-}
+```toml
+[subCommands.cpp-subcommand.files.src]
+filepath = "src/main.cpp"
+template = true
 ```
 
 ---
@@ -738,6 +722,7 @@ Now we can add the template file under our desired subcommand like so:
 ## Dependencies
 
 ```
+github.com/BurntSushi/toml
 github.com/briandowns/spinner
 github.com/fatih/color
 github.com/mattn/go-colorable
