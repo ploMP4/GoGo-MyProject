@@ -1,0 +1,22 @@
+commands: []
+dirs: []
+help: "example file"
+
+subCommands:
+  command-name:
+    name: ""
+    command: []
+
+    override: false
+    parallel: false
+    exclude: false
+
+    help: ""
+
+    files:
+      description:
+        filepath: ""
+        template: false
+        change: 
+          split-on: ""
+          append: ""

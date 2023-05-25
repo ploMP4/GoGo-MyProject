@@ -52,7 +52,7 @@ who use many different programming languages and frameworks.
 
 	     h, help [command]   - show the help menu
 	            v, version   - print application version
-     C, set-config-path <path>   - set the config folder path containing your toml files.
+     C, set-config-path <path>   - set the config folder path containing your yaml files.
    T, set-template-path <path>   - set the template folder path.
 	%v
 

@@ -7,13 +7,13 @@ import (
 	"path/filepath"
 	"strings"
 
-	"github.com/BurntSushi/toml"
+	"gopkg.in/yaml.v3"
 )
 
 // Used to parse the arguments passed in and
-// the toml file specified
+// the yaml file specified
 type Parser struct {
-	settings Settings // settings.toml file
+	settings Settings // settings.yaml file
 	config   Config   // The config file
 	args     []string // Arguments passed
 }
@@ -34,39 +34,39 @@ type SubCommands map[string]SubCommand
 // description to print out to the user and the properties for the values
 type FilesType map[string]File
 
-// Describe the main toml config file
+// Describe the main yaml config file
 type Config struct {
-	Commands    MainCommmands `toml:"commands"`    // Array with the commands that will be executed. Note: commands should be passed as an array instead of using spaces e.x ["npx", "create-react-app"]
-	Dirs        []string      `toml:"dirs"`        // Array with names of directories that will be created
-	SubCommands SubCommands   `toml:"subCommands"` // Commands that can be passed after the initial command for optional features e.x. ts for typescript in a react command
-	Help        string        `toml:"help"`        // Help text for the command
+	Commands    MainCommmands `yaml:"commands"`    // Array with the commands that will be executed. Note: commands should be passed as an array instead of using spaces e.x ["npx", "create-react-app"]
+	Dirs        []string      `yaml:"dirs"`        // Array with names of directories that will be created
+	SubCommands SubCommands   `yaml:"subCommands"` // Commands that can be passed after the initial command for optional features e.x. ts for typescript in a react command
+	Help        string        `yaml:"help"`        // Help text for the command
 }
 
 // Describe a subcommand
 type SubCommand struct {
-	Name     string    `toml:"name"`     // Name that will be displayed in the Installing status message e.x Installing: React
-	Command  []string  `toml:"command"`  // The command that will be executed.  Note: commands should be passed as an array instead of using spaces e.x ["npx", "create-react-app"]
-	Override bool      `toml:"override"` // Overrides the last command in the main commands array and runs this instead
-	Parallel bool      `toml:"parallel"` // Sets if the command will be run concurrently with others or not
-	Exclude  bool      `toml:"exclude"`  // If true this command will be ignored when the (a, all) flag is ran
-	Files    FilesType `toml:"files"`    // Specify files that you want to change
-	Help     string    `toml:"help"`     // Help text for the command
+	Name     string    `yaml:"name"`     // Name that will be displayed in the Installing status message e.x Installing: React
+	Command  []string  `yaml:"command"`  // The command that will be executed.  Note: commands should be passed as an array instead of using spaces e.x ["npx", "create-react-app"]
+	Override bool      `yaml:"override"` // Overrides the last command in the main commands array and runs this instead
+	Parallel bool      `yaml:"parallel"` // Sets if the command will be run concurrently with others or not
+	Exclude  bool      `yaml:"exclude"`  // If true this command will be ignored when the (a, all) flag is ran
+	Files    FilesType `yaml:"files"`    // Specify files that you want to change
+	Help     string    `yaml:"help"`     // Help text for the command
 }
 
 // Describe a file object
 type File struct {
-	Filepath string     `toml:"filepath"` // Path where the file we want to edit is located. Path starts from the root file of our project
-	Template bool       `toml:"template"` // Specify if the file will be updated from an existing template
-	Change   FileChange `toml:"change"`   // Properties about changing the file
+	Filepath string     `yaml:"filepath"` // Path where the file we want to edit is located. Path starts from the root file of our project
+	Template bool       `yaml:"template"` // Specify if the file will be updated from an existing template
+	Change   FileChange `yaml:"change"`   // Properties about changing the file
 }
 
 // Describe file change properties object
 type FileChange struct {
-	SplitOn string `toml:"split-on"` // Specify string to split the file on
-	Append  string `toml:"append"`   // Content that will be appended after the split on
+	SplitOn string `yaml:"split-on"` // Specify string to split the file on
+	Append  string `yaml:"append"`   // Content that will be appended after the split on
 }
 
-// Parse the settings.toml file that exists in
+// Parse the settings.yaml file that exists in
 // the root of the application into the Parser.settings
 func (p *Parser) parseSettings() error {
 	e, err := os.Executable()
@@ -79,18 +79,18 @@ func (p *Parser) parseSettings() error {
 		return err
 	}
 
-	tomlFile, err := os.Open(filepath.Dir(e_path) + "/settings.toml")
+	yamlFile, err := os.Open(filepath.Dir(e_path) + "/settings.yaml")
 	if err != nil {
 		return err
 	}
-	defer tomlFile.Close()
+	defer yamlFile.Close()
 
-	tomlData, err := ioutil.ReadAll(tomlFile)
+	yamlData, err := ioutil.ReadAll(yamlFile)
 	if err != nil {
 		return err
 	}
 
-	if err = toml.Unmarshal(tomlData, &p.settings); err != nil {
+	if err = yaml.Unmarshal(yamlData, &p.settings); err != nil {
 		return err
 	}
 
@@ -100,18 +100,18 @@ func (p *Parser) parseSettings() error {
 // Check if a file with the name passed in by the user exists
 // and parse its contents into the Parser.config
 func (p *Parser) parseConfig(filename string) error {
-	tomlFile, err := os.Open(fmt.Sprintf("%s/%s.toml", p.settings.ConfigPath, filename))
+	yamlFile, err := os.Open(fmt.Sprintf("%s/%s.yaml", p.settings.ConfigPath, filename))
 	if err != nil {
 		return err
 	}
-	defer tomlFile.Close()
+	defer yamlFile.Close()
 
-	tomlData, err := ioutil.ReadAll(tomlFile)
+	yamlData, err := ioutil.ReadAll(yamlFile)
 	if err != nil {
 		return err
 	}
 
-	if err = toml.Unmarshal(tomlData, &p.config); err != nil {
+	if err = yaml.Unmarshal(yamlData, &p.config); err != nil {
 		return err
 	}
 
