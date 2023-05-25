@@ -1,0 +1,19 @@
+commands: [["mkdir"]]
+dirs: ["bin", "include", "src"]
+help: "Create C++ app"
+
+subCommands:
+  v:
+    name: "vanilla"
+    override:  false
+    parallel: true
+    help: ""
+
+    files:
+      src:
+        filepath: "src/main.cpp"
+        template: true
+
+      makefile:
+        filepath: "Makefile"
+        template: true
