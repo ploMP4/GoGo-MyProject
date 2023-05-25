@@ -6,20 +6,20 @@ import (
 	"os"
 	"path/filepath"
 
-	"github.com/BurntSushi/toml"
+	"gopkg.in/yaml.v3"
 )
 
 type Settings struct {
-	ConfigPath   string `toml:"config-path"`   // Path of folder containing toml files
-	TemplatePath string `toml:"template-path"` // Path of folder containing templates
+	ConfigPath   string `yaml:"config-path"`   // Path of folder containing toml files
+	TemplatePath string `yaml:"template-path"` // Path of folder containing templates
 }
 
-// Change the config-path value in settings.toml
+// Change the config-path value in settings.yaml
 func (s *Settings) setConfigPath(path string) error {
 	buf := new(bytes.Buffer)
 	s.ConfigPath = path
 
-	err := toml.NewEncoder(buf).Encode(map[string]string{
+	err := yaml.NewEncoder(buf).Encode(map[string]string{
 		"config-path":   s.ConfigPath,
 		"template-path": s.TemplatePath,
 	})
@@ -37,7 +37,7 @@ func (s *Settings) setConfigPath(path string) error {
 		return err
 	}
 
-	err = ioutil.WriteFile(filepath.Dir(e_path)+"/settings.toml", buf.Bytes(), 0644)
+	err = ioutil.WriteFile(filepath.Dir(e_path)+"/settings.yaml", buf.Bytes(), 0644)
 	if err != nil {
 		return err
 	}
@@ -45,12 +45,12 @@ func (s *Settings) setConfigPath(path string) error {
 	return nil
 }
 
-// Change the template-path value in settings.toml
+// Change the template-path value in settings.yaml
 func (s *Settings) setTemplatePath(path string) error {
 	buf := new(bytes.Buffer)
 	s.TemplatePath = path
 
-	err := toml.NewEncoder(buf).Encode(map[string]string{
+	err := yaml.NewEncoder(buf).Encode(map[string]string{
 		"config-path":   s.ConfigPath,
 		"template-path": s.TemplatePath,
 	})
@@ -68,7 +68,7 @@ func (s *Settings) setTemplatePath(path string) error {
 		return err
 	}
 
-	err = ioutil.WriteFile(filepath.Dir(e_path)+"/settings.toml", buf.Bytes(), 0644)
+	err = ioutil.WriteFile(filepath.Dir(e_path)+"/settings.yaml", buf.Bytes(), 0644)
 	if err != nil {
 		return err
 	}
