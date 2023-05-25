@@ -19,3 +19,6 @@ cover:
 ## install: installs executable as a global command to the machine
 install: 
 	@./scripts/install.sh
+
+doc:
+	@cd docs && npm start
