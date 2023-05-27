@@ -18,10 +18,10 @@ func TestParser_parseSettings(t *testing.T) {
 	// }
 }
 
-func TestParser_parseConfig(t *testing.T) {
-	p.settings.ConfigPath = "./testdata/config"
+func TestParser_parseGadget(t *testing.T) {
+	p.settings.GadgetPath = "./testdata/gadgets"
 
-	err := p.parseConfig("cpp")
+	err := p.parseGadget("cpp")
 	if err != nil {
 		t.Error(err)
 	}
@@ -34,7 +34,7 @@ func TestParser_getHelp(t *testing.T) {
 	}
 
 	p2 := p
-	p2.settings.ConfigPath = "non_existant"
+	p2.settings.GadgetPath = "non_existant"
 
 	helpCommands = p2.getHelp()
 	if helpCommands != nil {
@@ -50,7 +50,7 @@ func TestParser_getSubHelp(t *testing.T) {
 
 	_, err = p.getSubHelp("non_existant")
 	if err == nil {
-		t.Error("non existant config file name didn't throw an error")
+		t.Error("non existant gadget file name didn't throw an error")
 	}
 }
 

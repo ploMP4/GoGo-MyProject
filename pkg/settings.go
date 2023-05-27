@@ -10,17 +10,17 @@ import (
 )
 
 type Settings struct {
-	ConfigPath   string `yaml:"config-path"`   // Path of folder containing toml files
+	GadgetPath   string `yaml:"gadget-path"`   // Path of folder containing toml files
 	TemplatePath string `yaml:"template-path"` // Path of folder containing templates
 }
 
-// Change the config-path value in settings.yaml
-func (s *Settings) setConfigPath(path string) error {
+// Change the gadget-path value in settings.yaml
+func (s *Settings) setGadgetPath(path string) error {
 	buf := new(bytes.Buffer)
-	s.ConfigPath = path
+	s.GadgetPath = path
 
 	err := yaml.NewEncoder(buf).Encode(map[string]string{
-		"config-path":   s.ConfigPath,
+		"gadget-path":   s.GadgetPath,
 		"template-path": s.TemplatePath,
 	})
 	if err != nil {
@@ -51,7 +51,7 @@ func (s *Settings) setTemplatePath(path string) error {
 	s.TemplatePath = path
 
 	err := yaml.NewEncoder(buf).Encode(map[string]string{
-		"config-path":   s.ConfigPath,
+		"gadget-path":   s.GadgetPath,
 		"template-path": s.TemplatePath,
 	})
 	if err != nil {

@@ -52,14 +52,14 @@ who use many different programming languages and frameworks.
 
 	     h, help [command]   - show the help menu
 	            v, version   - print application version
-     C, set-config-path <path>   - set the config folder path containing your yaml files.
+     G, set-gadget-path <path>   - set the gadgets folder path containing your yaml files.
    T, set-template-path <path>   - set the template folder path.
 	%v
 
 `, Yellow("USAGE:"), Yellow("AVAILABLE COMMANDS:"), strings.Trim(fmt.Sprint(helpCommands), "[]"))
 }
 
-// Show the help menu the subcommands of a config file
+// Show the help menu the subcommands of a gadget file
 func showSubHelp(filename string) {
 	p := Parser{}
 	p.parseSettings()

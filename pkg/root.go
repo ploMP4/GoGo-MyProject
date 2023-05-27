@@ -51,9 +51,9 @@ func Execute() {
 	case "v", "version":
 		color.Green("Application version: " + version)
 
-	case "C", "set-config-path":
+	case "G", "set-gadget-path":
 		app.parser.parseSettings()
-		err = app.parser.settings.setConfigPath(appName)
+		err = app.parser.settings.setGadgetPath(appName)
 		if err != nil {
 			message = fmt.Sprint("Config path set to: " + appName)
 		}
@@ -104,7 +104,7 @@ func (app *App) run() (string, error) {
 		return "", err
 	}
 
-	err = app.parser.parseConfig(app.filename)
+	err = app.parser.parseGadget(app.filename)
 	if err != nil {
 		return "", err
 	}

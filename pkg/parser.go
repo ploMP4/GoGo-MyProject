@@ -14,7 +14,7 @@ import (
 // the yaml file specified
 type Parser struct {
 	settings Settings // settings.yaml file
-	config   Config   // The config file
+	gadget   Gadget   // The gadget file
 	args     []string // Arguments passed
 }
 
@@ -34,8 +34,8 @@ type SubCommands map[string]SubCommand
 // description to print out to the user and the properties for the values
 type FilesType map[string]File
 
-// Describe the main yaml config file
-type Config struct {
+// Describe the main yaml gadget file
+type Gadget struct {
 	Commands    MainCommmands `yaml:"commands"`    // Array with the commands that will be executed. Note: commands should be passed as an array instead of using spaces e.x ["npx", "create-react-app"]
 	Dirs        []string      `yaml:"dirs"`        // Array with names of directories that will be created
 	SubCommands SubCommands   `yaml:"subCommands"` // Commands that can be passed after the initial command for optional features e.x. ts for typescript in a react command
@@ -98,9 +98,9 @@ func (p *Parser) parseSettings() error {
 }
 
 // Check if a file with the name passed in by the user exists
-// and parse its contents into the Parser.config
-func (p *Parser) parseConfig(filename string) error {
-	yamlFile, err := os.Open(fmt.Sprintf("%s/%s.yaml", p.settings.ConfigPath, filename))
+// and parse its contents into the Parser.gadget
+func (p *Parser) parseGadget(filename string) error {
+	yamlFile, err := os.Open(fmt.Sprintf("%s/%s.yaml", p.settings.GadgetPath, filename))
 	if err != nil {
 		return err
 	}
@@ -111,51 +111,51 @@ func (p *Parser) parseConfig(filename string) error {
 		return err
 	}
 
-	if err = yaml.Unmarshal(yamlData, &p.config); err != nil {
+	if err = yaml.Unmarshal(yamlData, &p.gadget); err != nil {
 		return err
 	}
 
 	return nil
 }
 
-// Parse and return the help commands for all the config files
+// Parse and return the help commands for all the gadget files
 func (p Parser) getHelp() []string {
 	helpCommands := []string{}
 
-	files, err := ioutil.ReadDir(p.settings.ConfigPath)
+	files, err := ioutil.ReadDir(p.settings.GadgetPath)
 	if err != nil {
 		return nil
 	}
 
 	for _, file := range files {
 		filename := strings.Split(file.Name(), ".")[0]
-		_ = p.parseConfig(filename)
-		helpCommands = append(helpCommands, fmt.Sprintf("\n%30s   - %s", filename, p.config.Help))
+		_ = p.parseGadget(filename)
+		helpCommands = append(helpCommands, fmt.Sprintf("\n%30s   - %s", filename, p.gadget.Help))
 	}
 
 	return helpCommands
 }
 
-// Parse and return help for the subcommands of a config file
+// Parse and return help for the subcommands of a gadget file
 func (p Parser) getSubHelp(filename string) ([]string, error) {
 	helpCommands := []string{}
 
-	err := p.parseConfig(filename)
+	err := p.parseGadget(filename)
 	if err != nil {
 		return nil, err
 	}
 
-	for name, command := range p.config.SubCommands {
+	for name, command := range p.gadget.SubCommands {
 		helpCommands = append(helpCommands, fmt.Sprintf("\n%31s   - %s", name, command.Help))
 	}
 
 	return helpCommands, nil
 }
 
-// Use the parsed config file and the args to construct
+// Use the parsed gadget file and the args to construct
 // the dirs, main and sub commands and return them
 func (p *Parser) parseArgs() (MainCommmands, []SubCommand, []string) {
-	finalCommand := p.config.Commands[len(p.config.Commands)-1]
+	finalCommand := p.gadget.Commands[len(p.gadget.Commands)-1]
 	var otherCommands []SubCommand
 
 	all := false
@@ -165,16 +165,16 @@ func (p *Parser) parseArgs() (MainCommmands, []SubCommand, []string) {
 		}
 
 		if arg == "exclude" || arg == "e" {
-			if subcommand, ok := p.config.SubCommands[p.args[idx+1]]; ok {
+			if subcommand, ok := p.gadget.SubCommands[p.args[idx+1]]; ok {
 				subcommand.Exclude = true
 
-				p.config.SubCommands[p.args[idx+1]] = subcommand
+				p.gadget.SubCommands[p.args[idx+1]] = subcommand
 			}
 		}
 	}
 
 	if all {
-		for _, value := range p.config.SubCommands {
+		for _, value := range p.gadget.SubCommands {
 			if value.Exclude {
 				continue
 			} else if value.Override {
@@ -186,7 +186,7 @@ func (p *Parser) parseArgs() (MainCommmands, []SubCommand, []string) {
 		}
 	} else {
 		for _, arg := range p.args {
-			if value, isMapContainsKey := p.config.SubCommands[arg]; isMapContainsKey {
+			if value, isMapContainsKey := p.gadget.SubCommands[arg]; isMapContainsKey {
 				if value.Override {
 					finalCommand = value.Command
 					showMessage("Using", value.Name)
@@ -197,9 +197,9 @@ func (p *Parser) parseArgs() (MainCommmands, []SubCommand, []string) {
 		}
 	}
 
-	p.config.Commands[len(p.config.Commands)-1] = finalCommand
-	mainCommands := p.config.Commands
-	dirs := p.config.Dirs
+	p.gadget.Commands[len(p.gadget.Commands)-1] = finalCommand
+	mainCommands := p.gadget.Commands
+	dirs := p.gadget.Dirs
 
 	return mainCommands, otherCommands, dirs
 }
