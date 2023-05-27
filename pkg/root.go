@@ -13,10 +13,10 @@ import (
 )
 
 // Application Version
-const version = "3.0.0"
+const version = "4.0.0"
 
 type App struct {
-	filename string           // Name of the config file we are executing
+	filename string           // Name of the gadget we are executing
 	appName  string           // The name that the main app folder will have
 	parser   Parser           // Parser
 	spinner  *spinner.Spinner // Load Spinner

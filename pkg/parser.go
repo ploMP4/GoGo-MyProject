@@ -34,7 +34,7 @@ type SubCommands map[string]SubCommand
 // description to print out to the user and the properties for the values
 type FilesType map[string]File
 
-// Describe the main yaml gadget file
+// Describe the main yaml gadget
 type Gadget struct {
 	Commands    MainCommmands `yaml:"commands"`    // Array with the commands that will be executed. Note: commands should be passed as an array instead of using spaces e.x ["npx", "create-react-app"]
 	Dirs        []string      `yaml:"dirs"`        // Array with names of directories that will be created
@@ -118,7 +118,7 @@ func (p *Parser) parseGadget(filename string) error {
 	return nil
 }
 
-// Parse and return the help commands for all the gadget files
+// Parse and return the help commands for all the gadgets
 func (p Parser) getHelp() []string {
 	helpCommands := []string{}
 
@@ -136,7 +136,7 @@ func (p Parser) getHelp() []string {
 	return helpCommands
 }
 
-// Parse and return help for the subcommands of a gadget file
+// Parse and return help for the subcommands of a gadget
 func (p Parser) getSubHelp(filename string) ([]string, error) {
 	helpCommands := []string{}
 
@@ -152,7 +152,7 @@ func (p Parser) getSubHelp(filename string) ([]string, error) {
 	return helpCommands, nil
 }
 
-// Use the parsed gadget file and the args to construct
+// Use the parsed gadget and the args to construct
 // the dirs, main and sub commands and return them
 func (p *Parser) parseArgs() (MainCommmands, []SubCommand, []string) {
 	finalCommand := p.gadget.Commands[len(p.gadget.Commands)-1]
