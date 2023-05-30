@@ -7,7 +7,7 @@ const darkCodeTheme = require('prism-react-renderer/themes/dracula');
 /** @type {import('@docusaurus/types').Config} */
 const config = {
   title: 'GoGo My Project',
-  tagline: 'scaffold any project in seconds',
+  tagline: 'Scaffold any project in seconds',
   favicon: 'img/favicon.ico',
 
   // Set the production url of your site here
