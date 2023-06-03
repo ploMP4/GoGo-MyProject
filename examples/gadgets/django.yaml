@@ -1,4 +1,4 @@
-commands: 
+commands:
   - # Create virtual environtment
     - "python"
     - "-m"
@@ -19,7 +19,7 @@ help: "Create django app"
 subCommands:
   rest:
     name: "rest-framework"
-    command: 
+    command:
       - "../env/bin/pip"
       - "install"
       - "djangorestframework"
@@ -27,16 +27,16 @@ subCommands:
     parallel: true
     help: "Install and setup DjangoRestFramework"
 
-    files: 
+    files:
       rest-framework-settings:
         filepath: "<APPNAME>/settings.py"
-        change: 
+        change:
           split-on: "'django.contrib.staticfiles',"
-          append: "\n\t'rest_framework'," 
+          append: "\n\t'rest_framework',"
 
   cors:
     name: "cors-headers"
-    command: 
+    command:
       - "../env/bin/pip"
       - "install"
       - "django-cors-headers"
@@ -47,25 +47,25 @@ subCommands:
     files:
       cors-installed-apps:
         filepath: "<APPNAME>/settings.py"
-        change: 
+        change:
           split-on: "'django.contrib.staticfiles',"
           append: "\n\t'corsheaders',"
 
       cors-middleware:
         filepath: "<APPNAME>/settings.py"
-        change: 
+        change:
           split-on: "MIDDLEWARE = ["
-          append: "\n\t'corsheaders.middleware.CorsMiddleware'," 
+          append: "\n\t'corsheaders.middleware.CorsMiddleware',"
 
       cors-settings:
         filepath: "<APPNAME>/settings.py"
-        change: 
+        change:
           split-on: ""
           append: "\n# Change in production\nCORS_ALLOW_ALL_ORIGINS = True"
 
   jwt:
     name: "json-web-tokens"
-    command: 
+    command:
       - "../env/bin/pip"
       - "install"
       - "djangorestframework-simplejwt"
@@ -76,6 +76,6 @@ subCommands:
     files:
       jwt-settings:
         filepath: "<APPNAME>/settings.py"
-        change: 
+        change:
           split-on: "# Application definition"
           append: "\nREST_FRAMEWORK = {\n\t'DEFAULT_AUTHENTICATION_CLASSES': (\n\t\t'rest_framework_simplejwt.authentication.JWTAuthentication',\n\t)\n}"

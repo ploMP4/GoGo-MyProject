@@ -4,7 +4,7 @@ help: "Create nextJS app"
 subCommands:
   redux:
     name: "Redux"
-    command: 
+    command:
       - "npx"
       - "create-next-app"
       - "--example"
@@ -15,7 +15,7 @@ subCommands:
 
   ts:
     name: "Typescript"
-    command: 
+    command:
       - "npx"
       - "create-next-app"
       - "--typescript"
@@ -25,7 +25,7 @@ subCommands:
 
   redux-ts:
     name: "Redux-Typescript"
-    command: 
+    command:
       - "npx"
       - "create-next-app"
       - "--example"
@@ -36,13 +36,13 @@ subCommands:
 
   mui:
     name: "Material-UI"
-    command: 
+    command:
       - "npm"
       - "install"
       - "@mui/material"
       - "@emotion/react"
       - "@emotion/styled"
-    
+
     override: false
     help: "Install material-ui library"
 

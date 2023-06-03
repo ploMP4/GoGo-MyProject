@@ -17,6 +17,6 @@ subCommands:
       description:
         filepath: ""
         template: false
-        change: 
+        change:
           split-on: ""
           append: ""

@@ -1,6 +1,5 @@
-commands: 
-  -
-    - "npx"
+commands:
+  - - "npx"
     - "create-react-app"
 
 help: "Create react app"
@@ -8,7 +7,7 @@ help: "Create react app"
 subCommands:
   redux:
     name: "Redux"
-    command: 
+    command:
       - "npx"
       - "create-react-app"
       - "--template"
@@ -19,7 +18,7 @@ subCommands:
 
   ts:
     name: "Typescript"
-    command: 
+    command:
       - "npx"
       - "create-react-app"
       - "--template"
@@ -41,13 +40,13 @@ subCommands:
 
   mui:
     name: "Material-UI"
-    command: 
+    command:
       - "npm"
       - "install"
       - "@mui/material"
       - "@emotion/react"
       - "@emotion/styled"
-    
+
     override: false
     help: "Install material-ui library"
 
