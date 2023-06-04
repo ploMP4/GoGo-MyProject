@@ -160,11 +160,11 @@ func (p *Parser) parseArgs() (MainCommmands, []SubCommand, []string) {
 
 	all := false
 	for idx, arg := range p.args {
-		if arg == "all" || arg == "a" {
+		switch arg {
+		case A_FLAG, ALL_FLAG:
 			all = true
-		}
 
-		if arg == "exclude" || arg == "e" {
+		case E_FLAG, EXLCUDE_FLAG:
 			if subcommand, ok := p.gadget.SubCommands[p.args[idx+1]]; ok {
 				subcommand.Exclude = true
 

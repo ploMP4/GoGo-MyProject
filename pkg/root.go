@@ -13,7 +13,27 @@ import (
 )
 
 // Application Version
-const version = "4.0.0"
+const APPLICATION_VERSION = "4.0.0"
+
+const (
+	A_FLAG   = "a"
+	ALL_FLAG = "all"
+
+	E_FLAG       = "e"
+	EXLCUDE_FLAG = "exclude"
+
+	V_FLAG       = "v"
+	VERSION_FLAG = "version"
+
+	H_FLAG    = "h"
+	HELP_FLAG = "help"
+
+	G_FLAG               = "G"
+	SET_GADGET_PATH_FLAG = "set-gadget-path"
+
+	T_FLAG                = "T"
+	SET_TEMPATE_PATH_FLAG = "set-template-path"
+)
 
 type App struct {
 	filename string           // Name of the gadget we are executing
@@ -41,24 +61,24 @@ func Execute() {
 	}
 
 	switch filename {
-	case "h", "help":
+	case H_FLAG, HELP_FLAG:
 		if appName == "" {
 			showHelp()
 		} else {
 			showSubHelp(appName)
 		}
 
-	case "v", "version":
-		color.Green("Application version: " + version)
+	case V_FLAG, VERSION_FLAG:
+		color.Green("Application version: " + APPLICATION_VERSION)
 
-	case "G", "set-gadget-path":
+	case G_FLAG, SET_GADGET_PATH_FLAG:
 		app.parser.parseSettings()
 		err = app.parser.settings.setGadgetPath(appName)
 		if err != nil {
 			message = fmt.Sprint("Config path set to: " + appName)
 		}
 
-	case "T", "set-template-path":
+	case T_FLAG, SET_TEMPATE_PATH_FLAG:
 		app.parser.parseSettings()
 		err = app.parser.settings.setTemplatePath(appName)
 		if err != nil {
@@ -213,7 +233,13 @@ func (app *App) executeSubCommand(command SubCommand) error {
 				app.spinner.Restart()
 				showMessage("Copying", file.Filepath)
 
-				templatePath := fmt.Sprintf("%s/%s/%s/%s", app.parser.settings.TemplatePath, app.filename, command.Name, file.Filepath)
+				templatePath := fmt.Sprintf(
+					"%s/%s/%s/%s",
+					app.parser.settings.TemplatePath,
+					app.filename,
+					command.Name,
+					file.Filepath,
+				)
 				copyFileFromTemplate(templatePath, file.Filepath)
 			} else {
 				app.spinner.Restart()
