@@ -5,7 +5,7 @@ help: "Create C++ app"
 subCommands:
   v:
     name: "vanilla"
-    override:  false
+    override: false
     parallel: true
     help: ""
 

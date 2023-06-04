@@ -196,7 +196,7 @@ func (app *App) runSubCommands(subcommands []SubCommand) {
 
 		if command.Parallel {
 			wg.Add(1)
-			go func(wg *sync.WaitGroup, command SubCommand) {
+			go func(command SubCommand) {
 				defer wg.Done()
 
 				err := app.executeSubCommand(command)
@@ -204,7 +204,7 @@ func (app *App) runSubCommands(subcommands []SubCommand) {
 					color.Yellow("Failed to execute %s\n", command)
 					color.Red("Error: %v\n", err)
 				}
-			}(&wg, command)
+			}(command)
 		} else {
 			err := app.executeSubCommand(command)
 			if err != nil {
