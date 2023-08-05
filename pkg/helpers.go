@@ -71,11 +71,13 @@ func showSubHelp(filename string) {
 	fmt.Printf(`%s
 	%23s   - %s
 	%s   - %s
+	%23s   - %s
 	%v
 	
 	`, Yellow("AVAILABLE COMMANDS FOR: "+filename),
 		"a, all", "Run all subcommands",
 		"e, exclude [subcommand]", "Don't run specified subcommand",
+		"vv, verbose", "Give verbose output of the commands running",
 		strings.Trim(fmt.Sprint(helpCommands), "[]"))
 }
 
@@ -86,5 +88,9 @@ func showMessage(prefix string, message ...string) {
 }
 
 func loadSpinner() *spinner.Spinner {
-	return spinner.New(spinner.CharSets[43], 100*time.Millisecond, spinner.WithHiddenCursor(true)) // Build our new spinner
+	return spinner.New(
+		spinner.CharSets[43],
+		100*time.Millisecond,
+		spinner.WithHiddenCursor(true),
+	) // Build our new spinner
 }

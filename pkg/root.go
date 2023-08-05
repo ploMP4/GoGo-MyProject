@@ -16,23 +16,26 @@ import (
 const APPLICATION_VERSION = "4.0.0"
 
 const (
-	A_FLAG   = "a"
-	ALL_FLAG = "all"
+	SHORT_ALL_FLAG = "a"
+	ALL_FLAG       = "all"
 
-	E_FLAG       = "e"
-	EXLCUDE_FLAG = "exclude"
+	SHORT_EXCLUDE_FLAG = "e"
+	EXLCUDE_FLAG       = "exclude"
 
-	V_FLAG       = "v"
-	VERSION_FLAG = "version"
+	SHORT_VERBOSE_FLAG = "vv"
+	VERBOSE_FLAG       = "verbose"
 
-	H_FLAG    = "h"
-	HELP_FLAG = "help"
+	SHORT_VERSION_FLAG = "v"
+	VERSION_FLAG       = "version"
 
-	G_FLAG               = "G"
-	SET_GADGET_PATH_FLAG = "set-gadget-path"
+	SHORT_HELP_FLAG = "h"
+	HELP_FLAG       = "help"
 
-	T_FLAG                = "T"
-	SET_TEMPATE_PATH_FLAG = "set-template-path"
+	SHORT_SET_GADGET_PATH_FLAG = "G"
+	SET_GADGET_PATH_FLAG       = "set-gadget-path"
+
+	SHORT_SET_TEMPATE_PATH_FLAG = "T"
+	SET_TEMPATE_PATH_FLAG       = "set-template-path"
 )
 
 type App struct {
@@ -40,6 +43,7 @@ type App struct {
 	appName  string           // The name that the main app folder will have
 	parser   Parser           // Parser
 	spinner  *spinner.Spinner // Load Spinner
+	verbose  bool             // Verbose output flag
 }
 
 func Execute() {
@@ -54,6 +58,7 @@ func Execute() {
 		parser: Parser{
 			args: args,
 		},
+		verbose: false,
 	}
 
 	if err != nil {
@@ -61,24 +66,24 @@ func Execute() {
 	}
 
 	switch filename {
-	case H_FLAG, HELP_FLAG:
+	case SHORT_HELP_FLAG, HELP_FLAG:
 		if appName == "" {
 			showHelp()
 		} else {
 			showSubHelp(appName)
 		}
 
-	case V_FLAG, VERSION_FLAG:
+	case SHORT_VERSION_FLAG, VERSION_FLAG:
 		color.Green("Application version: " + APPLICATION_VERSION)
 
-	case G_FLAG, SET_GADGET_PATH_FLAG:
+	case SHORT_SET_GADGET_PATH_FLAG, SET_GADGET_PATH_FLAG:
 		app.parser.parseSettings()
 		err = app.parser.settings.setGadgetPath(appName)
 		if err != nil {
 			message = fmt.Sprint("Config path set to: " + appName)
 		}
 
-	case T_FLAG, SET_TEMPATE_PATH_FLAG:
+	case SHORT_SET_TEMPATE_PATH_FLAG, SET_TEMPATE_PATH_FLAG:
 		app.parser.parseSettings()
 		err = app.parser.settings.setTemplatePath(appName)
 		if err != nil {
@@ -163,6 +168,12 @@ func (app *App) runMainCommands(mainCommands MainCommmands) (string, error) {
 		showMessage("Running", cmd...)
 
 		c := exec.Command(cmd[0], cmd[1:]...)
+
+		if app.verbose {
+			c.Stdout = os.Stdout
+			c.Stderr = os.Stderr
+		}
+
 		err := c.Run()
 		if err != nil {
 			return "Unable to execute command: " + cmd[0], err
@@ -221,6 +232,12 @@ func (app *App) runSubCommands(subcommands []SubCommand) {
 func (app *App) executeSubCommand(command SubCommand) error {
 	if command.Command != nil {
 		c := exec.Command(command.Command[0], command.Command[1:]...)
+
+		if app.verbose {
+			c.Stdout = os.Stdout
+			c.Stderr = os.Stderr
+		}
+
 		err := c.Run()
 		if err != nil {
 			return err

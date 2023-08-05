@@ -158,43 +158,10 @@ func (p *Parser) parseArgs() (MainCommmands, []SubCommand, []string) {
 	finalCommand := p.gadget.Commands[len(p.gadget.Commands)-1]
 	var otherCommands []SubCommand
 
-	all := false
-	for idx, arg := range p.args {
-		switch arg {
-		case A_FLAG, ALL_FLAG:
-			all = true
-
-		case E_FLAG, EXLCUDE_FLAG:
-			if subcommand, ok := p.gadget.SubCommands[p.args[idx+1]]; ok {
-				subcommand.Exclude = true
-
-				p.gadget.SubCommands[p.args[idx+1]] = subcommand
-			}
-		}
-	}
-
-	if all {
-		for _, value := range p.gadget.SubCommands {
-			if value.Exclude {
-				continue
-			} else if value.Override {
-				finalCommand = value.Command
-				showMessage("Using", value.Name)
-			} else {
-				otherCommands = append(otherCommands, value)
-			}
-		}
+	if all, _ := p.parseFlags(); all {
+		p.parseAll(&finalCommand, &otherCommands)
 	} else {
-		for _, arg := range p.args {
-			if value, isMapContainsKey := p.gadget.SubCommands[arg]; isMapContainsKey {
-				if value.Override {
-					finalCommand = value.Command
-					showMessage("Using", value.Name)
-				} else {
-					otherCommands = append(otherCommands, value)
-				}
-			}
-		}
+		p.parseCmd(&finalCommand, &otherCommands)
 	}
 
 	p.gadget.Commands[len(p.gadget.Commands)-1] = finalCommand
@@ -202,4 +169,53 @@ func (p *Parser) parseArgs() (MainCommmands, []SubCommand, []string) {
 	dirs := p.gadget.Dirs
 
 	return mainCommands, otherCommands, dirs
+}
+
+func (p *Parser) parseFlags() (all, verbose bool) {
+	all = false
+	verbose = false
+
+	for idx, arg := range p.args {
+		switch arg {
+		case SHORT_ALL_FLAG, ALL_FLAG:
+			all = true
+
+		case SHORT_EXCLUDE_FLAG, EXLCUDE_FLAG:
+			if subcommand, exists := p.gadget.SubCommands[p.args[idx+1]]; exists {
+				subcommand.Exclude = true
+				p.gadget.SubCommands[p.args[idx+1]] = subcommand
+			}
+
+		case SHORT_VERBOSE_FLAG, VERBOSE_FLAG:
+			verbose = true
+		}
+	}
+
+	return all, verbose
+}
+
+func (p *Parser) parseAll(finalCommand *[]string, otherCommands *[]SubCommand) {
+	for _, value := range p.gadget.SubCommands {
+		if value.Exclude {
+			continue
+		} else if value.Override {
+			*finalCommand = value.Command
+			showMessage("Using", value.Name)
+		} else {
+			*otherCommands = append(*otherCommands, value)
+		}
+	}
+}
+
+func (p *Parser) parseCmd(finalCommand *[]string, otherCommands *[]SubCommand) {
+	for _, arg := range p.args {
+		if value, exists := p.gadget.SubCommands[arg]; exists {
+			if value.Override {
+				*finalCommand = value.Command
+				showMessage("Using", value.Name)
+			} else {
+				*otherCommands = append(*otherCommands, value)
+			}
+		}
+	}
 }
