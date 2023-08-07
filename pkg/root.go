@@ -233,15 +233,8 @@ func (app *App) runSubCommands(subcommands []SubCommand) {
 // Executes a single subcommand
 func (app *App) executeSubCommand(command SubCommand) error {
 	if command.Command != nil {
-		c := exec.Command(command.Command[0], command.Command[1:]...)
+		err := app.handleSubCommandCommand(command.Command)
 
-		if app.verbose {
-			app.spinner.Stop()
-			c.Stdout = os.Stdout
-			c.Stderr = os.Stderr
-		}
-
-		err := c.Run()
 		if err != nil {
 			return err
 		}
@@ -249,33 +242,54 @@ func (app *App) executeSubCommand(command SubCommand) error {
 
 	if command.Files != nil {
 		for name, file := range command.Files {
-			if file.Template {
-				app.spinner.Restart()
-				showMessage("Copying", file.Filepath)
-
-				templatePath := fmt.Sprintf(
-					"%s/%s/%s/%s",
-					app.parser.settings.TemplatePath,
-					app.filename,
-					command.Name,
-					file.Filepath,
-				)
-				copyFileFromTemplate(templatePath, file.Filepath)
-			} else {
-				app.spinner.Restart()
-
-				if strings.Contains(file.Filepath, "<APPNAME>") {
-					path := strings.Split(file.Filepath, "<APPNAME>")
-					file.Filepath = app.appName + path[1]
-				}
-
-				showMessage("Adding", name, "in", Green(file.Filepath))
-				editFile(file.Filepath, file.Change.SplitOn, file.Change.Append)
-			}
+			app.handleSubCommandFiles(command.Name, name, file)
 		}
 	}
 
 	return nil
+}
+
+func (app *App) handleSubCommandCommand(command []string) error {
+	c := exec.Command(command[0], command[1:]...)
+
+	if app.verbose {
+		app.spinner.Stop()
+		c.Stdout = os.Stdout
+		c.Stderr = os.Stderr
+	}
+
+	err := c.Run()
+	if err != nil {
+		return err
+	}
+
+	return nil
+}
+
+func (app *App) handleSubCommandFiles(commandName, name string, file File) {
+	if file.Template {
+		app.spinner.Restart()
+		showMessage("Copying", file.Filepath)
+
+		templatePath := fmt.Sprintf(
+			"%s/%s/%s/%s",
+			app.parser.settings.TemplatePath,
+			app.filename,
+			commandName,
+			file.Filepath,
+		)
+		copyFileFromTemplate(templatePath, file.Filepath)
+	} else {
+		app.spinner.Restart()
+
+		if strings.Contains(file.Filepath, "<APPNAME>") {
+			path := strings.Split(file.Filepath, "<APPNAME>")
+			file.Filepath = app.appName + path[1]
+		}
+
+		showMessage("Adding", name, "in", Green(file.Filepath))
+		editFile(file.Filepath, file.Change.SplitOn, file.Change.Append)
+	}
 }
 
 // Adds a string in the specified file either at the end of the file
