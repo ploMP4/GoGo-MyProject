@@ -1,11 +1,7 @@
-/*
-Copyright © 2022 Kostas Artopoulos
-
-*/
 package main
 
-import "github.com/ploMP4/gogo-myproject/pkg"
+import gogo "github.com/ploMP4/gogo-myproject/internal"
 
 func main() {
-	pkg.Execute()
+	gogo.Execute()
 }
