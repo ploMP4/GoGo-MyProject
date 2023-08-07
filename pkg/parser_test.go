@@ -235,7 +235,7 @@ func TestParser_parseArgs(t *testing.T) {
 			}
 			p.parseGadget("cpp")
 
-			got, _, got2 := p.parseArgs()
+			got, _, got2, _ := p.parseArgs()
 			if !reflect.DeepEqual(got, tt.want) {
 				t.Errorf("Parser.parseArgs() got = %v, want %v", got, tt.want)
 			}
