@@ -171,6 +171,7 @@ func (app *App) runMainCommands(mainCommands MainCommmands) (string, error) {
 		c := exec.Command(cmd[0], cmd[1:]...)
 
 		if app.verbose {
+			app.spinner.Stop()
 			c.Stdout = os.Stdout
 			c.Stderr = os.Stderr
 		}
@@ -235,6 +236,7 @@ func (app *App) executeSubCommand(command SubCommand) error {
 		c := exec.Command(command.Command[0], command.Command[1:]...)
 
 		if app.verbose {
+			app.spinner.Stop()
 			c.Stdout = os.Stdout
 			c.Stderr = os.Stderr
 		}
