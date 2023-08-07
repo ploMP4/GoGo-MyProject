@@ -52,8 +52,8 @@ who use many different programming languages and frameworks.
 
 	     h, help [command]   - show the help menu
 	            v, version   - print application version
-     G, set-gadget-path <path>   - set the gadgets folder path containing your yaml files.
-   T, set-template-path <path>   - set the template folder path.
+           G, gadgetdir <path>   - set the gadgets folder path containing your yaml files.
+         T, templatedir <path>   - set the template folder path.
 	%v
 
 `, Yellow("USAGE:"), Yellow("AVAILABLE COMMANDS:"), strings.Trim(fmt.Sprint(helpCommands), "[]"))

@@ -13,7 +13,7 @@ import (
 )
 
 // Application Version
-const APPLICATION_VERSION = "4.0.0"
+const APPLICATION_VERSION = "4.1.0"
 
 const (
 	SHORT_ALL_FLAG = "a"
@@ -32,10 +32,10 @@ const (
 	HELP_FLAG       = "help"
 
 	SHORT_SET_GADGET_PATH_FLAG = "G"
-	SET_GADGET_PATH_FLAG       = "set-gadget-path"
+	SET_GADGET_PATH_FLAG       = "gadgetdir"
 
 	SHORT_SET_TEMPATE_PATH_FLAG = "T"
-	SET_TEMPATE_PATH_FLAG       = "set-template-path"
+	SET_TEMPATE_PATH_FLAG       = "templatedir"
 )
 
 type App struct {
