@@ -13,7 +13,7 @@ import (
 )
 
 // Application Version
-const APPLICATION_VERSION = "4.1.0"
+const APPLICATION_VERSION = "4.2.0"
 
 const (
 	SHORT_ALL_FLAG = "a"
@@ -138,8 +138,9 @@ func (app *App) run() (string, error) {
 		return "", errors.New("appname was not provided")
 	}
 
-	mainCommands, otherCommands, dirs := app.parser.parseArgs()
+	mainCommands, otherCommands, dirs, verbose := app.parser.parseArgs()
 	mainCommands[len(mainCommands)-1] = append(mainCommands[len(mainCommands)-1], app.appName)
+	app.verbose = verbose
 
 	app.spinner.Start()
 

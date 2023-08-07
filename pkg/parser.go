@@ -154,11 +154,12 @@ func (p Parser) getSubHelp(filename string) ([]string, error) {
 
 // Use the parsed gadget and the args to construct
 // the dirs, main and sub commands and return them
-func (p *Parser) parseArgs() (MainCommmands, []SubCommand, []string) {
+func (p *Parser) parseArgs() (MainCommmands, []SubCommand, []string, bool) {
 	finalCommand := p.gadget.Commands[len(p.gadget.Commands)-1]
 	var otherCommands []SubCommand
 
-	if all, _ := p.parseFlags(); all {
+	all, verbose := p.parseFlags()
+	if all {
 		p.parseAll(&finalCommand, &otherCommands)
 	} else {
 		p.parseCmd(&finalCommand, &otherCommands)
@@ -168,7 +169,7 @@ func (p *Parser) parseArgs() (MainCommmands, []SubCommand, []string) {
 	mainCommands := p.gadget.Commands
 	dirs := p.gadget.Dirs
 
-	return mainCommands, otherCommands, dirs
+	return mainCommands, otherCommands, dirs, verbose
 }
 
 func (p *Parser) parseFlags() (all, verbose bool) {
