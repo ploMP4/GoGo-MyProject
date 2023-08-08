@@ -18,15 +18,15 @@ build-all: build build-windows build-mac
 
 ## test: runs all tests
 test:
-	@cd ./pkg && go test -v
+	@cd ./internal && go test -v
 
 ## coverage: displays test coverage
 coverage:
-	@go test -cover ./pkg
+	@go test -cover ./internal
 
 ## cover: opens coverage in browser
 cover:
-	@go test -coverprofile=coverage.out ./pkg && go tool cover -html=coverage.out
+	@go test -coverprofile=coverage.out ./internal && go tool cover -html=coverage.out
 
 ## install: installs executable as a global command to the machine
 install: 
