@@ -100,9 +100,12 @@ func (p *Parser) parseSettings() error {
 // Check if a file with the name passed in by the user exists
 // and parse its contents into the Parser.gadget
 func (p *Parser) parseGadget(filename string) error {
-	yamlFile, err := os.Open(fmt.Sprintf("%s/%s.yaml", p.settings.GadgetPath, filename))
+	yamlFile, err := os.Open(fmt.Sprintf("%s/gadgets/%s.yaml", PROJECT_ROOT_DIR_NAME, filename))
 	if err != nil {
-		return err
+		yamlFile, err = os.Open(fmt.Sprintf("%s/%s.yaml", p.settings.GadgetPath, filename))
+		if err != nil {
+			return err
+		}
 	}
 	defer yamlFile.Close()
 
@@ -125,6 +128,12 @@ func (p Parser) getHelp() []string {
 	files, err := ioutil.ReadDir(p.settings.GadgetPath)
 	if err != nil {
 		return nil
+	}
+
+	localFiles, err := ioutil.ReadDir(PROJECT_ROOT_DIR_NAME + "/gadgets")
+	if err == nil {
+		files = append(files, localFiles...)
+		files = compactFilesSlice(files)
 	}
 
 	for _, file := range files {

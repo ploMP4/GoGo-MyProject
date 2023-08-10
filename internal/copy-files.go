@@ -5,10 +5,6 @@ import (
 )
 
 func copyFileFromTemplate(templatePath, targetFile string) error {
-	// if fileExists(targetFile) {
-	// 	return errors.New(targetFile + " already exists")
-	// }
-
 	data, err := os.ReadFile(templatePath)
 	if err != nil {
 		exitGracefully(err)
@@ -31,10 +27,10 @@ func copyDataToFile(data []byte, to string) error {
 	return nil
 }
 
-// func fileExists(fileToCheck string) bool {
-// 	if _, err := os.Stat(fileToCheck); os.IsNotExist(err) {
-// 		return false
-// 	}
+func fileExists(fileToCheck string) bool {
+	if _, err := os.Stat(fileToCheck); os.IsNotExist(err) {
+		return false
+	}
 
-// 	return true
-// }
+	return true
+}

@@ -2,6 +2,7 @@ package internal
 
 import (
 	"fmt"
+	"io/fs"
 	"os"
 	"strings"
 	"time"
@@ -93,4 +94,20 @@ func loadSpinner() *spinner.Spinner {
 		100*time.Millisecond,
 		spinner.WithHiddenCursor(true),
 	) // Build our new spinner
+}
+
+// Remove duplicate file entries from a file slice,
+// returns a new slice with the entries removed
+func compactFilesSlice(files []fs.FileInfo) []fs.FileInfo {
+	seen := make(map[string]bool)
+	compactFiles := []fs.FileInfo{}
+
+	for _, file := range files {
+		if _, ok := seen[file.Name()]; !ok {
+			seen[file.Name()] = true
+			compactFiles = append(compactFiles, file)
+		}
+	}
+
+	return compactFiles
 }

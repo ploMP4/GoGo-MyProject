@@ -13,7 +13,7 @@ with the same name as the command.
 Let's say we name our command cpp,
 we will create a directory in the `templates folder` called `cpp`.
 
-**When we say that a file is going to use a template in our [config](#files) file**
+**When we say that a file is going to use a template, in our [config](../gadgets/sub-cmd/files),**
 **we specify a path for that file so in our templates folder we need to follow the same directory structure.**
 
 For example let's say we want to have a directory named `src` that will
@@ -31,7 +31,7 @@ Now we can create our template file inside the src directory.
 cd src && touch main.cpp
 ```
 
-```cpp title="src/main.cpp"
+```cpp title="templates/cpp/minimal/src/main.cpp"
 #include <iostream>
 
 int main() {
@@ -45,9 +45,9 @@ Now we can add the template file under our desired subcommand like so:
 
 ```yaml title="cpp.yaml"
 subCommands:
-    cpp-subcommand:
-        files:
-            src:
-                filepath: "src/main.cpp"
-                template: true
+  cpp-subcommand:
+    files:
+      src:
+        filepath: "src/main.cpp"
+        template: true
 ```
