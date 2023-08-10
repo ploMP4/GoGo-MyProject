@@ -9,7 +9,7 @@ import (
 	"gopkg.in/yaml.v3"
 )
 
-const ProjectRootDirName = ".gogo"
+const PROJECT_ROOT_DIR_NAME = ".gogo"
 
 type Settings struct {
 	GadgetPath   string `yaml:"gadget-path"`   // Path of folder containing toml files
