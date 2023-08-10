@@ -128,12 +128,10 @@ func (p Parser) getHelp() []string {
 	}
 
 	localFiles, err := ioutil.ReadDir(ProjectRootDirName + "/gadgets")
-	if err != nil {
-		return nil
+	if err == nil {
+		files = append(files, localFiles...)
+		files = compactFilesSlice(files)
 	}
-
-	files = append(files, localFiles...)
-	files = compactFilesSlice(files)
 
 	for _, file := range files {
 		filename := strings.Split(file.Name(), ".")[0]
