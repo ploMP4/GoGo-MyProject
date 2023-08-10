@@ -13,7 +13,7 @@ import (
 )
 
 // Application Version
-const APPLICATION_VERSION = "4.2.0"
+const APPLICATION_VERSION = "4.3.0"
 
 const (
 	SHORT_ALL_FLAG = "a"
@@ -272,12 +272,23 @@ func (app *App) handleSubCommandFiles(commandName, name string, file File) {
 		showMessage("Copying", file.Filepath)
 
 		templatePath := fmt.Sprintf(
-			"%s/%s/%s/%s",
-			app.parser.settings.TemplatePath,
+			"../%s/templates/%s/%s/%s",
+			PROJECT_ROOT_DIR_NAME,
 			app.filename,
 			commandName,
 			file.Filepath,
 		)
+
+		if !fileExists(templatePath) {
+			templatePath = fmt.Sprintf(
+				"%s/%s/%s/%s",
+				app.parser.settings.TemplatePath,
+				app.filename,
+				commandName,
+				file.Filepath,
+			)
+		}
+
 		copyFileFromTemplate(templatePath, file.Filepath)
 	} else {
 		app.spinner.Restart()
