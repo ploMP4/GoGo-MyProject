@@ -79,14 +79,14 @@ func Execute() {
 	case SHORT_SET_GADGET_PATH_FLAG, SET_GADGET_PATH_FLAG:
 		app.parser.parseSettings()
 		err = app.parser.settings.setGadgetPath(appName)
-		if err != nil {
+		if err == nil {
 			message = fmt.Sprint("Config path set to: " + appName)
 		}
 
 	case SHORT_SET_TEMPATE_PATH_FLAG, SET_TEMPATE_PATH_FLAG:
 		app.parser.parseSettings()
 		err = app.parser.settings.setTemplatePath(appName)
-		if err != nil {
+		if err == nil {
 			message = fmt.Sprint("Template path set to: " + appName)
 		}
 
