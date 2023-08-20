@@ -6,26 +6,25 @@ sidebar_position: 1
 
 Installation instructions for linux opperating systems
 
-## Download binary
+## Build from source (Recommended)
 
-Comming soon...
+### What you'll need
 
-## Build from source (Makefile)
+- Go >= 1.20
 
-Make sure you have [Make and go installed](#installing-go-and-make).
+### Using Makefile
 
 Clone the repo to your computer. Then cd into the project directory and run `make install`
 
 ```
 git clone https://github.com/ploMP4/GoGo-MyProject
-cd GoGo-MyProject && make install
+cd GoGo-MyProject
+make install
 ```
 
-Finally [add the command to PATH](#add-command-to-path) to be able to execute it globally
+Finally [add the command to PATH](#add-command-to-path) to be able to execute it globally.
 
-## Using install.sh 
-
-Make sure you have [Make and go installed](#installing-go-and-make).
+### Using install.sh
 
 Clone the repo to your computer:
 
@@ -33,101 +32,37 @@ Clone the repo to your computer:
 git clone https://github.com/ploMP4/GoGo-MyProject
 ```
 
-cd into the project directory and build the application.
+cd into the project directory and run the `install` script
 
 ```
-cd GoGo-MyProject && go build -o ./dist/gogo ./cmd/...
-```
-
-OR
-
-```
-cd GoGo-MyProject && make build
-```
-
-Run the install.sh script
-
-```
+cd GoGo-MyProject
 ./scripts/install.sh
 ```
 
-Finally [add the command to PATH](#add-command-to-path) to be able to execute it globally
+Finally [add the command to PATH](#add-command-to-path) to be able to execute it globally.
 
-## Adding command to PATH
+## Precompiled binary
 
-### zsh
+Download the precompiled binary for your operating system from the [releases page](https://github.com/ploMP4/GoGo-MyProject/releases).
 
-Add this to your `.zshrc` file before the `export PATH` line
+## Add command to PATH
 
-```bash
-path+=($HOME'/.gogo/bin')
-```
-
-_if you installed it in a different directory add that instead_
-
-Restart your terminal or run to following command
-
-```
-source .zshrc
-```
-
-Test that everything went well by running
-
-```
-gogo version
-```
-
-### bash
-
-Add this to the end of your `.bashrc` file
+Add this to the end of your `.bashrc` or `.zshrc` file
 
 ```bash
 export PATH="$HOME/.gogo/bin:$PATH"
 ```
 
-_if you installed it in a different directory add that instead_
+_if you installed it in a different directory, change `.gogo` to the directory you installed it instead._
 
-Restart your terminal or run to following command
-
-```
-source .bashrc
-```
-
-Test that everything went well by running
-
-```
-gogo version
-```
-
-## Installing Go and Make
-
-### Debian
-
-```
-sudo apt install make
-```
-
-Visit the [go website](https://go.dev/dl/) and download the linux version.
-Then unzip the file you downloaded.
-
-```
-sudo tar -C /usr/local -xzf <filename>
-```
-
-Finally add this line to your .bashrc file
+Restart your terminal or run the following command
 
 ```bash
-export PATH="/usr/local/go/bin:$PATH"
+exec $SHELL
 ```
 
-### Fedora
+Verify that everything went well by running
 
-```
-sudo dnf install make go
-```
-
-### Arch
-
-```
-sudo pacman -S make go
+```bash
+gogo version
 ```
