@@ -1,11 +1,11 @@
-commands: [["mkdir"]]
+commands: ["mkdir"]
 dirs: ["bin", "include", "src"]
 help: "Create C++ app"
 
 subCommands:
   v:
     name: "vanilla"
-    override:  false
+    override: false
     parallel: true
     help: ""
 

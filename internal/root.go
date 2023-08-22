@@ -13,7 +13,7 @@ import (
 )
 
 // Application Version
-const APPLICATION_VERSION = "4.3.0"
+const APPLICATION_VERSION = "4.4.0"
 
 const (
 	SHORT_ALL_FLAG = "a"
@@ -139,7 +139,11 @@ func (app *App) run() (string, error) {
 	}
 
 	mainCommands, otherCommands, dirs, verbose := app.parser.parseArgs()
-	mainCommands[len(mainCommands)-1] = append(mainCommands[len(mainCommands)-1], app.appName)
+	mainCommands[len(mainCommands)-1] = fmt.Sprintf(
+		"%s %s",
+		mainCommands[len(mainCommands)-1],
+		app.appName,
+	)
 	app.verbose = verbose
 
 	app.spinner.Start()
@@ -164,10 +168,11 @@ func (app *App) run() (string, error) {
 // Used to run all the main commands and throw an error if
 // something goes wrong
 func (app *App) runMainCommands(mainCommands MainCommmands) (string, error) {
-	for _, cmd := range mainCommands {
+	for _, command := range mainCommands {
 		app.spinner.Restart()
-		showMessage("Running", cmd...)
+		showMessage("Running", command)
 
+		cmd := strings.Fields(command)
 		c := exec.Command(cmd[0], cmd[1:]...)
 
 		if app.verbose {
@@ -232,7 +237,7 @@ func (app *App) runSubCommands(subcommands []SubCommand) {
 
 // Executes a single subcommand
 func (app *App) executeSubCommand(command SubCommand) error {
-	if command.Command != nil {
+	if command.Command != "" {
 		err := app.handleSubCommandCommand(command.Command)
 
 		if err != nil {
@@ -249,8 +254,9 @@ func (app *App) executeSubCommand(command SubCommand) error {
 	return nil
 }
 
-func (app *App) handleSubCommandCommand(command []string) error {
-	c := exec.Command(command[0], command[1:]...)
+func (app *App) handleSubCommandCommand(command string) error {
+	cmd := strings.Fields(command)
+	c := exec.Command(cmd[0], cmd[1:]...)
 
 	if app.verbose {
 		app.spinner.Stop()

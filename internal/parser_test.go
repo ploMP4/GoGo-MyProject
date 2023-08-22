@@ -201,11 +201,11 @@ func TestParser_parseArgs(t *testing.T) {
 		{
 			name:   "pass",
 			parser: p,
-			want:   [][]string{{"mkdir"}},
+			want:   []string{"mkdir"},
 			want1: []SubCommand{
 				{
 					Name:     "vanilla",
-					Command:  []string{},
+					Command:  "",
 					Override: false,
 					Parallel: true,
 					Exclude:  false,

@@ -1,4 +1,5 @@
-commands: [["mkdir"]]
+commands:
+  - "mkdir"
 dirs: ["bin", "include", "src"]
 help: "Create C++ app"
 

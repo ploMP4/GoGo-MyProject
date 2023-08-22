@@ -1,57 +1,39 @@
 commands:
-  - - "npx"
-    - "create-react-app"
+  - "npx create-react-app"
 
 help: "Create react app"
 
 subCommands:
   redux:
     name: "Redux"
-    command:
-      - "npx"
-      - "create-react-app"
-      - "--template"
-      - "redux"
+    command: "npx create-react-app --template redux"
 
     override: true
     help: "Use redux template of cra"
 
   ts:
     name: "Typescript"
-    command:
-      - "npx"
-      - "create-react-app"
-      - "--template"
-      - "typescript"
+    command: "npx create-react-app --template typescript"
 
     override: true
     help: "Use typescript template of cra"
 
   redux-ts:
     name: "Redux-Typescript"
-    command:
-      - "npx"
-      - "create-react-app"
-      - "--template"
-      - "redux-typescript"
+    command: "npx create-react-app --template redux-typescript"
 
     override: true
     help: "Use redux-typescript template of cra"
 
   mui:
     name: "Material-UI"
-    command:
-      - "npm"
-      - "install"
-      - "@mui/material"
-      - "@emotion/react"
-      - "@emotion/styled"
+    command: "npm install @mui/material @emotion/react @emotion/styled"
 
     override: false
     help: "Install material-ui library"
 
   bootstrap:
     name: "Bootstrap"
-    command: ["npm", "install", "react-bootstrap"]
+    command: "npm install react-bootstrap"
     override: false
     help: "Install react-bootstrap library"

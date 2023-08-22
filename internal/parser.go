@@ -21,7 +21,7 @@ type Parser struct {
 // We can have many main commands and commands
 // come in the form of a string array so they can
 // be passed in exec.Command()
-type MainCommmands [][]string
+type MainCommmands []string
 
 // We can have many subcommands and they come in the form
 // of an javascript object having what the argument name is going
@@ -45,7 +45,7 @@ type Gadget struct {
 // Describe a subcommand
 type SubCommand struct {
 	Name     string    `yaml:"name"`     // Name that will be displayed in the Installing status message e.x Installing: React
-	Command  []string  `yaml:"command"`  // The command that will be executed.  Note: commands should be passed as an array instead of using spaces e.x ["npx", "create-react-app"]
+	Command  string    `yaml:"command"`  // The command that will be executed.  Note: commands should be passed as an array instead of using spaces e.x ["npx", "create-react-app"]
 	Override bool      `yaml:"override"` // Overrides the last command in the main commands array and runs this instead
 	Parallel bool      `yaml:"parallel"` // Sets if the command will be run concurrently with others or not
 	Exclude  bool      `yaml:"exclude"`  // If true this command will be ignored when the (a, all) flag is ran
@@ -204,7 +204,7 @@ func (p *Parser) parseFlags() (all, verbose bool) {
 	return all, verbose
 }
 
-func (p *Parser) parseAll(finalCommand *[]string, otherCommands *[]SubCommand) {
+func (p *Parser) parseAll(finalCommand *string, otherCommands *[]SubCommand) {
 	for _, value := range p.gadget.SubCommands {
 		if value.Exclude {
 			continue
@@ -217,7 +217,7 @@ func (p *Parser) parseAll(finalCommand *[]string, otherCommands *[]SubCommand) {
 	}
 }
 
-func (p *Parser) parseCmd(finalCommand *[]string, otherCommands *[]SubCommand) {
+func (p *Parser) parseCmd(finalCommand *string, otherCommands *[]SubCommand) {
 	for _, arg := range p.args {
 		if value, exists := p.gadget.SubCommands[arg]; exists {
 			if value.Override {

@@ -5,7 +5,7 @@ help: "example file"
 subCommands:
   command-name:
     name: ""
-    command: []
+    command: ""
 
     override: false
     parallel: false

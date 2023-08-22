@@ -97,7 +97,7 @@ func TestApp_runMainCommands(t *testing.T) {
 			name: "run a command",
 			app:  a,
 			args: args{
-				mainCommands: [][]string{{"echo", a.appName}},
+				mainCommands: []string{"echo " + a.appName},
 			},
 			want:    "",
 			wantErr: false,
@@ -106,7 +106,7 @@ func TestApp_runMainCommands(t *testing.T) {
 			name: "command doesn't exist",
 			app:  a,
 			args: args{
-				mainCommands: [][]string{{"some_command"}},
+				mainCommands: []string{"some_command"},
 			},
 			want:    "Unable to execute command: some_command",
 			wantErr: true,
@@ -166,7 +166,7 @@ func TestApp_executeSubCommand(t *testing.T) {
 			args: args{
 				command: SubCommand{
 					Name:    "test",
-					Command: []string{"some_command"},
+					Command: "some_command",
 				},
 			},
 			wantErr: true,
@@ -177,7 +177,7 @@ func TestApp_executeSubCommand(t *testing.T) {
 			args: args{
 				command: SubCommand{
 					Name:    "echo",
-					Command: []string{"echo", "test"},
+					Command: "echo test",
 				},
 			},
 			wantErr: false,
