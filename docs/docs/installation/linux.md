@@ -12,7 +12,7 @@ Installation instructions for linux opperating systems
 
 - Go >= 1.20
 
-### Using Makefile
+### Using Make
 
 Clone the repo to your computer. Then cd into the project directory and run `make install`
 
@@ -24,7 +24,7 @@ make install
 
 Finally [add the command to PATH](#add-command-to-path) to be able to execute it globally.
 
-### Using install.sh
+### Using the install.sh script
 
 Clone the repo to your computer:
 
@@ -57,8 +57,16 @@ _if you installed it in a different directory, change `.gogo` to the directory y
 
 Restart your terminal or run the following command
 
+For bash users
+
 ```bash
-exec $SHELL
+source ~/.bashrc
+```
+
+For zsh users
+
+```bash
+source ~/.zshrc
 ```
 
 Verify that everything went well by running
