@@ -10,8 +10,7 @@ The string that will be displayed in log messages
 
 ```yaml
 subCommands:
-    cors:
-        files:
-            cors-middleware:
-                ...
+  cors:
+    files:
+      cors-middleware: ...
 ```
