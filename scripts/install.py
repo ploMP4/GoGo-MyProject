@@ -2,12 +2,16 @@
 
 import os
 import shutil
+import sys
 import subprocess
 from pathlib import Path
 
-DIST_PATH = Path(f"{Path.cwd()}/dist/gogo")
+if sys.platform.startswith("win"):
+    APPLICATION_PATH = Path(f"{Path.home()}/gogo")
+else:
+    APPLICATION_PATH = Path(f"{Path.home()}/.gogo")
 
-APPLICATION_PATH = Path(f"{Path.home()}/.gogo")
+DIST_PATH = Path(f"{Path.cwd()}/dist/gogo")
 BINARY_PATH = Path(f"{APPLICATION_PATH}/bin")
 SETTINGS_FILE_PATH = Path(f"{BINARY_PATH}/settings.yaml")
 GADGET_PATH = Path(f"{APPLICATION_PATH}/gadgets")
