@@ -32,11 +32,12 @@ type SubCommands map[string]SubCommand
 // We can change many files with different ways each.
 // Files is an object with the key being a small
 // description to print out to the user and the properties for the values
-type FilesType map[string]File
+type Files map[string]File
 
 // Describe the main yaml gadget
 type Gadget struct {
-	Commands    MainCommmands `yaml:"commands"`    // Array with the commands that will be executed. Note: commands should be passed as an array instead of using spaces e.x ["npx", "create-react-app"]
+	Commands    MainCommmands `yaml:"commands"` // Array with the commands that will be executed.
+	Template    bool          `yaml:"template"`
 	Dirs        []string      `yaml:"dirs"`        // Array with names of directories that will be created
 	SubCommands SubCommands   `yaml:"subCommands"` // Commands that can be passed after the initial command for optional features e.x. ts for typescript in a react command
 	Help        string        `yaml:"help"`        // Help text for the command
@@ -44,13 +45,13 @@ type Gadget struct {
 
 // Describe a subcommand
 type SubCommand struct {
-	Name     string    `yaml:"name"`     // Name that will be displayed in the Installing status message e.x Installing: React
-	Command  string    `yaml:"command"`  // The command that will be executed.  Note: commands should be passed as an array instead of using spaces e.x ["npx", "create-react-app"]
-	Override bool      `yaml:"override"` // Overrides the last command in the main commands array and runs this instead
-	Parallel bool      `yaml:"parallel"` // Sets if the command will be run concurrently with others or not
-	Exclude  bool      `yaml:"exclude"`  // If true this command will be ignored when the (a, all) flag is ran
-	Files    FilesType `yaml:"files"`    // Specify files that you want to change
-	Help     string    `yaml:"help"`     // Help text for the command
+	Name     string `yaml:"name"`     // Name that will be displayed in the Installing status message e.x Installing: React
+	Command  string `yaml:"command"`  // The command that will be executed.
+	Override bool   `yaml:"override"` // Overrides the last command in the main commands array and runs this instead
+	Parallel bool   `yaml:"parallel"` // Sets if the command will be run concurrently with others or not
+	Exclude  bool   `yaml:"exclude"`  // If true this command will be ignored when the (a, all) flag is ran
+	Files    Files  `yaml:"files"`    // Specify files that you want to change
+	Help     string `yaml:"help"`     // Help text for the command
 }
 
 // Describe a file object
