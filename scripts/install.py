@@ -11,7 +11,7 @@ if sys.platform.startswith("win"):
 else:
     APPLICATION_PATH = Path(f"{Path.home()}/.gogo")
 
-DIST_PATH = Path(f"{Path.cwd()}/dist/gogo")
+DIST_PATH = Path(f"{Path.cwd()}/dist")
 BINARY_PATH = Path(f"{APPLICATION_PATH}/bin")
 SETTINGS_FILE_PATH = Path(f"{BINARY_PATH}/settings.yaml")
 GADGET_PATH = Path(f"{APPLICATION_PATH}/gadgets")
