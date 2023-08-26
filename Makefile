@@ -37,7 +37,7 @@ cover:
 
 ## install: installs executable as a global command to the machine
 install: 
-	@./scripts/install.sh
+	@python ./scripts/install.py
 
 ## doc: start documentation dev environment
 doc:
