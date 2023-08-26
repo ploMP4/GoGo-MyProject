@@ -34,16 +34,17 @@ type SubCommands map[string]SubCommand
 // description to print out to the user and the properties for the values
 type Files map[string]File
 
-// Describe the main yaml gadget
+type Placeholders map[string]string
+
 type Gadget struct {
 	Commands    MainCommmands `yaml:"commands"` // Array with the commands that will be executed.
 	Template    bool          `yaml:"template"`
-	Dirs        []string      `yaml:"dirs"`        // Array with names of directories that will be created
+	Dirs        []string      `yaml:"dirs"` // Array with names of directories that will be created
+	Files       Files         `yaml:"files"`
 	SubCommands SubCommands   `yaml:"subCommands"` // Commands that can be passed after the initial command for optional features e.x. ts for typescript in a react command
 	Help        string        `yaml:"help"`        // Help text for the command
 }
 
-// Describe a subcommand
 type SubCommand struct {
 	Name     string `yaml:"name"`     // Name that will be displayed in the Installing status message e.x Installing: React
 	Command  string `yaml:"command"`  // The command that will be executed.
@@ -54,17 +55,16 @@ type SubCommand struct {
 	Help     string `yaml:"help"`     // Help text for the command
 }
 
-// Describe a file object
 type File struct {
 	Filepath string     `yaml:"filepath"` // Path where the file we want to edit is located. Path starts from the root file of our project
 	Template bool       `yaml:"template"` // Specify if the file will be updated from an existing template
 	Change   FileChange `yaml:"change"`   // Properties about changing the file
 }
 
-// Describe file change properties object
 type FileChange struct {
-	SplitOn string `yaml:"split-on"` // Specify string to split the file on
-	Append  string `yaml:"append"`   // Content that will be appended after the split on
+	SplitOn     string       `yaml:"split-on"` // Specify string to split the file on
+	Append      string       `yaml:"append"`   // Content that will be appended after the split on
+	Placeholder Placeholders `yaml:"placeholder"`
 }
 
 // Parse the settings.yaml file that exists in

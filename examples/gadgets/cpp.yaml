@@ -1,5 +1,5 @@
 commands: ["mkdir"]
-dirs: ["bin", "include", "src"]
+dirs: ["bin", "includes", "src"]
 help: "Create C++ app"
 
 subCommands:
@@ -17,3 +17,7 @@ subCommands:
       makefile:
         filepath: "Makefile"
         template: true
+        change:
+          placeholder:
+            _CC: "g++"
+            _INCLUDEDIR: "includes/"

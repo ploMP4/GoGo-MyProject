@@ -273,8 +273,9 @@ func (app *App) handleSubCommandCommand(command string) error {
 }
 
 func (app *App) handleSubCommandFiles(commandName, name string, file File) {
+	app.spinner.Restart()
+
 	if file.Template {
-		app.spinner.Restart()
 		showMessage("Copying", file.Filepath)
 
 		templatePath := fmt.Sprintf(
@@ -296,9 +297,11 @@ func (app *App) handleSubCommandFiles(commandName, name string, file File) {
 		}
 
 		copyFileFromTemplate(templatePath, file.Filepath)
-	} else {
-		app.spinner.Restart()
 
+		if file.Change.Placeholder != nil {
+			handlePlaceholders(file.Filepath, file.Change.Placeholder, app.parser.args)
+		}
+	} else {
 		if strings.Contains(file.Filepath, "<APPNAME>") {
 			path := strings.Split(file.Filepath, "<APPNAME>")
 			file.Filepath = app.appName + path[1]
@@ -330,6 +333,46 @@ func editFile(filename, splitOn, toAppend string) {
 	}
 
 	err = os.WriteFile(filename, []byte(settings), 0644)
+	if err != nil {
+		exitGracefully(err)
+	}
+}
+
+func handlePlaceholders(filepath string, placeholders Placeholders, args []string) {
+	for placeholder, defaultValue := range placeholders {
+		found := findAndReplacePlaceholder(filepath, placeholder, args)
+		if !found {
+			replacePlaceholder(filepath, placeholder, defaultValue)
+		}
+	}
+}
+
+func findAndReplacePlaceholder(filepath, placeholder string, args []string) bool {
+	for idx, arg := range args {
+		if arg == placeholder {
+			replacePlaceholder(filepath, placeholder, args[idx+1])
+
+			return true
+		}
+	}
+
+	return false
+}
+
+func replacePlaceholder(filepath, placeholder, value string) {
+	showMessage(
+		"Replacing",
+		fmt.Sprintf("%s -> %s", placeholder, value),
+	)
+
+	content, err := os.ReadFile(filepath)
+	if err != nil {
+		exitGracefully(err)
+	}
+
+	replaced := strings.ReplaceAll(string(content), placeholder, value)
+
+	err = os.WriteFile(filepath, []byte(replaced), 0644)
 	if err != nil {
 		exitGracefully(err)
 	}
