@@ -312,32 +312,6 @@ func (app *App) handleSubCommandFiles(commandName, name string, file File) {
 	}
 }
 
-// Adds a string in the specified file either at the end of the file
-// if the splitOn argument is an empty string or by splitting the file by the string
-// specified in splitOn and appending it there
-func editFile(filename, splitOn, toAppend string) {
-	var settings string
-
-	content, err := os.ReadFile(filename)
-	if err != nil {
-		exitGracefully(err)
-	}
-
-	if splitOn != "" { // Append after certain string in the file
-		s := strings.Split(string(content), splitOn)
-		s[0] += splitOn + toAppend
-
-		settings = strings.Join(s, " ")
-	} else { // Append at the end of file
-		settings = string(content) + toAppend
-	}
-
-	err = os.WriteFile(filename, []byte(settings), 0644)
-	if err != nil {
-		exitGracefully(err)
-	}
-}
-
 func handlePlaceholders(filepath string, placeholders Placeholders, args []string) {
 	for placeholder, defaultValue := range placeholders {
 		found := findAndReplacePlaceholder(filepath, placeholder, args)
@@ -357,23 +331,4 @@ func findAndReplacePlaceholder(filepath, placeholder string, args []string) bool
 	}
 
 	return false
-}
-
-func replacePlaceholder(filepath, placeholder, value string) {
-	showMessage(
-		"Replacing",
-		fmt.Sprintf("%s -> %s", placeholder, value),
-	)
-
-	content, err := os.ReadFile(filepath)
-	if err != nil {
-		exitGracefully(err)
-	}
-
-	replaced := strings.ReplaceAll(string(content), placeholder, value)
-
-	err = os.WriteFile(filepath, []byte(replaced), 0644)
-	if err != nil {
-		exitGracefully(err)
-	}
 }
