@@ -1,6 +1,6 @@
 module github.com/ploMP4/gogo-myproject
 
-go 1.20
+go 1.21
 
 require (
 	github.com/briandowns/spinner v1.18.0

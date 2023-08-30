@@ -101,7 +101,9 @@ func (p *Parser) parseSettings() error {
 // Check if a file with the name passed in by the user exists
 // and parse its contents into the Parser.gadget
 func (p *Parser) parseGadget(filename string) error {
-	yamlFile, err := os.Open(fmt.Sprintf("%s/gadgets/%s.yaml", PROJECT_ROOT_DIR_NAME, filename))
+	yamlFile, err := os.Open(
+		fmt.Sprintf("%s/gadgets/%s.yaml", PROJECT_ROOT_DIR_NAME, filename),
+	)
 	if err != nil {
 		yamlFile, err = os.Open(fmt.Sprintf("%s/%s.yaml", p.settings.GadgetPath, filename))
 		if err != nil {
@@ -165,21 +167,29 @@ func (p Parser) getSubHelp(filename string) ([]string, error) {
 // Use the parsed gadget and the args to construct
 // the dirs, main and sub commands and return them
 func (p *Parser) parseArgs() (MainCommmands, []SubCommand, []string, bool) {
-	finalCommand := p.gadget.Commands[len(p.gadget.Commands)-1]
-	var otherCommands []SubCommand
+	var finalCommand string
+	var mainCommands MainCommmands
+	var subCommands []SubCommand
+
+	if !p.gadget.Template {
+		finalCommand = p.gadget.Commands[len(p.gadget.Commands)-1]
+	}
 
 	all, verbose := p.parseFlags()
 	if all {
-		p.parseAll(&finalCommand, &otherCommands)
+		p.parseAll(&finalCommand, &subCommands)
 	} else {
-		p.parseCmd(&finalCommand, &otherCommands)
+		p.parseCmd(&finalCommand, &subCommands)
 	}
 
-	p.gadget.Commands[len(p.gadget.Commands)-1] = finalCommand
-	mainCommands := p.gadget.Commands
+	if !p.gadget.Template {
+		p.gadget.Commands[len(p.gadget.Commands)-1] = finalCommand
+		mainCommands = p.gadget.Commands
+	}
+
 	dirs := p.gadget.Dirs
 
-	return mainCommands, otherCommands, dirs, verbose
+	return mainCommands, subCommands, dirs, verbose
 }
 
 func (p *Parser) parseFlags() (all, verbose bool) {
@@ -205,7 +215,7 @@ func (p *Parser) parseFlags() (all, verbose bool) {
 	return all, verbose
 }
 
-func (p *Parser) parseAll(finalCommand *string, otherCommands *[]SubCommand) {
+func (p *Parser) parseAll(finalCommand *string, subCommands *[]SubCommand) {
 	for _, value := range p.gadget.SubCommands {
 		if value.Exclude {
 			continue
@@ -213,19 +223,19 @@ func (p *Parser) parseAll(finalCommand *string, otherCommands *[]SubCommand) {
 			*finalCommand = value.Command
 			showMessage("Using", value.Name)
 		} else {
-			*otherCommands = append(*otherCommands, value)
+			*subCommands = append(*subCommands, value)
 		}
 	}
 }
 
-func (p *Parser) parseCmd(finalCommand *string, otherCommands *[]SubCommand) {
+func (p *Parser) parseCmd(finalCommand *string, subCommands *[]SubCommand) {
 	for _, arg := range p.args {
 		if value, exists := p.gadget.SubCommands[arg]; exists {
 			if value.Override {
 				*finalCommand = value.Command
 				showMessage("Using", value.Name)
 			} else {
-				*otherCommands = append(*otherCommands, value)
+				*subCommands = append(*subCommands, value)
 			}
 		}
 	}
