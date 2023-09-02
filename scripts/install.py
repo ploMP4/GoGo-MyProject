@@ -36,5 +36,9 @@ if __name__ == "__main__":
 
     if not os.path.isfile(SETTINGS_FILE_PATH):
         with open(SETTINGS_FILE_PATH, "a") as f:
-            f.write(f'gadget-path: "{APPLICATION_PATH}/gadgets"\n')
-            f.write(f'template-path: "{APPLICATION_PATH}/templates"')
+            if sys.platform.startswith("win"):
+                f.write(f"gadget-path: {APPLICATION_PATH}\\gadgets\n")
+                f.write(f"template-path: {APPLICATION_PATH}\\templates")
+            else:
+                f.write(f"gadget-path: {APPLICATION_PATH}/gadgets\n")
+                f.write(f"template-path: {APPLICATION_PATH}/templates")
