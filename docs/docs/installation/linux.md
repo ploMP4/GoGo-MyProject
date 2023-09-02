@@ -6,13 +6,26 @@ sidebar_position: 1
 
 Installation instructions for linux opperating systems
 
-## Build from source (Recommended)
-
-### What you'll need
+## What you'll need
 
 - Go >= 1.20
+- Python >= 3.11
 
-### Using Make
+## Using the install script
+
+Clone the repo to your computer.
+
+cd into the project directory and run the `install` script
+
+```
+git clone https://github.com/ploMP4/GoGo-MyProject
+cd GoGo-MyProject
+python ./scripts/install.py
+```
+
+Finally [add the command to PATH](#add-command-to-path) to be able to execute it globally.
+
+## Using Make
 
 Clone the repo to your computer. Then cd into the project directory and run `make install`
 
@@ -23,27 +36,6 @@ make install
 ```
 
 Finally [add the command to PATH](#add-command-to-path) to be able to execute it globally.
-
-### Using the install.sh script
-
-Clone the repo to your computer:
-
-```
-git clone https://github.com/ploMP4/GoGo-MyProject
-```
-
-cd into the project directory and run the `install` script
-
-```
-cd GoGo-MyProject
-./scripts/install.sh
-```
-
-Finally [add the command to PATH](#add-command-to-path) to be able to execute it globally.
-
-## Precompiled binary
-
-Download the precompiled binary for your operating system from the [releases page](https://github.com/ploMP4/GoGo-MyProject/releases).
 
 ## Add command to PATH
 
