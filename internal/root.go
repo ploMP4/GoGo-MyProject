@@ -218,6 +218,15 @@ func (app *App) handeMainCommandFiles(name string, file File) {
 
 		if !fileExists(templatePath) {
 			templatePath = fmt.Sprintf(
+				"../%s/templates/%s/%s",
+				PROJECT_ROOT_DIR_NAME,
+				app.filename,
+				file.Filepath,
+			)
+		}
+
+		if !fileExists(templatePath) {
+			templatePath = fmt.Sprintf(
 				"%s/%s/%s",
 				app.parser.settings.TemplatePath,
 				app.filename,
@@ -345,6 +354,16 @@ func (app *App) handleSubCommandFiles(commandName, name string, file File) {
 			commandName,
 			file.Filepath,
 		)
+
+		if !fileExists(templatePath) {
+			templatePath = fmt.Sprintf(
+				"./%s/templates/%s/%s/%s",
+				PROJECT_ROOT_DIR_NAME,
+				app.filename,
+				commandName,
+				file.Filepath,
+			)
+		}
 
 		if !fileExists(templatePath) {
 			templatePath = fmt.Sprintf(
