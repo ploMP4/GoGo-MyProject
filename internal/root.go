@@ -166,12 +166,14 @@ func (app *App) run() (string, error) {
 
 	app.spinner.Restart()
 
+	app.createDirs(dirs)
+
 	if app.parser.gadget.Files != nil {
 		for name, file := range app.parser.gadget.Files {
 			app.handeMainCommandFiles(name, file)
 		}
 	}
-	app.createDirs(dirs)
+
 	app.runSubCommands(subCommands)
 
 	app.spinner.Stop()
