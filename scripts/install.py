@@ -18,7 +18,10 @@ GADGET_PATH = Path(f"{APPLICATION_PATH}/gadgets")
 TEMPLATES_PATH = Path(f"{APPLICATION_PATH}/templates")
 
 if __name__ == "__main__":
-    subprocess.run("go build -o ./dist/gogo ./cmd/...", shell=True)
+    if sys.platform.startswith("win"):
+        subprocess.run("go build -o ./dist/gogo.exe ./cmd/...", shell=True)
+    else:
+        subprocess.run("go build -o ./dist/gogo ./cmd/...", shell=True)
 
     if not os.path.isdir(APPLICATION_PATH):
         os.mkdir(APPLICATION_PATH)
@@ -26,7 +29,10 @@ if __name__ == "__main__":
         os.mkdir(GADGET_PATH)
         os.mkdir(TEMPLATES_PATH)
 
-    shutil.move(DIST_PATH, BINARY_PATH / "gogo")
+    if sys.platform.startswith("win"):
+        shutil.move(DIST_PATH, BINARY_PATH / "gogo.exe")
+    else:
+        shutil.move(DIST_PATH, BINARY_PATH / "gogo")
 
     if not os.path.isfile(SETTINGS_FILE_PATH):
         with open(SETTINGS_FILE_PATH, "a") as f:
