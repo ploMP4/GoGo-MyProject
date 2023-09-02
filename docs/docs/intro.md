@@ -4,7 +4,7 @@ sidebar_position: 1
 
 # GoGo My Intro
 
-GoGo is a cli tool that allows you to automatically create your project boilerplate
+GoGo is a cli tool that allows you to easily create boilerplate. From basic files to scaffolding the entire project structure.
 
 ## Getting Started
 
