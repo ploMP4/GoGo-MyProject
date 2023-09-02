@@ -39,7 +39,7 @@ func showHelp() {
 	p.parseSettings()
 	helpCommands := p.getHelp()
 
-	fmt.Printf(`A CLI tool to create starter boilerplate for you
+	fmt.Fprintf(color.Output, `A CLI tool to create starter boilerplate for you
 
 GoGo is a CLI tool that creates the starter boilerplate 
 for your projects and it's really helpful for people
@@ -69,7 +69,7 @@ func showSubHelp(filename string) {
 		exitGracefully(fmt.Errorf("command %s not found", filename))
 	}
 
-	fmt.Printf(`%s
+	fmt.Fprintf(color.Output, `%s
 	%23s   - %s
 	%s   - %s
 	%23s   - %s
@@ -85,7 +85,7 @@ func showSubHelp(filename string) {
 // Used to display status messages
 // e.x. Running: npm install
 func showMessage(prefix string, message ...string) {
-	fmt.Printf("%s: %s\n", Yellow(prefix), message)
+	fmt.Fprintf(color.Output, "%s: %s\n", Yellow(prefix), message)
 }
 
 func loadSpinner() *spinner.Spinner {
