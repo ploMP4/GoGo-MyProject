@@ -12,5 +12,7 @@ as the last argument.
 
 ```yaml
 commands:
-  - "npx create-react-app"
+  - echo "this is a command"
+  - echo "this is another command"
+  - npx create-react-app
 ```
