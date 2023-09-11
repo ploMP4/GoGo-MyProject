@@ -9,5 +9,8 @@ The command that will be executed.
 **Example:**
 
 ```yaml
-command: "npx create-react-app --template typescript"
+subCommands:
+  ts:
+    name: "Typescript"
+    command: "npx create-react-app --template typescript"
 ```

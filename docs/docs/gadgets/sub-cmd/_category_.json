@@ -1,6 +1,6 @@
 {
   "label": "Sub Commands",
-  "position": 4,
+  "position": 8,
   "link": {
     "type": "generated-index",
     "description": "In this section we will learn how to create our own gadget"

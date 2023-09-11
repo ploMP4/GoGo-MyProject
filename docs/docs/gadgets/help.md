@@ -9,5 +9,5 @@ Help text for the command
 **Example:**
 
 ```yaml
-help: "Creates react app"
+help: "Create react app"
 ```

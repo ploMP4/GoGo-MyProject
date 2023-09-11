@@ -6,10 +6,15 @@ sidebar_position: 6
 
 > Default: false
 
-If true this command will be ignored when the [a, all](../flags/all.mdx) flag is used.
+If true this subcommand will be ignored when the [a, all](../../flags/all) flag is used.
 
 **Example:**
 
 ```yaml
-exclude: true
+subCommands:
+  ts:
+    name: "Typescript"
+    command: "npx create-react-app --template typescript"
+    override: true
+    exclude: true
 ```
