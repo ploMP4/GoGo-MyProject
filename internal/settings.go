@@ -2,7 +2,6 @@ package internal
 
 import (
 	"bytes"
-	"io/ioutil"
 	"os"
 	"path/filepath"
 
@@ -39,7 +38,7 @@ func (s *Settings) setGadgetPath(path string) error {
 		return err
 	}
 
-	err = ioutil.WriteFile(filepath.Dir(e_path)+"/settings.yaml", buf.Bytes(), 0644)
+	err = os.WriteFile(filepath.Dir(e_path)+"/settings.yaml", buf.Bytes(), 0644)
 	if err != nil {
 		return err
 	}
@@ -70,7 +69,7 @@ func (s *Settings) setTemplatePath(path string) error {
 		return err
 	}
 
-	err = ioutil.WriteFile(filepath.Dir(e_path)+"/settings.yaml", buf.Bytes(), 0644)
+	err = os.WriteFile(filepath.Dir(e_path)+"/settings.yaml", buf.Bytes(), 0644)
 	if err != nil {
 		return err
 	}

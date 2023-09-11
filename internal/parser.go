@@ -2,7 +2,7 @@ package internal
 
 import (
 	"fmt"
-	"io/ioutil"
+	"io"
 	"os"
 	"path/filepath"
 	"strings"
@@ -86,7 +86,7 @@ func (p *Parser) parseSettings() error {
 	}
 	defer yamlFile.Close()
 
-	yamlData, err := ioutil.ReadAll(yamlFile)
+	yamlData, err := io.ReadAll(yamlFile)
 	if err != nil {
 		return err
 	}
@@ -112,7 +112,7 @@ func (p *Parser) parseGadget(filename string) error {
 	}
 	defer yamlFile.Close()
 
-	yamlData, err := ioutil.ReadAll(yamlFile)
+	yamlData, err := io.ReadAll(yamlFile)
 	if err != nil {
 		return err
 	}
@@ -128,12 +128,12 @@ func (p *Parser) parseGadget(filename string) error {
 func (p Parser) getHelp() []string {
 	helpCommands := []string{}
 
-	files, err := ioutil.ReadDir(p.settings.GadgetPath)
+	files, err := os.ReadDir(p.settings.GadgetPath)
 	if err != nil {
 		return nil
 	}
 
-	localFiles, err := ioutil.ReadDir(PROJECT_ROOT_DIR_NAME + "/gadgets")
+	localFiles, err := os.ReadDir(PROJECT_ROOT_DIR_NAME + "/gadgets")
 	if err == nil {
 		files = append(files, localFiles...)
 		files = compactFilesSlice(files)

@@ -98,9 +98,9 @@ func loadSpinner() *spinner.Spinner {
 
 // Remove duplicate file entries from a file slice,
 // returns a new slice with the entries removed
-func compactFilesSlice(files []fs.FileInfo) []fs.FileInfo {
+func compactFilesSlice(files []fs.DirEntry) []fs.DirEntry {
 	seen := make(map[string]bool)
-	compactFiles := []fs.FileInfo{}
+	compactFiles := []fs.DirEntry{}
 
 	for _, file := range files {
 		if _, ok := seen[file.Name()]; !ok {
