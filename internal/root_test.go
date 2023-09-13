@@ -14,32 +14,28 @@ func TestRoot_validateInput(t *testing.T) {
 		name    string
 		args    []string
 		want    string
-		want1   string
-		want2   []string
+		want1   []string
 		wantErr bool
 	}{
 		{
 			name:    "no args",
 			args:    []string{},
 			want:    "",
-			want1:   "",
-			want2:   nil,
+			want1:   nil,
 			wantErr: true,
 		},
 		{
 			name:    "command and app name",
 			args:    []string{"", "cpp", "my_app"},
 			want:    "cpp",
-			want1:   "my_app",
-			want2:   nil,
+			want1:   []string{"my_app"},
 			wantErr: false,
 		},
 		{
 			name:    "command app name and arguments",
 			args:    []string{"", "cpp", "my_app", "v"},
 			want:    "cpp",
-			want1:   "my_app",
-			want2:   []string{"v"},
+			want1:   []string{"my_app", "v"},
 			wantErr: false,
 		},
 	}
@@ -52,7 +48,7 @@ func TestRoot_validateInput(t *testing.T) {
 
 			os.Args = tt.args
 
-			got, got1, got2, err := validateInput()
+			got, got1, err := validateInput()
 			if (err != nil) != tt.wantErr {
 				t.Errorf("validateInput() error = %v, wantErr %v", err, tt.wantErr)
 				return
@@ -60,11 +56,8 @@ func TestRoot_validateInput(t *testing.T) {
 			if got != tt.want {
 				t.Errorf("validateInput() got = %v, want %v", got, tt.want)
 			}
-			if got1 != tt.want1 {
-				t.Errorf("validateInput() got1 = %v, want %v", got1, tt.want1)
-			}
-			if !reflect.DeepEqual(got2, tt.want2) {
-				t.Errorf("validateInput() got2 = %v, want %v", got2, tt.want2)
+			if !reflect.DeepEqual(got1, tt.want1) {
+				t.Errorf("validateInput() got2 = %v, want %v", got1, tt.want1)
 			}
 		})
 	}
