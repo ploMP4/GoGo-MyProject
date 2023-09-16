@@ -183,7 +183,7 @@ func (p *Parser) parseFlagsAndPlaceholders() (all, verbose bool, appname string)
 		case SHORT_ALL_FLAG, ALL_FLAG:
 			all = true
 			if idx < len(p.args) {
-				p.args = append(p.args[:idx], p.args[idx+1:]...)
+				p.args = append(p.args[:idx], p.args[idx:]...)
 			} else {
 				p.args = p.args[:idx]
 			}
@@ -193,7 +193,7 @@ func (p *Parser) parseFlagsAndPlaceholders() (all, verbose bool, appname string)
 				subcommand.Exclude = true
 				p.gadget.SubCommands[p.args[idx+1]] = subcommand
 				if idx < len(p.args) {
-					p.args = append(p.args[:idx+1], p.args[idx+2:]...)
+					p.args = append(p.args[:idx+1], p.args[idx+1:]...)
 				} else {
 					p.args = p.args[:idx+1]
 				}
@@ -202,7 +202,7 @@ func (p *Parser) parseFlagsAndPlaceholders() (all, verbose bool, appname string)
 		case SHORT_VERBOSE_FLAG, VERBOSE_FLAG:
 			verbose = true
 			if idx < len(p.args) {
-				p.args = append(p.args[:idx], p.args[idx+1:]...)
+				p.args = append(p.args[:idx], p.args[idx:]...)
 			} else {
 				p.args = p.args[:idx]
 			}
@@ -210,7 +210,7 @@ func (p *Parser) parseFlagsAndPlaceholders() (all, verbose bool, appname string)
 		case PLACEHOLDER_APPNAME:
 			appname = p.args[idx+1]
 			if idx < len(p.args) {
-				p.args = append(p.args[:idx+1], p.args[idx+2:]...)
+				p.args = append(p.args[:idx+1], p.args[idx+1:]...)
 			} else {
 				p.args = p.args[:idx+1]
 			}
