@@ -44,59 +44,66 @@ const (
 )
 
 type App struct {
-	filename string           // Name of the gadget we are executing
-	appName  string           // The name that the main app folder will have
-	parser   Parser           // Parser
-	spinner  *spinner.Spinner // Load Spinner
-	verbose  bool             // Verbose output flag
+	gadget  string           // Name of the gadget we are executing
+	parser  Parser           // Parser
+	spinner *spinner.Spinner // Load Spinner
+	verbose bool             // Verbose output flag
+	appname string           //
 }
 
 func Execute() {
 	var message string
-	var appName string
-	filename, args, err := validateInput()
+
+	gadget, args, err := validateInput()
 	s := loadSpinner()
-	if len(args) >= 1 {
-		appName = args[0]
-	}
 
 	app := &App{
-		filename: filename,
-		appName:  appName,
-		spinner:  s,
+		gadget:  gadget,
+		spinner: s,
 		parser: Parser{
 			args: args,
 		},
 		verbose: false,
+		appname: "",
 	}
 
 	if err != nil {
 		exitGracefully(err)
 	}
 
-	switch filename {
+	switch gadget {
 	case SHORT_HELP_FLAG, HELP_FLAG:
-		if appName == "" {
+		if len(args) == 0 {
 			showHelp()
 		} else {
-			showSubHelp(appName)
+			showSubHelp(args[0])
 		}
 
 	case SHORT_VERSION_FLAG, VERSION_FLAG:
 		color.Green("Application version: " + APPLICATION_VERSION)
 
 	case SHORT_SET_GADGET_PATH_FLAG, SET_GADGET_PATH_FLAG:
+		if len(args) == 0 {
+			showHelp()
+			break
+		}
+
 		app.parser.parseSettings()
-		err = app.parser.settings.setGadgetPath(appName)
+		err = app.parser.settings.setGadgetPath(args[0])
 		if err == nil {
-			message = fmt.Sprint("Config path set to: " + appName)
+			message = fmt.Sprint("Config path set to: " + args[0])
 		}
 
 	case SHORT_SET_TEMPATE_PATH_FLAG, SET_TEMPATE_PATH_FLAG:
+		if len(args) == 0 {
+			showHelp()
+			break
+		}
+
 		app.parser.parseSettings()
-		err = app.parser.settings.setTemplatePath(appName)
+		err = app.parser.settings.setTemplatePath(args[0])
 		if err == nil {
-			message = fmt.Sprint("Template path set to: " + appName)
+			message = fmt.Sprint("Template path set to: " + args[0])
 		}
 
 	default:
@@ -111,13 +118,13 @@ func Execute() {
 // to execute and also return with it the appname and
 // the rest of the args for later use
 func validateInput() (string, []string, error) {
-	var command string
+	var gadget string
 	var args []string
 
 	if len(os.Args) > 1 {
-		command = os.Args[1]
+		gadget = os.Args[1]
 
-		if len(os.Args) >= 3 {
+		if len(os.Args) >= 2 {
 			args = os.Args[2:]
 		}
 	} else {
@@ -125,7 +132,7 @@ func validateInput() (string, []string, error) {
 		return "", nil, errors.New("no gadget provided")
 	}
 
-	return command, args, nil
+	return gadget, args, nil
 }
 
 func (app *App) run() (string, error) {
@@ -134,37 +141,27 @@ func (app *App) run() (string, error) {
 		return "", err
 	}
 
-	err = app.parser.parseGadget(app.filename)
+	err = app.parser.parseGadget(app.gadget)
 	if err != nil {
 		return "", err
 	}
 
-	if app.appName == "" && !app.parser.gadget.Template {
-		return "", errors.New("appname was not provided")
-	}
-
-	mainCommands, subCommands, dirs, verbose := app.parser.parseArgs()
+	commands, subCommands, dirs, verbose, appname := app.parser.parseArgs()
 	app.verbose = verbose
+	app.appname = appname
 
 	app.spinner.Start()
 
-	if !app.parser.gadget.Template {
-		mainCommands[len(mainCommands)-1] = fmt.Sprintf(
-			"%s %s",
-			mainCommands[len(mainCommands)-1],
-			app.appName,
-		)
-
-		msg, err := app.runMainCommands(mainCommands)
-		if err != nil {
-			return msg, err
-		}
-
-		os.Chdir(app.appName)
-		showMessage("Created Project", app.appName)
+	msg, err := app.runCommands(commands)
+	if err != nil {
+		return msg, err
 	}
 
 	app.spinner.Restart()
+
+	if app.parser.gadget.Chdir && app.appname != "" {
+		os.Chdir(app.appname)
+	}
 
 	app.createDirs(dirs)
 
@@ -177,13 +174,20 @@ func (app *App) run() (string, error) {
 	app.runSubCommands(subCommands)
 
 	app.spinner.Stop()
-	return "\nGadget Executed Successfully: " + app.filename, nil
+	return "\nGadget Executed Successfully: " + app.gadget, nil
 }
 
 // Used to run all the main commands and throw an error if
 // something goes wrong
-func (app *App) runMainCommands(mainCommands MainCommmands) (string, error) {
-	for _, command := range mainCommands {
+func (app *App) runCommands(commands Commands) (string, error) {
+	if commands == nil {
+		return "", nil
+	}
+
+	for _, command := range commands {
+		if strings.Contains(command, PLACEHOLDER_APPNAME) && app.appname != "" {
+			command = strings.ReplaceAll(command, PLACEHOLDER_APPNAME, app.appname)
+		}
 		app.spinner.Restart()
 		showMessage("Running", command)
 
@@ -214,7 +218,7 @@ func (app *App) handeMainCommandFiles(name string, file File) {
 		templatePath := fmt.Sprintf(
 			"./%s/templates/%s/%s",
 			PROJECT_ROOT_DIR_NAME,
-			app.filename,
+			app.gadget,
 			file.Filepath,
 		)
 
@@ -222,7 +226,7 @@ func (app *App) handeMainCommandFiles(name string, file File) {
 			templatePath = fmt.Sprintf(
 				"../%s/templates/%s/%s",
 				PROJECT_ROOT_DIR_NAME,
-				app.filename,
+				app.gadget,
 				file.Filepath,
 			)
 		}
@@ -231,7 +235,7 @@ func (app *App) handeMainCommandFiles(name string, file File) {
 			templatePath = fmt.Sprintf(
 				"%s/%s/%s",
 				app.parser.settings.TemplatePath,
-				app.filename,
+				app.gadget,
 				file.Filepath,
 			)
 		}
@@ -243,8 +247,7 @@ func (app *App) handeMainCommandFiles(name string, file File) {
 		}
 	} else {
 		if strings.Contains(file.Filepath, PLACEHOLDER_APPNAME) {
-			path := strings.Split(file.Filepath, PLACEHOLDER_APPNAME)
-			file.Filepath = app.appName + path[1]
+			file.Filepath = strings.ReplaceAll(file.Filepath, PLACEHOLDER_APPNAME, app.appname)
 		}
 
 		showMessage("Adding", name, "in", Green(file.Filepath))
@@ -308,8 +311,8 @@ func (app *App) runSubCommands(subcommands []SubCommand) {
 
 // Executes a single subcommand
 func (app *App) executeSubCommand(command SubCommand) error {
-	if command.Command != "" {
-		err := app.handleSubCommandCommand(command.Command)
+	if command.Commands != nil {
+		err := app.handleSubCommandCommands(command.Commands)
 
 		if err != nil {
 			return err
@@ -325,19 +328,21 @@ func (app *App) executeSubCommand(command SubCommand) error {
 	return nil
 }
 
-func (app *App) handleSubCommandCommand(command string) error {
-	cmd := strings.Fields(command)
-	c := exec.Command(cmd[0], cmd[1:]...)
+func (app *App) handleSubCommandCommands(commands Commands) error {
+	for _, command := range commands {
+		cmd := strings.Fields(command)
+		c := exec.Command(cmd[0], cmd[1:]...)
 
-	if app.verbose {
-		app.spinner.Stop()
-		c.Stdout = os.Stdout
-		c.Stderr = os.Stderr
-	}
+		if app.verbose {
+			app.spinner.Stop()
+			c.Stdout = os.Stdout
+			c.Stderr = os.Stderr
+		}
 
-	err := c.Run()
-	if err != nil {
-		return err
+		err := c.Run()
+		if err != nil {
+			return err
+		}
 	}
 
 	return nil
@@ -352,7 +357,7 @@ func (app *App) handleSubCommandFiles(commandName, name string, file File) {
 		templatePath := fmt.Sprintf(
 			"../%s/templates/%s/%s/%s",
 			PROJECT_ROOT_DIR_NAME,
-			app.filename,
+			app.gadget,
 			commandName,
 			file.Filepath,
 		)
@@ -361,7 +366,7 @@ func (app *App) handleSubCommandFiles(commandName, name string, file File) {
 			templatePath = fmt.Sprintf(
 				"./%s/templates/%s/%s/%s",
 				PROJECT_ROOT_DIR_NAME,
-				app.filename,
+				app.gadget,
 				commandName,
 				file.Filepath,
 			)
@@ -371,7 +376,7 @@ func (app *App) handleSubCommandFiles(commandName, name string, file File) {
 			templatePath = fmt.Sprintf(
 				"%s/%s/%s/%s",
 				app.parser.settings.TemplatePath,
-				app.filename,
+				app.gadget,
 				commandName,
 				file.Filepath,
 			)
@@ -384,8 +389,7 @@ func (app *App) handleSubCommandFiles(commandName, name string, file File) {
 		}
 	} else {
 		if strings.Contains(file.Filepath, PLACEHOLDER_APPNAME) {
-			path := strings.Split(file.Filepath, PLACEHOLDER_APPNAME)
-			file.Filepath = app.appName + path[1]
+			file.Filepath = strings.ReplaceAll(file.Filepath, PLACEHOLDER_APPNAME, app.appname)
 		}
 
 		showMessage("Adding", name, "in", Green(file.Filepath))

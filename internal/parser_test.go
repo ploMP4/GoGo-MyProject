@@ -194,7 +194,7 @@ func TestParser_parseArgs(t *testing.T) {
 	tests := []struct {
 		name   string
 		parser parser
-		want   MainCommmands
+		want   Commands
 		want1  []SubCommand
 		want2  []string
 	}{
@@ -205,7 +205,7 @@ func TestParser_parseArgs(t *testing.T) {
 			want1: []SubCommand{
 				{
 					Name:     "vanilla",
-					Command:  "",
+					Commands: []string{""},
 					Override: false,
 					Parallel: true,
 					Exclude:  false,
@@ -235,7 +235,7 @@ func TestParser_parseArgs(t *testing.T) {
 			}
 			p.parseGadget("cpp")
 
-			got, _, got2, _ := p.parseArgs()
+			got, _, got2, _, _ := p.parseArgs()
 			if !reflect.DeepEqual(got, tt.want) {
 				t.Errorf("Parser.parseArgs() got = %v, want %v", got, tt.want)
 			}

@@ -18,41 +18,31 @@ type Parser struct {
 	args     []string // Arguments passed
 }
 
-// We can have many main commands and commands
-// come in the form of a string array so they can
-// be passed in exec.Command()
-type MainCommmands []string
+type Commands []string
 
-// We can have many subcommands and they come in the form
-// of an javascript object having what the argument name is going
-// to be as the key and another object with the rest of the settings
-// as the value so we translate it to a map[string]SubCommand
 type SubCommands map[string]SubCommand
 
-// We can change many files with different ways each.
-// Files is an object with the key being a small
-// description to print out to the user and the properties for the values
 type Files map[string]File
 
 type Placeholders map[string]string
 
 type Gadget struct {
-	Commands    MainCommmands `yaml:"commands"` // Array with the commands that will be executed.
-	Template    bool          `yaml:"template"`
-	Dirs        []string      `yaml:"dirs"` // Array with names of directories that will be created
-	Files       Files         `yaml:"files"`
-	SubCommands SubCommands   `yaml:"subCommands"` // Commands that can be passed after the initial command for optional features e.x. ts for typescript in a react command
-	Help        string        `yaml:"help"`        // Help text for the command
+	Commands    Commands    `yaml:"commands"` // Array with the commands that will be executed.
+	Chdir       bool        `yaml:"chdir"`
+	Dirs        []string    `yaml:"dirs"` // Array with names of directories that will be created
+	Files       Files       `yaml:"files"`
+	SubCommands SubCommands `yaml:"subCommands"` // Commands that can be passed after the initial command for optional features e.x. ts for typescript in a react command
+	Help        string      `yaml:"help"`        // Help text for the command
 }
 
 type SubCommand struct {
-	Name     string `yaml:"name"`     // Name that will be displayed in the Installing status message e.x Installing: React
-	Command  string `yaml:"command"`  // The command that will be executed.
-	Override bool   `yaml:"override"` // Overrides the last command in the main commands array and runs this instead
-	Parallel bool   `yaml:"parallel"` // Sets if the command will be run concurrently with others or not
-	Exclude  bool   `yaml:"exclude"`  // If true this command will be ignored when the (a, all) flag is ran
-	Files    Files  `yaml:"files"`    // Specify files that you want to change
-	Help     string `yaml:"help"`     // Help text for the command
+	Name     string   `yaml:"name"`     // Name that will be displayed in the Installing status message e.x Installing: React
+	Commands Commands `yaml:"commands"` // The commands that will be executed.
+	Override bool     `yaml:"override"` // Overrides the last command in the main commands array and runs this instead
+	Parallel bool     `yaml:"parallel"` // Sets if the command will be run concurrently with others or not
+	Exclude  bool     `yaml:"exclude"`  // If true this command will be ignored when the (a, all) flag is ran
+	Files    Files    `yaml:"files"`    // Specify files that you want to change
+	Help     string   `yaml:"help"`     // Help text for the command
 }
 
 type File struct {
@@ -166,61 +156,76 @@ func (p Parser) getSubHelp(filename string) ([]string, error) {
 
 // Use the parsed gadget and the args to construct
 // the dirs, main and sub commands and return them
-func (p *Parser) parseArgs() (MainCommmands, []SubCommand, []string, bool) {
-	var finalCommand string
-	var mainCommands MainCommmands
+func (p *Parser) parseArgs() (Commands, []SubCommand, []string, bool, string) {
+	commands := p.gadget.Commands
 	var subCommands []SubCommand
 
-	if !p.gadget.Template {
-		finalCommand = p.gadget.Commands[len(p.gadget.Commands)-1]
-	}
+	all, verbose, appname := p.parseFlagsAndPlaceholders()
 
-	all, verbose := p.parseFlags()
 	if all {
-		p.parseAll(&finalCommand, &subCommands)
+		p.parseAll(&commands, &subCommands)
 	} else {
-		p.parseCmd(&finalCommand, &subCommands)
-	}
-
-	if !p.gadget.Template {
-		p.gadget.Commands[len(p.gadget.Commands)-1] = finalCommand
-		mainCommands = p.gadget.Commands
+		p.parseCmd(&commands, &subCommands)
 	}
 
 	dirs := p.gadget.Dirs
 
-	return mainCommands, subCommands, dirs, verbose
+	return commands, subCommands, dirs, verbose, appname
 }
 
-func (p *Parser) parseFlags() (all, verbose bool) {
+func (p *Parser) parseFlagsAndPlaceholders() (all, verbose bool, appname string) {
 	all = false
 	verbose = false
+	appname = ""
 
 	for idx, arg := range p.args {
 		switch arg {
 		case SHORT_ALL_FLAG, ALL_FLAG:
 			all = true
+			if idx < len(p.args) {
+				p.args = append(p.args[:idx], p.args[idx+1:]...)
+			} else {
+				p.args = p.args[:idx]
+			}
 
 		case SHORT_EXCLUDE_FLAG, EXLCUDE_FLAG:
 			if subcommand, exists := p.gadget.SubCommands[p.args[idx+1]]; exists {
 				subcommand.Exclude = true
 				p.gadget.SubCommands[p.args[idx+1]] = subcommand
+				if idx < len(p.args) {
+					p.args = append(p.args[:idx+1], p.args[idx+2:]...)
+				} else {
+					p.args = p.args[:idx+1]
+				}
 			}
 
 		case SHORT_VERBOSE_FLAG, VERBOSE_FLAG:
 			verbose = true
+			if idx < len(p.args) {
+				p.args = append(p.args[:idx], p.args[idx+1:]...)
+			} else {
+				p.args = p.args[:idx]
+			}
+
+		case PLACEHOLDER_APPNAME:
+			appname = p.args[idx+1]
+			if idx < len(p.args) {
+				p.args = append(p.args[:idx+1], p.args[idx+2:]...)
+			} else {
+				p.args = p.args[:idx+1]
+			}
 		}
 	}
 
-	return all, verbose
+	return all, verbose, appname
 }
 
-func (p *Parser) parseAll(finalCommand *string, subCommands *[]SubCommand) {
+func (p *Parser) parseAll(commands *Commands, subCommands *[]SubCommand) {
 	for _, value := range p.gadget.SubCommands {
 		if value.Exclude {
 			continue
 		} else if value.Override {
-			*finalCommand = value.Command
+			*commands = value.Commands
 			showMessage("Using", value.Name)
 		} else {
 			*subCommands = append(*subCommands, value)
@@ -228,11 +233,11 @@ func (p *Parser) parseAll(finalCommand *string, subCommands *[]SubCommand) {
 	}
 }
 
-func (p *Parser) parseCmd(finalCommand *string, subCommands *[]SubCommand) {
+func (p *Parser) parseCmd(commands *Commands, subCommands *[]SubCommand) {
 	for _, arg := range p.args {
 		if value, exists := p.gadget.SubCommands[arg]; exists {
 			if value.Override {
-				*finalCommand = value.Command
+				*commands = value.Commands
 				showMessage("Using", value.Name)
 			} else {
 				*subCommands = append(*subCommands, value)

@@ -71,7 +71,7 @@ func TestApp_runMainCommands(t *testing.T) {
 		spinner  *spinner.Spinner
 	}
 	type args struct {
-		mainCommands MainCommmands
+		mainCommands Commands
 	}
 	a := app{
 		filename: "cpp",
@@ -113,13 +113,13 @@ func TestApp_runMainCommands(t *testing.T) {
 			os.Stdout = os.NewFile(uintptr(syscall.Stdin), os.DevNull)
 
 			app := &App{
-				filename: tt.app.filename,
-				appName:  tt.app.appName,
-				parser:   tt.app.parser,
-				spinner:  tt.app.spinner,
+				gadget:  tt.app.filename,
+				appname: tt.app.appName,
+				parser:  tt.app.parser,
+				spinner: tt.app.spinner,
 			}
 
-			got, err := app.runMainCommands(tt.args.mainCommands)
+			got, err := app.runCommands(tt.args.mainCommands)
 			if (err != nil) != tt.wantErr {
 				t.Errorf("App.runMainCommands() error = %v, wantErr %v", err, tt.wantErr)
 				return
@@ -158,8 +158,8 @@ func TestApp_executeSubCommand(t *testing.T) {
 			fields: a,
 			args: args{
 				command: SubCommand{
-					Name:    "test",
-					Command: "some_command",
+					Name:     "test",
+					Commands: []string{"some_command"},
 				},
 			},
 			wantErr: true,
@@ -169,8 +169,8 @@ func TestApp_executeSubCommand(t *testing.T) {
 			fields: a,
 			args: args{
 				command: SubCommand{
-					Name:    "echo",
-					Command: "echo test",
+					Name:     "echo",
+					Commands: []string{"echo test"},
 				},
 			},
 			wantErr: false,
@@ -184,10 +184,10 @@ func TestApp_executeSubCommand(t *testing.T) {
 			os.Stdout = os.NewFile(uintptr(syscall.Stdin), os.DevNull)
 
 			app := &App{
-				filename: tt.fields.filename,
-				appName:  tt.fields.appName,
-				parser:   tt.fields.parser,
-				spinner:  tt.fields.spinner,
+				gadget:  tt.fields.filename,
+				appname: tt.fields.appName,
+				parser:  tt.fields.parser,
+				spinner: tt.fields.spinner,
 			}
 			if err := app.executeSubCommand(tt.args.command); (err != nil) != tt.wantErr {
 				t.Errorf("App.executeSubCommand() error = %v, wantErr %v", err, tt.wantErr)
