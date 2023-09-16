@@ -4,7 +4,14 @@ sidebar_position: 1
 
 # GoGo My Intro
 
-GoGo is a cli tool that allows you to easily create boilerplate. From basic files to scaffolding the entire project structure.
+GoGo is a cli tool that allows you to easily blueprint boilerplate and repetitive commands.
+From basic files to scaffolding the entire project structure.
+
+## How it works
+
+GoGo utilizes something called `gadgets`, these are just `yaml` config files that describe what each `gadget` does.
+`Gadgets` can be invoked using the `gogo` command and are like small cli applications themselves. They can run shell commands,
+modify and copy files from prebuilt templates and they can also have their own `subcommands` that are capable of the same things aswell.
 
 ## Getting Started
 

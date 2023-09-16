@@ -1,4 +1,66 @@
-# Change
+---
+sidebar_position: 7
+---
+
+# Files
+
+## Description
+
+The yaml key will be used as a description to be displayed in log messages
+
+**Example:**
+
+```yaml title=".gogo/gadgets/expressjs.yaml"
+files:
+  cors-middleware: ...
+```
+
+**Example Output:**
+
+```
+Adding: [cors-middleware in src/app.js]
+```
+
+## Filepath
+
+Path where the file we want to edit is located. **Path starts from the root of our project**.
+
+**Example:**
+
+```yaml
+files:
+  main:
+    filepath: "src/app.js"
+```
+
+You can also use the **\_APPNAME** tag which searches for something
+with the same name as your app. Useful for things like a django project.
+
+**Example:**
+
+```yaml
+files:
+  settings_py:
+    filepath: "_APPNAME/settings.py"
+```
+
+## Template
+
+> Default: false
+
+If true updates the file using a template. See [templates section](../../../templates/) for more info.
+
+**Example:**
+
+```yaml
+---
+files:
+  main:
+    filepath: "src/main.c"
+    template: true
+```
+
+## Change
 
 Properties about changing the file
 
@@ -11,7 +73,7 @@ files:
     change: ...
 ```
 
-## Split On
+### Split On
 
 Will split the file on specified string and will append after it.
 If left empty appends at the end of the file.
@@ -29,7 +91,7 @@ files:
         ...
 ```
 
-## Append
+### Append
 
 Content that will be appended after the [split on](#split-on)
 
@@ -44,7 +106,7 @@ files:
         append: "\n\t'corsheaders.middleware.CorsMiddleware',"
 ```
 
-## Placeholder
+### Placeholder
 
 We can also define placeholder strings that exist inside our file that we want to edit and replace them either with
 a default value that we provide in the config or by a custom value that we pass as an argument.

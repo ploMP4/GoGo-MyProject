@@ -24,7 +24,7 @@ const FeatureList = [
     ),
   },
   {
-    title: "Powered by React",
+    title: "Flexible",
     Svg: require("@site/static/img/undraw_docusaurus_react.svg").default,
     description: (
       <>
