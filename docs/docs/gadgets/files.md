@@ -1,8 +1,11 @@
 ---
-sidebar_position: 7
+sidebar_position: 2
 ---
 
 # Files
+
+The files property gives us the ability to modify files or create them from prebuilt
+templates.
 
 ## Description
 
@@ -10,7 +13,7 @@ The yaml key will be used as a description to be displayed in log messages
 
 **Example:**
 
-```yaml title=".gogo/gadgets/expressjs.yaml"
+```yaml title="~/.gogo/gadgets/expressjs.yaml"
 files:
   cors-middleware: ...
 ```
@@ -29,12 +32,12 @@ Path where the file we want to edit is located. **Path starts from the root of o
 
 ```yaml
 files:
-  main:
+  cors-middleware:
     filepath: "src/app.js"
 ```
 
-You can also use the **\_APPNAME** tag which searches for something
-with the same name as your app. Useful for things like a django project.
+You can also use the `_APPNAME` placeholder which searches for a directory
+with the same name as your appname. Useful for things like a django project.
 
 **Example:**
 
@@ -48,15 +51,14 @@ files:
 
 > Default: false
 
-If true updates the file using a template. See [templates section](../../../templates/) for more info.
+If true updates the file using a template. See [templates section](../templates) for more info.
 
 **Example:**
 
 ```yaml
----
 files:
-  main:
-    filepath: "src/main.c"
+  app.js:
+    filepath: "src/app.js"
     template: true
 ```
 
@@ -68,8 +70,8 @@ Properties about changing the file
 
 ```yaml
 files:
-  main:
-    filepath: "src/main.c"
+  app.js:
+    filepath: "src/app.js"
     change: ...
 ```
 
@@ -78,7 +80,7 @@ files:
 Will split the file on specified string and will append after it.
 If left empty appends at the end of the file.
 
-_Uses strings.Split()_
+_Uses golang strings.Split() under the hood_
 
 **Example:**
 
@@ -142,7 +144,7 @@ Now we can run our gadget and provide a value for the `_NAME` placeholder like s
 gogo react-component _NAME Button
 ```
 
-Now our newly created file will look like this:
+Our newly created file will look like this:
 
 ```jsx title="components/component.jsx"
 import React from "react";
@@ -165,7 +167,7 @@ _But really they can be any string we want_
 ```yaml
 change:
   placeholder:
-    ComponentName: "Component"
+    _NAME: "Component"
 ```
 
 There are also some built in placeholders that you can find [here](../../placeholders).
