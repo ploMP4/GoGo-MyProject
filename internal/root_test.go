@@ -113,10 +113,10 @@ func TestApp_runMainCommands(t *testing.T) {
 			os.Stdout = os.NewFile(uintptr(syscall.Stdin), os.DevNull)
 
 			app := &App{
-				gadget:  tt.app.filename,
-				appname: tt.app.appName,
-				parser:  tt.app.parser,
-				spinner: tt.app.spinner,
+				gadgetName: tt.app.filename,
+				appname:    tt.app.appName,
+				parser:     tt.app.parser,
+				spinner:    tt.app.spinner,
 			}
 
 			got, err := app.runCommands(tt.args.mainCommands)
@@ -184,10 +184,10 @@ func TestApp_executeSubCommand(t *testing.T) {
 			os.Stdout = os.NewFile(uintptr(syscall.Stdin), os.DevNull)
 
 			app := &App{
-				gadget:  tt.fields.filename,
-				appname: tt.fields.appName,
-				parser:  tt.fields.parser,
-				spinner: tt.fields.spinner,
+				gadgetName: tt.fields.filename,
+				appname:    tt.fields.appName,
+				parser:     tt.fields.parser,
+				spinner:    tt.fields.spinner,
 			}
 			if err := app.executeSubCommand(tt.args.command); (err != nil) != tt.wantErr {
 				t.Errorf("App.executeSubCommand() error = %v, wantErr %v", err, tt.wantErr)

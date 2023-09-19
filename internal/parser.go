@@ -14,47 +14,7 @@ import (
 // the yaml file specified
 type Parser struct {
 	settings Settings // settings.yaml file
-	gadget   Gadget   // The gadget file
 	args     []string // Arguments passed
-}
-
-type Commands []string
-
-type SubCommands map[string]SubCommand
-
-type Files map[string]File
-
-type Placeholders map[string]string
-
-type Gadget struct {
-	Commands    Commands    `yaml:"commands"` // Array with the commands that will be executed.
-	Chdir       bool        `yaml:"chdir"`
-	Dirs        []string    `yaml:"dirs"` // Array with names of directories that will be created
-	Files       Files       `yaml:"files"`
-	SubCommands SubCommands `yaml:"subCommands"` // Commands that can be passed after the initial command for optional features e.x. ts for typescript in a react command
-	Help        string      `yaml:"help"`        // Help text for the command
-}
-
-type SubCommand struct {
-	Name     string   `yaml:"name"`     // Name that will be displayed in the Installing status message e.x Installing: React
-	Commands Commands `yaml:"commands"` // The commands that will be executed.
-	Override bool     `yaml:"override"` // Overrides the last command in the main commands array and runs this instead
-	Parallel bool     `yaml:"parallel"` // Sets if the command will be run concurrently with others or not
-	Exclude  bool     `yaml:"exclude"`  // If true this command will be ignored when the (a, all) flag is ran
-	Files    Files    `yaml:"files"`    // Specify files that you want to change
-	Help     string   `yaml:"help"`     // Help text for the command
-}
-
-type File struct {
-	Filepath string     `yaml:"filepath"` // Path where the file we want to edit is located. Path starts from the root file of our project
-	Template bool       `yaml:"template"` // Specify if the file will be updated from an existing template
-	Change   FileChange `yaml:"change"`   // Properties about changing the file
-}
-
-type FileChange struct {
-	SplitOn     string       `yaml:"split-on"` // Specify string to split the file on
-	Append      string       `yaml:"append"`   // Content that will be appended after the split on
-	Placeholder Placeholders `yaml:"placeholder"`
 }
 
 // Parse the settings.yaml file that exists in
@@ -90,28 +50,30 @@ func (p *Parser) parseSettings() error {
 
 // Check if a file with the name passed in by the user exists
 // and parse its contents into the Parser.gadget
-func (p *Parser) parseGadget(filename string) error {
+func (p *Parser) parseGadget(filename string) (Gadget, error) {
+	var gadget Gadget
+
 	yamlFile, err := os.Open(
 		fmt.Sprintf("%s/gadgets/%s.yaml", PROJECT_ROOT_DIR_NAME, filename),
 	)
 	if err != nil {
 		yamlFile, err = os.Open(fmt.Sprintf("%s/%s.yaml", p.settings.GadgetPath, filename))
 		if err != nil {
-			return err
+			return gadget, err
 		}
 	}
 	defer yamlFile.Close()
 
 	yamlData, err := io.ReadAll(yamlFile)
 	if err != nil {
-		return err
+		return gadget, err
 	}
 
-	if err = yaml.Unmarshal(yamlData, &p.gadget); err != nil {
-		return err
+	if err = yaml.Unmarshal(yamlData, &gadget); err != nil {
+		return gadget, err
 	}
 
-	return nil
+	return gadget, nil
 }
 
 // Parse and return the help commands for all the gadgets
@@ -131,8 +93,8 @@ func (p Parser) getHelp() []string {
 
 	for _, file := range files {
 		filename := strings.Split(file.Name(), ".")[0]
-		_ = p.parseGadget(filename)
-		helpCommands = append(helpCommands, fmt.Sprintf("\n%30s   - %s", filename, p.gadget.Help))
+		gadget, _ := p.parseGadget(filename)
+		helpCommands = append(helpCommands, fmt.Sprintf("\n%30s   - %s", filename, gadget.Help))
 	}
 
 	return helpCommands
@@ -142,12 +104,12 @@ func (p Parser) getHelp() []string {
 func (p Parser) getSubHelp(filename string) ([]string, error) {
 	helpCommands := []string{}
 
-	err := p.parseGadget(filename)
+	gadget, err := p.parseGadget(filename)
 	if err != nil {
 		return nil, err
 	}
 
-	for name, command := range p.gadget.SubCommands {
+	for name, command := range gadget.SubCommands {
 		helpCommands = append(helpCommands, fmt.Sprintf("\n%31s   - %s", name, command.Help))
 	}
 
@@ -156,24 +118,26 @@ func (p Parser) getSubHelp(filename string) ([]string, error) {
 
 // Use the parsed gadget and the args to construct
 // the dirs, main and sub commands and return them
-func (p *Parser) parseArgs() (Commands, []SubCommand, []string, bool, string) {
-	commands := p.gadget.Commands
-	var subCommands []SubCommand
+func (p *Parser) parseArgs(gadget Gadget) (Gadget, []string, bool, string) {
+	commands := gadget.Commands
+	subCommands := make(SubCommands)
 
-	all, verbose, appname := p.parseFlagsAndPlaceholders()
+	all, verbose, appname := p.parseFlagsAndPlaceholders(&gadget)
 
 	if all {
-		p.parseAll(&commands, &subCommands)
+		p.parseAll(&gadget, &commands, subCommands)
 	} else {
-		p.parseCmd(&commands, &subCommands)
+		p.parseCmd(&gadget, &commands, subCommands)
 	}
 
-	dirs := p.gadget.Dirs
+	gadget.Commands = commands
+	gadget.SubCommands = subCommands
+	dirs := gadget.Dirs
 
-	return commands, subCommands, dirs, verbose, appname
+	return gadget, dirs, verbose, appname
 }
 
-func (p *Parser) parseFlagsAndPlaceholders() (all, verbose bool, appname string) {
+func (p *Parser) parseFlagsAndPlaceholders(gadget *Gadget) (all, verbose bool, appname string) {
 	all = false
 	verbose = false
 	appname = ""
@@ -189,9 +153,9 @@ func (p *Parser) parseFlagsAndPlaceholders() (all, verbose bool, appname string)
 			}
 
 		case SHORT_EXCLUDE_FLAG, EXLCUDE_FLAG:
-			if subcommand, exists := p.gadget.SubCommands[p.args[idx+1]]; exists {
+			if subcommand, exists := gadget.SubCommands[p.args[idx+1]]; exists {
 				subcommand.Exclude = true
-				p.gadget.SubCommands[p.args[idx+1]] = subcommand
+				gadget.SubCommands[p.args[idx+1]] = subcommand
 				if idx < len(p.args) {
 					p.args = append(p.args[:idx+1], p.args[idx+1:]...)
 				} else {
@@ -220,27 +184,27 @@ func (p *Parser) parseFlagsAndPlaceholders() (all, verbose bool, appname string)
 	return all, verbose, appname
 }
 
-func (p *Parser) parseAll(commands *Commands, subCommands *[]SubCommand) {
-	for _, value := range p.gadget.SubCommands {
+func (p *Parser) parseAll(gadget *Gadget, commands *Commands, subCommands SubCommands) {
+	for key, value := range gadget.SubCommands {
 		if value.Exclude {
 			continue
 		} else if value.Override {
 			*commands = value.Commands
 			showMessage("Using", value.Name)
 		} else {
-			*subCommands = append(*subCommands, value)
+			subCommands[key] = value
 		}
 	}
 }
 
-func (p *Parser) parseCmd(commands *Commands, subCommands *[]SubCommand) {
+func (p *Parser) parseCmd(gadget *Gadget, commands *Commands, subCommands SubCommands) {
 	for _, arg := range p.args {
-		if value, exists := p.gadget.SubCommands[arg]; exists {
+		if value, exists := gadget.SubCommands[arg]; exists {
 			if value.Override {
 				*commands = value.Commands
 				showMessage("Using", value.Name)
 			} else {
-				*subCommands = append(*subCommands, value)
+				subCommands[arg] = value
 			}
 		}
 	}

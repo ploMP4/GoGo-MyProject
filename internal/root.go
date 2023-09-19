@@ -4,16 +4,13 @@ import (
 	"errors"
 	"fmt"
 	"os"
-	"os/exec"
-	"strings"
-	"sync"
 
 	"github.com/briandowns/spinner"
 	"github.com/fatih/color"
 )
 
 // Application Version
-const APPLICATION_VERSION = "4.4.0"
+const APPLICATION_VERSION = "1.0.0"
 
 const (
 	SHORT_ALL_FLAG = "a"
@@ -43,35 +40,42 @@ const (
 	PLACEHOLDER_APPNAME  = "_APPNAME"
 )
 
+type Commands []string
+type SubCommands map[string]SubCommand
+type Files map[string]File
+type Placeholders map[string]string
+
 type App struct {
-	gadget  string           // Name of the gadget we are executing
-	parser  Parser           // Parser
-	spinner *spinner.Spinner // Load Spinner
-	verbose bool             // Verbose output flag
-	appname string           //
+	gadgetName string           // Name of the gadget we are executing
+	parser     Parser           // Parser
+	spinner    *spinner.Spinner // Load Spinner
+	appname    string
+	verbose    bool
 }
+
+var app *App
 
 func Execute() {
 	var message string
 
-	gadget, args, err := validateInput()
+	gadgetName, args, err := validateInput()
 	s := loadSpinner()
 
-	app := &App{
-		gadget:  gadget,
-		spinner: s,
+	app = &App{
+		gadgetName: gadgetName,
+		spinner:    s,
 		parser: Parser{
 			args: args,
 		},
-		verbose: false,
 		appname: "",
+		verbose: false,
 	}
 
 	if err != nil {
 		exitGracefully(err)
 	}
 
-	switch gadget {
+	switch gadgetName {
 	case SHORT_HELP_FLAG, HELP_FLAG:
 		if len(args) == 0 {
 			showHelp()
@@ -88,9 +92,10 @@ func Execute() {
 			break
 		}
 
-		app.parser.parseSettings()
-		err = app.parser.settings.setGadgetPath(args[0])
-		if err == nil {
+		if err = app.parser.parseSettings(); err != nil {
+			exitGracefully(err)
+		}
+		if err = app.parser.settings.setGadgetPath(args[0]); err == nil {
 			message = fmt.Sprint("Config path set to: " + args[0])
 		}
 
@@ -100,9 +105,10 @@ func Execute() {
 			break
 		}
 
-		app.parser.parseSettings()
-		err = app.parser.settings.setTemplatePath(args[0])
-		if err == nil {
+		if err = app.parser.parseSettings(); err != nil {
+			exitGracefully(err)
+		}
+		if err = app.parser.settings.setTemplatePath(args[0]); err == nil {
 			message = fmt.Sprint("Template path set to: " + args[0])
 		}
 
@@ -141,127 +147,40 @@ func (app *App) run() (string, error) {
 		return "", err
 	}
 
-	err = app.parser.parseGadget(app.gadget)
+	gadget, err := app.parser.parseGadget(app.gadgetName)
 	if err != nil {
 		return "", err
 	}
 
-	commands, subCommands, dirs, verbose, appname := app.parser.parseArgs()
-	app.verbose = verbose
+	gadget, dirs, verbose, appname := app.parser.parseArgs(gadget)
 	app.appname = appname
+	app.verbose = verbose
 
 	app.spinner.Start()
 
-	msg, err := app.runCommands(commands)
+	msg, err := gadget.runCommands()
 	if err != nil {
 		return msg, err
 	}
 
 	app.spinner.Restart()
 
-	if app.parser.gadget.Chdir && app.appname != "" {
-		os.Chdir(app.appname)
+	if gadget.Chdir && app.appname != "" {
+		err := os.Chdir(app.appname)
+		if err != nil {
+			showMessage("Warning", err.Error())
+		}
 	}
 
 	app.createDirs(dirs)
 
-	if app.parser.gadget.Files != nil {
-		for name, file := range app.parser.gadget.Files {
-			app.handeMainCommandFiles(name, file)
-		}
-	}
+	app.spinner.Restart()
+	gadget.handleFiles()
 
-	app.runSubCommands(subCommands)
+	gadget.runSubCommands()
 
 	app.spinner.Stop()
-	return "\nGadget Executed Successfully: " + app.gadget, nil
-}
-
-// Used to run all the main commands and throw an error if
-// something goes wrong
-func (app *App) runCommands(commands Commands) (string, error) {
-	if commands == nil {
-		return "", nil
-	}
-
-	for _, command := range commands {
-		if strings.Contains(command, PLACEHOLDER_APPNAME) && app.appname != "" {
-			command = strings.ReplaceAll(command, PLACEHOLDER_APPNAME, app.appname)
-		}
-		app.spinner.Restart()
-		showMessage("Running", command)
-
-		cmd := strings.Fields(command)
-		c := exec.Command(cmd[0], cmd[1:]...)
-
-		if app.verbose {
-			app.spinner.Stop()
-			c.Stdout = os.Stdout
-			c.Stderr = os.Stderr
-		}
-
-		err := c.Run()
-		if err != nil {
-			return "Unable to execute command: " + cmd[0], err
-		}
-	}
-
-	return "", nil
-}
-
-func (app *App) handeMainCommandFiles(name string, file File) {
-	app.spinner.Restart()
-
-	if file.Template {
-		showMessage("Copying", file.Filepath)
-
-		templatePath := fmt.Sprintf(
-			"./%s/templates/%s/%s",
-			PROJECT_ROOT_DIR_NAME,
-			app.gadget,
-			file.Filepath,
-		)
-
-		if !fileExists(templatePath) {
-			templatePath = fmt.Sprintf(
-				"../%s/templates/%s/%s",
-				PROJECT_ROOT_DIR_NAME,
-				app.gadget,
-				file.Filepath,
-			)
-		}
-
-		if !fileExists(templatePath) {
-			templatePath = fmt.Sprintf(
-				"%s/%s/%s",
-				app.parser.settings.TemplatePath,
-				app.gadget,
-				file.Filepath,
-			)
-		}
-
-		copyFileFromTemplate(templatePath, file.Filepath)
-
-		if file.Change.Placeholder != nil {
-			handlePlaceholders(file.Filepath, file.Change.Placeholder, app.parser.args)
-		}
-	} else {
-		if strings.Contains(file.Filepath, PLACEHOLDER_APPNAME) {
-			file.Filepath = strings.ReplaceAll(file.Filepath, PLACEHOLDER_APPNAME, app.appname)
-		}
-
-		showMessage("Adding", name, "in", Green(file.Filepath))
-		editFile(file.Filepath, file.Change.SplitOn, file.Change.Append)
-	}
-
-	for idx, arg := range app.parser.args {
-		if arg == PLACEHOLDER_FILENAME {
-			filepathSlice := strings.Split(file.Filepath, "/")
-			filepathSlice[len(filepathSlice)-1] = app.parser.args[idx+1]
-			filepathNew := strings.Join(filepathSlice, "/")
-			os.Rename(file.Filepath, filepathNew)
-		}
-	}
+	return "\nGadget Executed Successfully: " + app.gadgetName, nil
 }
 
 func (app *App) createDirs(dirs []string) {
@@ -274,155 +193,4 @@ func (app *App) createDirs(dirs []string) {
 			color.Red("Error: %v\n", err)
 		}
 	}
-}
-
-// Used to run all the subcommands either concurrently or by themselves
-// based on the value of SubCommand.parallel. Displays a message if
-// there is an error
-func (app *App) runSubCommands(subcommands []SubCommand) {
-	var wg sync.WaitGroup
-
-	for _, command := range subcommands {
-		app.spinner.Restart()
-		showMessage("Running", command.Name)
-
-		if command.Parallel {
-			wg.Add(1)
-			go func(command SubCommand) {
-				defer wg.Done()
-
-				err := app.executeSubCommand(command)
-				if err != nil {
-					color.Yellow("Failed to execute %s\n", command)
-					color.Red("Error: %v\n", err)
-				}
-			}(command)
-		} else {
-			err := app.executeSubCommand(command)
-			if err != nil {
-				color.Yellow("Failed to execute %s\n", command)
-				color.Red("Error: %v\n", err)
-			}
-		}
-	}
-
-	wg.Wait()
-}
-
-// Executes a single subcommand
-func (app *App) executeSubCommand(command SubCommand) error {
-	if command.Commands != nil {
-		err := app.handleSubCommandCommands(command.Commands)
-
-		if err != nil {
-			return err
-		}
-	}
-
-	if command.Files != nil {
-		for name, file := range command.Files {
-			app.handleSubCommandFiles(command.Name, name, file)
-		}
-	}
-
-	return nil
-}
-
-func (app *App) handleSubCommandCommands(commands Commands) error {
-	for _, command := range commands {
-		cmd := strings.Fields(command)
-		c := exec.Command(cmd[0], cmd[1:]...)
-
-		if app.verbose {
-			app.spinner.Stop()
-			c.Stdout = os.Stdout
-			c.Stderr = os.Stderr
-		}
-
-		err := c.Run()
-		if err != nil {
-			return err
-		}
-	}
-
-	return nil
-}
-
-func (app *App) handleSubCommandFiles(commandName, name string, file File) {
-	app.spinner.Restart()
-
-	if file.Template {
-		showMessage("Copying", file.Filepath)
-
-		templatePath := fmt.Sprintf(
-			"../%s/templates/%s/%s/%s",
-			PROJECT_ROOT_DIR_NAME,
-			app.gadget,
-			commandName,
-			file.Filepath,
-		)
-
-		if !fileExists(templatePath) {
-			templatePath = fmt.Sprintf(
-				"./%s/templates/%s/%s/%s",
-				PROJECT_ROOT_DIR_NAME,
-				app.gadget,
-				commandName,
-				file.Filepath,
-			)
-		}
-
-		if !fileExists(templatePath) {
-			templatePath = fmt.Sprintf(
-				"%s/%s/%s/%s",
-				app.parser.settings.TemplatePath,
-				app.gadget,
-				commandName,
-				file.Filepath,
-			)
-		}
-
-		copyFileFromTemplate(templatePath, file.Filepath)
-
-		if file.Change.Placeholder != nil {
-			handlePlaceholders(file.Filepath, file.Change.Placeholder, app.parser.args)
-		}
-	} else {
-		if strings.Contains(file.Filepath, PLACEHOLDER_APPNAME) {
-			file.Filepath = strings.ReplaceAll(file.Filepath, PLACEHOLDER_APPNAME, app.appname)
-		}
-
-		showMessage("Adding", name, "in", Green(file.Filepath))
-		editFile(file.Filepath, file.Change.SplitOn, file.Change.Append)
-	}
-
-	for idx, arg := range app.parser.args {
-		if arg == PLACEHOLDER_FILENAME {
-			filepathSlice := strings.Split(file.Filepath, "/")
-			filepathSlice[len(filepathSlice)-1] = app.parser.args[idx+1]
-			filepathNew := strings.Join(filepathSlice, "/")
-			os.Rename(file.Filepath, filepathNew)
-		}
-	}
-}
-
-func handlePlaceholders(filepath string, placeholders Placeholders, args []string) {
-	for placeholder, defaultValue := range placeholders {
-		found := findAndReplacePlaceholder(filepath, placeholder, args)
-		if !found {
-			replacePlaceholder(filepath, placeholder, defaultValue)
-		}
-	}
-}
-
-func findAndReplacePlaceholder(filepath, placeholder string, args []string) bool {
-	for idx, arg := range args {
-		if arg == placeholder {
-			replacePlaceholder(filepath, placeholder, args[idx+1])
-
-			return true
-		}
-	}
-
-	return false
 }
