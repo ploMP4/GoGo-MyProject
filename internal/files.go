@@ -21,12 +21,14 @@ type FileChange struct {
 func (f *File) handleTemplate(templatePath string, args []string) {
 	showMessage("Copying", f.Filepath)
 
+	app.spinner.Restart()
 	if err := f.copyFromTemplate(templatePath); err != nil {
 		exitGracefully(err)
 	}
 
 	if f.Change.Placeholders != nil {
 		for placeholder, defaultValue := range f.Change.Placeholders {
+			app.spinner.Restart()
 			found := f.findAndReplacePlaceholder(placeholder, args)
 			if !found {
 				if err := f.replacePlaceholder(placeholder, defaultValue); err != nil {

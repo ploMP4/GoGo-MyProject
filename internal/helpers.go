@@ -25,10 +25,12 @@ func exitGracefully(err error, msg ...string) {
 	}
 
 	if err != nil {
+		app.spinner.Stop()
 		color.Red("Error: %v\n", err)
 		os.Exit(1)
 	}
 
+	app.spinner.Stop()
 	color.Green("Finished")
 	os.Exit(0)
 }
