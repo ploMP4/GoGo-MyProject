@@ -69,7 +69,7 @@ func (s SubCommand) handleFiles() {
 			}
 
 			for idx, arg := range app.parser.args {
-				if arg == PLACEHOLDER_FILENAME {
+				if arg == PLACEHOLDER_FILENAME && len(s.Files) <= 1 {
 					filepathSlice := strings.Split(file.Filepath, "/")
 					filepathSlice[len(filepathSlice)-1] = app.parser.args[idx+1]
 					filepathNew := strings.Join(filepathSlice, "/")
