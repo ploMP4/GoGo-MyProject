@@ -25,14 +25,18 @@ build-all: build build-windows build-mac
 
 ## test: runs all tests
 test:
+	@cd ./internal && go test
+
+## test-verbose: runs all tests with the -v flag
+test-verbose:
 	@cd ./internal && go test -v
 
-## coverage: displays test coverage
-coverage:
+## cover: displays test coverage
+cover:
 	@go test -cover ./internal
 
-## cover: opens coverage in browser
-cover:
+## cover-out: opens coverage in browser
+cover-out:
 	@go test -coverprofile=coverage.out ./internal && go tool cover -html=coverage.out
 
 ## install: installs executable as a global command to the machine
