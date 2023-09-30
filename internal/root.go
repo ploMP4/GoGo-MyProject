@@ -152,7 +152,7 @@ func (app *App) run() (string, error) {
 		return "", err
 	}
 
-	gadget, dirs, verbose, appname := app.parser.parseArgs(gadget)
+	gadget, verbose, appname := app.parser.parseArgs(gadget)
 	app.appname = appname
 	app.verbose = verbose
 
@@ -172,7 +172,7 @@ func (app *App) run() (string, error) {
 		}
 	}
 
-	app.createDirs(dirs)
+	app.createDirs(gadget.Dirs)
 
 	app.spinner.Restart()
 	gadget.handleFiles()
