@@ -118,23 +118,22 @@ func (p Parser) getSubHelp(filename string) ([]string, error) {
 
 // Use the parsed gadget and the args to construct
 // the dirs, main and sub commands and return them
-func (p *Parser) parseArgs(gadget Gadget) (Gadget, []string, bool, string) {
+func (p *Parser) parseArgs(gadget Gadget) (Gadget, bool, string) {
 	commands := gadget.Commands
 	subCommands := make(SubCommands)
 
 	all, verbose, appname := p.parseFlagsAndPlaceholders(&gadget)
 
 	if all {
-		p.parseAll(&gadget, &commands, subCommands)
+		p.parseAll(gadget, &commands, subCommands)
 	} else {
-		p.parseCmd(&gadget, &commands, subCommands)
+		p.parseCmd(gadget, &commands, subCommands)
 	}
 
 	gadget.Commands = commands
 	gadget.SubCommands = subCommands
-	dirs := gadget.Dirs
 
-	return gadget, dirs, verbose, appname
+	return gadget, verbose, appname
 }
 
 func (p *Parser) parseFlagsAndPlaceholders(gadget *Gadget) (all, verbose bool, appname string) {
@@ -184,7 +183,7 @@ func (p *Parser) parseFlagsAndPlaceholders(gadget *Gadget) (all, verbose bool, a
 	return all, verbose, appname
 }
 
-func (p *Parser) parseAll(gadget *Gadget, commands *Commands, subCommands SubCommands) {
+func (p *Parser) parseAll(gadget Gadget, commands *Commands, subCommands SubCommands) {
 	for key, value := range gadget.SubCommands {
 		if value.Exclude {
 			continue
@@ -197,7 +196,7 @@ func (p *Parser) parseAll(gadget *Gadget, commands *Commands, subCommands SubCom
 	}
 }
 
-func (p *Parser) parseCmd(gadget *Gadget, commands *Commands, subCommands SubCommands) {
+func (p *Parser) parseCmd(gadget Gadget, commands *Commands, subCommands SubCommands) {
 	for _, arg := range p.args {
 		if value, exists := gadget.SubCommands[arg]; exists {
 			if value.Override {
