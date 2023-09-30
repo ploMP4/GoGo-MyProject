@@ -50,7 +50,6 @@ func (g *Gadget) runCommands() (string, error) {
 	}
 
 	return "", nil
-
 }
 
 // Used to run all the subcommands either concurrently or by themselves
