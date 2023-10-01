@@ -25,10 +25,12 @@ func exitGracefully(err error, msg ...string) {
 	}
 
 	if err != nil {
+		app.spinner.Stop()
 		color.Red("Error: %v\n", err)
 		os.Exit(1)
 	}
 
+	app.spinner.Stop()
 	color.Green("Finished")
 	os.Exit(0)
 }
@@ -36,7 +38,9 @@ func exitGracefully(err error, msg ...string) {
 // Print the general help menu
 func showHelp() {
 	p := Parser{}
-	p.parseSettings()
+	if err := p.parseSettings(); err != nil {
+		exitGracefully(err)
+	}
 	helpCommands := p.getHelp()
 
 	fmt.Fprintf(color.Output, `A CLI tool to create starter boilerplate for you
@@ -63,7 +67,9 @@ who use many different programming languages and frameworks.
 // Show the help menu the subcommands of a gadget file
 func showSubHelp(filename string) {
 	p := Parser{}
-	p.parseSettings()
+	if err := p.parseSettings(); err != nil {
+		exitGracefully(err)
+	}
 	helpCommands, err := p.getSubHelp(filename)
 	if err != nil {
 		exitGracefully(fmt.Errorf("command %s not found", filename))
