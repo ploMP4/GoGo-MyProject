@@ -72,6 +72,7 @@ func Execute() {
 	}
 
 	if err != nil {
+		showHelp()
 		exitGracefully(err)
 	}
 
@@ -134,7 +135,6 @@ func validateInput() (string, []string, error) {
 			args = os.Args[2:]
 		}
 	} else {
-		showHelp()
 		return "", nil, errors.New("no gadget provided")
 	}
 
