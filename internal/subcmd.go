@@ -79,6 +79,7 @@ func (s SubCommand) updateFileName(file File) {
 			filepathSlice := strings.Split(file.Filepath, "/")
 			filepathSlice[len(filepathSlice)-1] = app.parser.args[idx+1]
 			filepathNew := strings.Join(filepathSlice, "/")
+			showMessage("Renaming", fmt.Sprintf("%s -> %s", file.Filepath, filepathNew))
 			if err := os.Rename(file.Filepath, filepathNew); err != nil {
 				showMessage("Warning", err.Error())
 			}
