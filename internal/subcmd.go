@@ -68,15 +68,19 @@ func (s SubCommand) handleFiles() {
 				file.handleEdit(name, app.appname)
 			}
 
-			for idx, arg := range app.parser.args {
-				if arg == PLACEHOLDER_FILENAME && len(s.Files) <= 1 {
-					filepathSlice := strings.Split(file.Filepath, "/")
-					filepathSlice[len(filepathSlice)-1] = app.parser.args[idx+1]
-					filepathNew := strings.Join(filepathSlice, "/")
-					if err := os.Rename(file.Filepath, filepathNew); err != nil {
-						showMessage("Warning", err.Error())
-					}
-				}
+			s.updateFileName(file)
+		}
+	}
+}
+
+func (s SubCommand) updateFileName(file File) {
+	for idx, arg := range app.parser.args {
+		if arg == PLACEHOLDER_FILENAME && len(s.Files) <= 1 {
+			filepathSlice := strings.Split(file.Filepath, "/")
+			filepathSlice[len(filepathSlice)-1] = app.parser.args[idx+1]
+			filepathNew := strings.Join(filepathSlice, "/")
+			if err := os.Rename(file.Filepath, filepathNew); err != nil {
+				showMessage("Warning", err.Error())
 			}
 		}
 	}

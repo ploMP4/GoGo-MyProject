@@ -22,7 +22,7 @@ type Gadget struct {
 
 // Used to run all the main commands and throw an error if
 // something goes wrong
-func (g *Gadget) runCommands() (string, error) {
+func (g Gadget) runCommands() (string, error) {
 	if g.Commands == nil {
 		return "", nil
 	}
@@ -55,7 +55,7 @@ func (g *Gadget) runCommands() (string, error) {
 // Used to run all the subcommands either concurrently or by themselves
 // based on the value of SubCommand.parallel. Displays a message if
 // there is an error
-func (g *Gadget) runSubCommands() {
+func (g Gadget) runSubCommands() {
 	var wg sync.WaitGroup
 
 	for _, subcmd := range g.SubCommands {
@@ -85,7 +85,7 @@ func (g *Gadget) runSubCommands() {
 	wg.Wait()
 }
 
-func (g *Gadget) handleFiles() {
+func (g Gadget) handleFiles() {
 	if g.Files != nil {
 		for name, file := range g.Files {
 			if file.Template {
@@ -101,21 +101,25 @@ func (g *Gadget) handleFiles() {
 				file.handleEdit(name, app.appname)
 			}
 
-			for idx, arg := range app.parser.args {
-				if arg == PLACEHOLDER_FILENAME && len(g.Files) <= 1 {
-					filepathSlice := strings.Split(file.Filepath, "/")
-					filepathSlice[len(filepathSlice)-1] = app.parser.args[idx+1]
-					filepathNew := strings.Join(filepathSlice, "/")
-					if err := os.Rename(file.Filepath, filepathNew); err != nil {
-						showMessage("Warning", err.Error())
-					}
-				}
+			g.updateFileName(file)
+		}
+	}
+}
+
+func (g Gadget) updateFileName(file File) {
+	for idx, arg := range app.parser.args {
+		if arg == PLACEHOLDER_FILENAME && len(g.Files) <= 1 {
+			filepathSlice := strings.Split(file.Filepath, "/")
+			filepathSlice[len(filepathSlice)-1] = app.parser.args[idx+1]
+			filepathNew := strings.Join(filepathSlice, "/")
+			if err := os.Rename(file.Filepath, filepathNew); err != nil {
+				showMessage("Warning", err.Error())
 			}
 		}
 	}
 }
 
-func (g *Gadget) getTemplatePath(file File) (string, error) {
+func (g Gadget) getTemplatePath(file File) (string, error) {
 	var templatePath string
 
 	templatePath = fmt.Sprintf(
