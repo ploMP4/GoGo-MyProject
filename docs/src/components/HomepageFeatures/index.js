@@ -5,31 +5,32 @@ import styles from "./styles.module.css";
 const FeatureList = [
   {
     title: "Easy to Use",
-    Svg: require("@site/static/img/img1.svg").default,
+    Svg: require("@site/static/img/easytouse.svg").default,
     description: (
       <>
-        Docusaurus was designed from the ground up to be easily installed and
-        used to get your website up and running quickly.
+        GoGo was designed to be easily configured by making use of the tools
+        you're already used to in your everyday life.
       </>
     ),
   },
   {
     title: "Focus on What Matters",
-    Svg: require("@site/static/img/undraw_docusaurus_tree.svg").default,
+    Svg: require("@site/static/img/focus.svg").default,
     description: (
       <>
-        Docusaurus lets you focus on your docs, and we&apos;ll do the chores. Go
-        ahead and move your docs into the <code>docs</code> directory.
+        Don't think about the repetitive actions and how to setup things.
+        Instead configure the process once and reuse it whenever you need to.
       </>
     ),
   },
   {
     title: "Flexible",
-    Svg: require("@site/static/img/undraw_docusaurus_react.svg").default,
+    Svg: require("@site/static/img/flex.svg").default,
     description: (
       <>
-        Extend or customize your website layout by reusing React. Docusaurus can
-        be extended while reusing the same header and footer.
+        By combining popular cli tools and the ability to template and
+        manipulate files you can overcome any tedious task that gets in your
+        way.
       </>
     ),
   },
@@ -41,10 +42,7 @@ function Feature({ Svg, title, description }) {
       <div className="text--center" style={{ marginTop: 20 }}>
         <Svg className={styles.featureSvg} role="img" />
       </div>
-      <div
-        className="text--center padding-horiz--md"
-        style={{ marginTop: -40 }}
-      >
+      <div className="text--center padding-horiz--md">
         <h3>{title}</h3>
         <p>{description}</p>
       </div>
