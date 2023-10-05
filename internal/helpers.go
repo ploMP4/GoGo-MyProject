@@ -43,11 +43,13 @@ func showHelp() {
 	}
 	helpCommands := p.getHelp()
 
-	fmt.Fprintf(color.Output, `A CLI tool to create starter boilerplate for you
+	fmt.Fprintf(
+		color.Output,
+		`A CLI tool that allows you to easily blueprint boilerplate and repetitive commands. 
 
-GoGo is a CLI tool that creates the starter boilerplate 
-for your projects and it's really helpful for people
-who use many different programming languages and frameworks.
+GoGo is a CLI tool that allows you to easily blueprint boilerplate 
+and repetitive commands. From basic files to scaffolding 
+the entire project structure.
 
 %s
 
@@ -61,7 +63,11 @@ who use many different programming languages and frameworks.
          T, templatedir <path>   - set the template folder path.
 	%v
 
-`, Yellow("USAGE:"), Yellow("AVAILABLE COMMANDS:"), strings.Trim(fmt.Sprint(helpCommands), "[]"))
+`,
+		Yellow("USAGE:"),
+		Yellow("AVAILABLE COMMANDS:"),
+		strings.Trim(fmt.Sprint(helpCommands), "[]"),
+	)
 }
 
 // Show the help menu the subcommands of a gadget file
