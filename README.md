@@ -1,8 +1,10 @@
 # GoGo MyProject
 
-![logo](https://github.com/ploMP4/GoGo-MyProject/blob/main/docs/static/img/gogo.png)
+<p align="center">
+    <img src="https://github.com/ploMP4/GoGo-MyProject/blob/main/docs/static/img/gogo.png" alt="logo"/>
+</p>
 
-GoGo is a CLI tool that allows you to easily blueprint boilerplate and repetitive commands.
+GoGo is an extendable CLI tool that allows you to easily blueprint boilerplate and repetitive commands.
 From basic files to scaffolding the entire project structure
 
 ## Table of contents
@@ -15,6 +17,13 @@ From basic files to scaffolding the entire project structure
 - [Contributing](#contributing)
 
 ## Overview
+
+- Extendable CLI tool through config files
+- Blueprint your repetitive tasks with simple yaml files
+- Make use of the already existing CLI tools you're used to in your everyday life by combining them together in a single tool
+- Create file templates to reuse whenever you need to
+- Use placeholders to dynamically manipulate files
+- Execute commands and modify multiple files concurrently to save time
 
 ## Usage
 
@@ -40,7 +49,7 @@ Finally add the command to PATH to be able to execute it globally.
 
 ## Get Started
 
-Visit the [gogo site](https://gogo-my-project.netlify.app/) to find the full documentation for the project.
+Visit the [gogo website](https://gogo-my-project.netlify.app/) to find the full documentation for the project.
 
 ## Examples
 
