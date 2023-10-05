@@ -1,0 +1,170 @@
+---
+sidebar_position: 3
+---
+
+# Flags
+
+In this section we are going to be going over the built in flags of gogo
+
+import Tabs from "@theme/Tabs";
+import TabItem from "@theme/TabItem";
+
+## h, help
+
+Displays the help menu. If a gadget name is passed as an argument
+displays the help menu for the specific gadget
+
+<Tabs>
+  <TabItem value="h" label="h" default>
+
+    gogo h
+    gogo h react
+
+  </TabItem>
+
+  <TabItem value="help" label="help">
+
+    gogo help
+    gogo help react
+
+  </TabItem>
+</Tabs>
+
+## v, version
+
+Display the application version
+
+<Tabs>
+  <TabItem value="v" label="v" default>
+
+    gogo v
+
+  </TabItem>
+
+  <TabItem value="version" label="version">
+
+    gogo version
+
+  </TabItem>
+</Tabs>
+
+## G, gadgetdir
+
+Set the path of the directory containing the config files.
+
+**_NOTE: You need to specify the full path from the root directory_**
+
+<Tabs>
+  <TabItem value="G" label="G" default>
+
+    gogo G /home/[username]/.gogo/gadgets
+
+  </TabItem>
+
+  <TabItem value="gadgetdir" label="gadgetdir">
+
+    gogo gadgetdir C:\Users\[username]\gogo\gadgets
+
+  </TabItem>
+</Tabs>
+
+_Replace [username] with your username_
+
+## T, templatedir
+
+Set the path of the directory containing the templates.
+
+**_NOTE: You need to specify the full path from the root directory_**
+
+<Tabs>
+  <TabItem value="T" label="T" default>
+
+    gogo T /home/[username]/.gogo/templates
+
+  </TabItem>
+
+  <TabItem value="templatedir" label="templatedir">
+
+    gogo templatedir C:\Users\[username]\gogo\templates
+
+  </TabItem>
+</Tabs>
+
+_Replace [username] with your username_
+
+## a, all
+
+Runs all the subcommands for a command
+except the ones that have the exclude value set to true.
+
+<Tabs>
+  <TabItem value="a" label="a" default>
+
+    gogo react myapp a
+
+  </TabItem>
+
+  <TabItem value="all" label="all">
+
+    gogo react myapp all
+
+  </TabItem>
+</Tabs>
+
+## e, exclude
+
+> `gogo [gadget] <appname> all exclude [subcommand]`
+
+Paired with the [all flag](#a-all), exludes specified subcommands from being executed.
+
+### Exclude a subcommand
+
+<Tabs>
+  <TabItem value="e" label="e" default>
+
+    gogo react myapp all e redux
+
+  </TabItem>
+
+  <TabItem value="exclude" label="exclude">
+
+    gogo react myapp all exclude redux
+
+  </TabItem>
+</Tabs>
+
+### Exlude multiple subcommands
+
+To exclude multiple subcommands you can add multiple exclude flags.
+
+<Tabs>
+  <TabItem value="e" label="e" default>
+
+    gogo react myapp all e redux e typescript
+
+  </TabItem>
+
+  <TabItem value="exclude" label="exclude">
+
+    gogo react myapp all exclude redux exclude mui exclude bootstrap
+
+  </TabItem>
+</Tabs>
+
+## vv, verbose
+
+Display verbose output from the commands that are being ran
+
+<Tabs>
+  <TabItem value="vv" label="vv" default>
+
+    gogo react myapp mui vv
+
+  </TabItem>
+
+  <TabItem value="verbose" label="verbose">
+
+    gogo nextjs myapp nextauth verbose
+
+  </TabItem>
+</Tabs>
