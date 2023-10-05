@@ -32,8 +32,8 @@ export default function Home() {
   const { siteConfig } = useDocusaurusContext();
   return (
     <Layout
-      title={`Hello from ${siteConfig.title}`}
-      description="Description will go into a meta tag in <head />"
+      title={`${siteConfig.title}`}
+      description="Extendable CLI tool that allows you to easily blueprint boilerplate and repetitive commands."
     >
       <HomepageHeader />
       <main>

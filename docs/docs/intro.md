@@ -4,7 +4,7 @@ sidebar_position: 1
 
 # GoGo My Intro
 
-GoGo is a cli tool that allows you to easily blueprint boilerplate and repetitive commands.
+GoGo is an extendable cli tool that allows you to easily blueprint boilerplate and repetitive commands.
 From basic files to scaffolding the entire project structure.
 
 ## How it works
