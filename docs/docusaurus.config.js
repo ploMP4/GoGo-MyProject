@@ -7,17 +7,17 @@ const darkCodeTheme = require("prism-react-renderer/themes/dracula");
 /** @type {import('@docusaurus/types').Config} */
 const config = {
   title: "GoGo My Project",
-  tagline: "Scaffold any project in seconds",
+  tagline: "",
   favicon: "img/favicon.ico",
 
   // Set the production url of your site here
-  url: "https://your-docusaurus-test-site.com",
+  url: "https://gogo-my-project.netlify.com",
   // Set the /<baseUrl>/ pathname under which your site is served
   // For GitHub pages deployment, it is often '/<projectName>/'
   baseUrl: "/",
 
   // GitHub pages deployment config.
-  // If you aren't using GitHub pages, you don't need these.
+  // If you aren't using GitHub pages, you don't need these.blomain
   organizationName: "ploMP4", // Usually your GitHub org/user name.
   projectName: "GoGo-MyProject", // Usually your repo name.
 
@@ -41,7 +41,7 @@ const config = {
           sidebarPath: require.resolve("./sidebars.js"),
           // Please change this to your repo.
           // Remove this to remove the "edit this page" links.
-          editUrl: "github.com/ploMP4/GoGo-MyProject",
+          editUrl: "http://github.com/ploMP4/GoGo-MyProject/blob/main/docs",
         },
         theme: {
           customCss: require.resolve("./src/css/custom.css"),
