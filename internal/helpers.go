@@ -45,9 +45,9 @@ func showHelp() {
 
 	fmt.Fprintf(
 		color.Output,
-		`A CLI tool that allows you to easily blueprint boilerplate and repetitive commands. 
+		`An extendable CLI tool that allows you to easily blueprint boilerplate and repetitive commands. 
 
-GoGo is a CLI tool that allows you to easily blueprint boilerplate 
+GoGo is an extendable CLI tool that allows you to easily blueprint boilerplate 
 and repetitive commands. From basic files to scaffolding 
 the entire project structure.
 
