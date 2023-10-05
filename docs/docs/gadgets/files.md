@@ -170,4 +170,4 @@ change:
     _NAME: "Component"
 ```
 
-There are also some built in placeholders that you can find [here](../../placeholders).
+There are also some built in placeholders that you can find [here](../placeholders.md).
