@@ -1,39 +1,39 @@
-commands:
-  - "npx create-react-app"
+commands: ["npx create-react-app _APPNAME"]
+help: "Create React app"
+chdir: true
 
-help: "Create react app"
+dirs:
+  - "components"
+  - ".gogo"
+  - ".gogo/gadgets"
+  - ".gogo/templates"
+  - ".gogo/templates/component"
+  - ".gogo/templates/component/components"
+
+files:
+  component.yaml:
+    filepath: ".gogo/gadgets/component.yaml"
+    template: true
+
+  component.jsx:
+    filepath: ".gogo/templates/component/components/component.jsx"
+    template: true
 
 subCommands:
-  redux:
-    name: "Redux"
-    command: "npx create-react-app --template redux"
-
-    override: true
-    help: "Use redux template of cra"
-
   ts:
     name: "Typescript"
-    command: "npx create-react-app --template typescript"
-
+    commands: ["npx create-react-app --template typescript _APPNAME"]
     override: true
     help: "Use typescript template of cra"
 
-  redux-ts:
-    name: "Redux-Typescript"
-    command: "npx create-react-app --template redux-typescript"
-
-    override: true
-    help: "Use redux-typescript template of cra"
-
   mui:
     name: "Material-UI"
-    command: "npm install @mui/material @emotion/react @emotion/styled"
-
-    override: false
+    parallel: true
+    commands: ["npm install @mui/material @emotion/react @emotion/styled"]
     help: "Install material-ui library"
 
   bootstrap:
     name: "Bootstrap"
-    command: "npm install react-bootstrap"
-    override: false
+    exclude: true
+    commands: ["npm install react-bootstrap"]
     help: "Install react-bootstrap library"

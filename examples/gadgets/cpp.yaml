@@ -1,16 +1,19 @@
-commands: ["mkdir"]
-dirs: ["bin", "includes", "src"]
+commands:
+  - "mkdir _APPNAME"
+
+chdir: true
+dirs: ["bin", "include", "src"]
 help: "Create C++ app"
 
 subCommands:
-  v:
-    name: "vanilla"
+  basic:
+    name: "basic"
     override: false
     parallel: true
-    help: ""
+    help: "Basic C++ starter"
 
     files:
-      src:
+      src/main.cpp:
         filepath: "src/main.cpp"
         template: true
 
@@ -19,5 +22,8 @@ subCommands:
         template: true
         change:
           placeholder:
-            _CC: "g++"
-            _INCLUDEDIR: "includes/"
+            _CC: "clang++"
+
+      compile_flags.txt:
+        filepath: "compile_flags.txt"
+        template: true

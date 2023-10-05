@@ -1,11 +1,12 @@
 commands: []
 dirs: []
 help: "example file"
+chdir: false
 
 subCommands:
   command-name:
     name: ""
-    command: ""
+    commands: []
 
     override: false
     parallel: false
