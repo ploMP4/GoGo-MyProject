@@ -1,0 +1,42 @@
+defgadget Django do
+  @init appname = [ 
+      "python -m venv env",
+      "./env/bin/pip install django",
+      "./env/bin/django-admin startproject " + appname,
+  ]
+
+  def execute(cmd) do
+    pass
+  end
+
+  def help() do
+    "Create a basic django app"
+  end
+end
+
+defgadget Django.RestFramework do
+  @name = "rest-framework"
+  @parallel = true
+  @help = "Install and setup DjangoRestFramework"
+
+  @impl(Files) 
+  @local_py(appname) =
+    [path: appname + "./local.py", template: true]
+
+  @impl(Files)
+  appname + "/settings.py" do
+    def change do
+
+    end
+  end
+end
+
+defgadget Django.CORS do
+  @name = "cors"
+  @parallel = true
+  @help = "Install django-cors-headers"
+end
+
+impl Files for Django.CORS do
+  @settings appname = [path: appname + "/settings.py", template: true]
+end
